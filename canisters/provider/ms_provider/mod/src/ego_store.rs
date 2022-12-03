@@ -1,31 +1,32 @@
 use ic_cdk::api;
 use ic_cdk::export::Principal;
-use async_trait::async_trait;
 use tracing::error;
+use async_trait::async_trait;
+use crate::ego_types::{EgoError, UserApp, WalletMainNewResponse};
 
-use crate::ego_types::{App, AppId, EgoError, Memo, WalletAppInstallRequest, WalletAppInstallResponse, WalletAppRemoveRequest, WalletMainNewResponse, WalletOrderNewRequest, WalletOrderNewResponse};
-use crate::types::{AppMainListRequest, AppMainListResponse, QueryParam};
 
 #[async_trait]
 pub trait TEgoStore {
-  async fn wallet_main_new(&self, ego_store_canister_id: Principal) -> Result<Principal, EgoError>;
+  async fn wallet_main_new(&self) -> Result<UserApp, EgoError>;
 }
 
 pub struct EgoStore {
-
+  pub canister_id: Principal,
 }
 
-impl EgoStore{
-  pub fn new() -> Self {
-    EgoStore{}
+impl EgoStore {
+  pub fn new(canister_id: Principal) -> Self {
+    EgoStore{
+      canister_id
+    }
   }
 }
 
 #[async_trait]
 impl TEgoStore for EgoStore {
-  async fn wallet_main_new(&self, ego_store_canister_id: Principal) -> Result<Principal, EgoError>{
+  async fn wallet_main_new(&self) -> Result<UserApp, EgoError>{
     let (resp, ): (WalletMainNewResponse, ) = match api::call::call(
-      ego_store_canister_id,
+      self.canister_id,
       "wallet_main_new",
       ()
     )
@@ -43,6 +44,6 @@ impl TEgoStore for EgoStore {
       }
     };
 
-    Ok(resp.tenant_id)
+    Ok(resp.user_app)
   }
 }

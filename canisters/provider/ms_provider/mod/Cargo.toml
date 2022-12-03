@@ -6,7 +6,6 @@ edition = "2021"
 [lib]
 path = "src/mod.rs"
 
-
 [dependencies]
 candid = "0.7.10"
 ic-cdk = "0.5"
@@ -14,3 +13,9 @@ ic-cdk-macros = "0.5"
 ic-types = "0.4.0"
 serde = "1.0"
 serde_json = "1.0"
+async-trait = "0.1.57"
+tracing = "0.1.29"
+
+[dev-dependencies]
+mockall = "0.11.2"
+tokio = {version="1.21.0", features=["full"]}
