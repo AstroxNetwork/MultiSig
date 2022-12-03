@@ -1,0 +1,13 @@
+[workspace]
+members = [
+    "provider/ms_provider/actor",
+    "provider/ms_provider/mod",
+    "controller/ms_controller/actor",
+    "controller/ms_controller/mod",
+    "dapp/btc_wallet/actor",
+    "dapp/btc_wallet/mod"
+]
+
+[profile.release]
+lto = true
+opt-level = 'z'
