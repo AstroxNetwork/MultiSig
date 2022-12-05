@@ -2,9 +2,10 @@ use std::collections::{BTreeMap};
 use ego_lib::ego_store::TEgoStore;
 use ego_lib::ego_types::AppId;
 use ic_cdk::export::Principal;
+use crate::app_wallet::TAppWallet;
 use crate::model::{Action, Sign};
 use crate::state::{CONTROLLER};
-use crate::types::SystemErr;
+use crate::types::{Errors, SystemErr};
 
 pub struct Service {}
 
@@ -24,21 +25,26 @@ impl Service {
         CONTROLLER.with(|controller| controller.borrow_mut().app = Some(canister.canister_id));
         Ok(())
       }
-      _ => Err(SystemErr{code: 500, msg: "System Error".to_string()})
+      _ => Err(SystemErr::from(Errors::SystemError))
     }
   }
 
+  pub fn app_action_get(action_id: u64) -> Result<Action, SystemErr> {
+    CONTROLLER.with(|controller| controller.borrow().app_action_get(action_id))
+  }
+
   pub fn app_action_create(
-    params: BTreeMap<String, String>
+    params: BTreeMap<String, String>,
+    create_at: u64,
   ) -> Action {
-    CONTROLLER.with(|controller| controller.borrow_mut().app_action_create(params))
+    CONTROLLER.with(|controller| controller.borrow_mut().app_action_create(params, create_at))
   }
 
   pub fn app_action_list() -> Vec<Action> {
     CONTROLLER.with(|controller| controller.borrow().app_action_list())
   }
 
-  pub fn app_sign_create(action_id: u64, user_id: &Principal) -> Result<Sign, SystemErr>{
-    CONTROLLER.with(|controller| controller.borrow_mut().app_sign_create(action_id, user_id))
+  pub fn action_sign_create<W: TAppWallet>(app_wallet: W, action_id: u64, user_id: &Principal, sign_at: u64) -> Result<Sign, SystemErr>{
+    CONTROLLER.with(|controller| controller.borrow_mut().action_sign_create(app_wallet, action_id, user_id, sign_at))
   }
 }

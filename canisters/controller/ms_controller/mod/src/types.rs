@@ -14,6 +14,22 @@ pub struct SystemErr {
   pub msg: String
 }
 
+impl SystemErr {
+  pub fn new(code: u16, msg: &str) -> Self {
+    SystemErr {
+      code,
+      msg: msg.to_string(),
+    }
+  }
+}
+
+pub enum Errors {
+  NotFound,
+  SystemError,
+  Signed,
+  WrongStatus
+}
+
 impl From<EgoError> for SystemErr {
   fn from(e: EgoError) -> Self {
     SystemErr{
@@ -28,6 +44,17 @@ impl From<std::string::String> for SystemErr {
     SystemErr{
       code: 500,
       msg
+    }
+  }
+}
+
+impl From<Errors> for SystemErr {
+  fn from(e: Errors) -> Self {
+    match e {
+      Errors::NotFound => SystemErr::new(1000, "Not Found"),
+      Errors::SystemError => SystemErr::new(1001, "System Error"),
+      Errors::Signed => SystemErr::new(1002, "Already Signed"),
+      Errors::WrongStatus  => SystemErr::new(1003, "Wrong Status"),
     }
   }
 }
