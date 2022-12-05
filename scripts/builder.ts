@@ -153,7 +153,7 @@ function runBuildRust(ego: ProjectConfig) {
     if (staging === 'production') {
       // getSnapshot();
       shell.exec(`
-          PARENT_DIR="${process.cwd()}/ego"
+          PARENT_DIR="${process.cwd()}/canisters"
           EGO_DIR="${process.cwd()}/canisters/${ego.category}/${ego.package}"
           CAT_DIR="${process.cwd()}/canisters/${ego.category}"
           TARGET="wasm32-unknown-unknown"

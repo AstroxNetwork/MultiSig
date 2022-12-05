@@ -25,7 +25,7 @@ export const infraConfig: Configs = [
   {
     category: 'provider',
     package: 'ms_provider',
-    bin_name: 'ms-provider',
+    bin_name: 'ms-ms_provider',
     config: './configs/ms_provider.json',
     post_install_sequence: 100
   },
@@ -34,8 +34,7 @@ export const infraConfig: Configs = [
     package: 'ms_controller',
     bin_name: 'ms-controller',
     config: './configs/ms_controller.json',
-    post_install_sequence: 100,
-    no_build: true
+    post_install_sequence: 100
   },
   {
     category: 'dapp',

@@ -9,6 +9,8 @@ fn main() {}
 fn main() {
     use ic_cdk::export::Principal;
     use std::collections::BTreeMap;
+    use ms_provider_mod::types::*;
+    use ms_provider_mod::model::*;
 
     candid::export_service!();
     std::print!("{}", __export_service());

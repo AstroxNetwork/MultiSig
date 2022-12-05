@@ -7,7 +7,7 @@ use ms_provider_mod::types::{ControllerMainCreateRequest, SystemErr};
 
 use astrox_macros::inject_canister_registry;
 use astrox_macros::inject_canister_users;
-use ms_provider_mod::ego_store::EgoStore;
+use ms_provider_mod::ego_lib::ego_store::EgoStore;
 use ms_provider_mod::model::{Controller, Provider};
 use ms_provider_mod::state::PROVIDER;
 use ms_provider_mod::service::Service;
@@ -23,7 +23,7 @@ fn on_canister_added(_name: &str, _canister_id: Principal) {
 #[candid_method(init)]
 pub fn init() {
     let caller = caller();
-    ic_cdk::println!("provider: init, caller is {}", caller.clone());
+    ic_cdk::println!("ms_provider: init, caller is {}", caller.clone());
 
     ic_cdk::println!("==> add caller as the owner");
     users_init(caller.clone());
@@ -38,7 +38,7 @@ struct PersistState {
 
 #[pre_upgrade]
 fn pre_upgrade() {
-    ic_cdk::println!("provider: pre_upgrade");
+    ic_cdk::println!("ms_provider: pre_upgrade");
 
     let provider = PROVIDER.with(|provider| provider.borrow().clone());
     let user = users_pre_upgrade();
@@ -50,7 +50,7 @@ fn pre_upgrade() {
 
 #[post_upgrade]
 fn post_upgrade() {
-    ic_cdk::println!("provider: post_upgrade");
+    ic_cdk::println!("ms_provider: post_upgrade");
 
     let (state,): (PersistState,) = storage::stable_restore().unwrap();
     PROVIDER.with(|provider| *provider.borrow_mut() = state.provider);
@@ -62,7 +62,7 @@ fn post_upgrade() {
 #[query(name = "controller_main_list")]
 #[candid_method(query, rename = "controller_main_list")]
 fn controller_main_list() -> Result<Vec<Controller>, SystemErr>{
-    println!("provider: controller_main_list");
+    println!("ms_provider: controller_main_list");
     let user = caller();
     let controllers = Service::controller_main_list(&user);
     Ok(controllers)
@@ -71,7 +71,7 @@ fn controller_main_list() -> Result<Vec<Controller>, SystemErr>{
 #[query(name = "controller_main_get")]
 #[candid_method(query, rename = "controller_main_get")]
 pub fn controller_main_get(controller_id: Principal) -> Result<Controller, SystemErr> {
-    println!("provider: controller_main_get");
+    println!("ms_provider: controller_main_get");
     let user = caller();
     match Service::controller_main_get(&user, &controller_id) {
         Some(controller) => Ok(controller),
@@ -82,7 +82,7 @@ pub fn controller_main_get(controller_id: Principal) -> Result<Controller, Syste
 #[update(name = "controller_main_create")]
 #[candid_method(query, rename = "controller_main_create")]
 pub async fn controller_main_create(request: ControllerMainCreateRequest) -> Result<Controller, SystemErr> {
-    println!("provider: controller_main_create");
+    println!("ms_provider: controller_main_create");
     let user = caller();
 
     let canister_id = REGISTRY.with(|registry| registry.borrow().canister_get_one("ego_store")).unwrap();

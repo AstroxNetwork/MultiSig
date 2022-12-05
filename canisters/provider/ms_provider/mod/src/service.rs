@@ -1,5 +1,5 @@
+use ego_lib::ego_store::TEgoStore;
 use ic_cdk::export::Principal;
-use crate::ego_store::TEgoStore;
 use crate::model::Controller;
 use crate::state::PROVIDER;
 use crate::types::SystemErr;
