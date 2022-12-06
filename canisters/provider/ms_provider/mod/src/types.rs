@@ -33,3 +33,15 @@ impl From<std::string::String> for SystemErr {
         }
     }
 }
+
+pub enum Errors {
+    NotFound
+}
+
+impl From<Errors> for SystemErr {
+    fn from(e: Errors) -> Self {
+        match e {
+            Errors::NotFound => SystemErr::new(1000, "Not Found"),
+        }
+    }
+}

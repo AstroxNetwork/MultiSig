@@ -110,7 +110,7 @@ fn user_list() -> Result<BTreeMap<Principal, String>, SystemErr> {
 }
 /* ===== end user relative method ===== */
 
-#[update(name = "app_main_create")]
+#[update(name = "app_main_create", guard = "user_guard")]
 #[candid_method(update, rename = "app_main_create")]
 async fn app_main_create() -> Result<(), SystemErr> {
   ic_cdk::println!("controller: install_app");
@@ -122,7 +122,7 @@ async fn app_main_create() -> Result<(), SystemErr> {
   Service::app_main_create(ego_store, "btc_wallet".to_string()).await
 }
 
-#[update(name = "app_action_create")]
+#[update(name = "app_action_create", guard = "user_guard")]
 #[candid_method(update, rename = "app_action_create")]
 fn app_action_create(req: AppActionCreateRequest) -> Result<Action, SystemErr> {
   ic_cdk::println!("controller: app_action_create");
@@ -131,7 +131,7 @@ fn app_action_create(req: AppActionCreateRequest) -> Result<Action, SystemErr> {
   Ok(action)
 }
 
-#[query(name = "app_action_get")]
+#[query(name = "app_action_get", guard = "user_guard")]
 #[candid_method(query, rename = "app_action_get")]
 fn app_action_get(action_id: u64) -> Result<Action, SystemErr> {
   ic_cdk::println!("controller: app_action_get");
@@ -140,7 +140,7 @@ fn app_action_get(action_id: u64) -> Result<Action, SystemErr> {
 }
 
 
-#[query(name = "app_action_list")]
+#[query(name = "app_action_list", guard = "user_guard")]
 #[candid_method(update, rename = "app_action_list")]
 fn app_action_list() -> Result<Vec<Action>, SystemErr> {
   ic_cdk::println!("controller: app_action_list");
@@ -149,7 +149,7 @@ fn app_action_list() -> Result<Vec<Action>, SystemErr> {
   Ok(actions)
 }
 
-#[query(name = "action_sign_create")]
+#[query(name = "action_sign_create", guard = "user_guard")]
 #[candid_method(update, rename = "action_sign_create")]
 fn action_sign_create(action_id: u64) -> Result<Sign, SystemErr> {
   ic_cdk::println!("controller: app_action_list");

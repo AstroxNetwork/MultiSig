@@ -3,7 +3,7 @@ use ic_cdk::export::candid::{CandidType, Deserialize};
 use ic_cdk::{storage};
 use ic_cdk_macros::*;
 use serde::Serialize;
-use ms_provider_mod::types::{ControllerMainCreateRequest, SystemErr};
+use ms_provider_mod::types::{ControllerMainCreateRequest, Errors, SystemErr};
 
 use astrox_macros::inject_canister_registry;
 use astrox_macros::inject_canister_users;
@@ -76,7 +76,7 @@ pub fn controller_main_get(controller_id: Principal) -> Result<Controller, Syste
     let user = caller();
     match Service::controller_main_get(&user, &controller_id) {
         Some(controller) => Ok(controller),
-        None => Err(SystemErr{code: 404, msg: "Not Exists".to_string()}),
+        None => Err(SystemErr::from(Errors::NotFound)),
     }
 }
 
