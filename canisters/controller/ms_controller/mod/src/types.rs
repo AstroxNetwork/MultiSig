@@ -27,7 +27,9 @@ pub enum Errors {
   NotFound,
   SystemError,
   Signed,
-  WrongStatus
+  WrongStatus,
+  TooManyUser,
+  AppNotInstalled
 }
 
 impl From<EgoError> for SystemErr {
@@ -55,6 +57,8 @@ impl From<Errors> for SystemErr {
       Errors::SystemError => SystemErr::new(1001, "System Error"),
       Errors::Signed => SystemErr::new(1002, "Already Signed"),
       Errors::WrongStatus  => SystemErr::new(1003, "Wrong Status"),
+      Errors::TooManyUser  => SystemErr::new(1004, "Too Many Users"),
+      Errors::AppNotInstalled => SystemErr::new(1005, "Wallet App Not Installed"),
     }
   }
 }

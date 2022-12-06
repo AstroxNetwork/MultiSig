@@ -26,7 +26,7 @@ pub fn init() {
     ic_cdk::println!("ms_provider: init, caller is {}", caller.clone());
 
     ic_cdk::println!("==> add caller as the owner");
-    users_init(caller.clone());
+    owner_add(caller.clone());
 }
 
 #[derive(CandidType, Deserialize, Serialize)]

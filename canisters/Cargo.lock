@@ -34,9 +34,9 @@ dependencies = [
 
 [[package]]
 name = "astrox_macros"
-version = "0.1.0"
+version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f3855a284ffd47c1b2d3b3d3157b9d3547a32ce71759b51cd1fc75f47f481a92"
+checksum = "30c898419d8e065ec0566eb721c37fa8f678bdff43d2c8f092ac8d3cb241bb01"
 dependencies = [
  "candid",
  "ic-cdk",
