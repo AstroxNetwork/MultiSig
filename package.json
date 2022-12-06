@@ -21,7 +21,7 @@
     "format": "prettier --write {scripts,clients}/**/*.{js,ts,less,json}",
     "format:json": "prettier --write artifacts/**/*.json",
     "format:idl": "prettier --write clients/idls/**/*.ts",
-    "ps:setup": "pnpm ms:pre && pnpm ms:bootstrap && pnpm ms:build && pnpm ms:install && pnpm ms:post_install:project ego_ops",
+    "ms:setup": "pnpm ms:pre && pnpm ms:bootstrap && pnpm ms:build && pnpm ms:install && pnpm ms:post_install:project ego_ops",
     "ms:create:live": "cross-env NODE_ENV=production node ./dist/deployer.js --create",
     "ms:install:live": "cross-env NODE_ENV=production node ./dist/deployer.js --install",
     "ms:reinstall:live": "cross-env NODE_ENV=production node ./dist/deployer.js --reinstall",
