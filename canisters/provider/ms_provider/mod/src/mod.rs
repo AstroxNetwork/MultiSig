@@ -3,3 +3,4 @@ pub mod model;
 pub mod service;
 pub mod state;
 pub use ego_lib;
+pub mod ms_controller;

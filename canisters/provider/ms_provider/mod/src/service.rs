@@ -7,8 +7,8 @@ use crate::types::SystemErr;
 pub struct Service {}
 
 impl Service {
-  pub fn controller_main_list(user: &Principal) -> Vec<Controller> {
-    PROVIDER.with(|provider| provider.borrow().controller_main_list(user))
+  pub fn controller_main_list(user_id: &Principal) -> Vec<Controller> {
+    PROVIDER.with(|provider| provider.borrow().controller_main_list(user_id))
   }
 
   pub fn controller_main_get(user: &Principal, controller_id: &Principal) -> Option<Controller> {
