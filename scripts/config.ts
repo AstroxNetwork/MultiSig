@@ -41,8 +41,7 @@ export const infraConfig: Configs = [
     package: 'btc_wallet',
     bin_name: 'btc-wallet',
     config: './configs/btc_wallet.json',
-    post_install_sequence: 100,
-    no_build: true
+    post_install_sequence: 100
   }
 ];
 

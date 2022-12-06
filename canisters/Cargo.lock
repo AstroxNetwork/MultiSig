@@ -136,6 +136,7 @@ dependencies = [
 name = "btc_wallet"
 version = "0.1.0"
 dependencies = [
+ "astrox_macros",
  "candid",
  "ic-cdk",
  "ic-cdk-macros",

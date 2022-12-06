@@ -32,10 +32,4 @@ export interface _SERVICE {
   >,
   'controller_main_get' : ActorMethod<[Principal], Result_2>,
   'controller_main_list' : ActorMethod<[], Result_3>,
-  'role_owner_add' : ActorMethod<[Principal], Result>,
-  'role_owner_remove' : ActorMethod<[Principal], Result>,
-  'role_owner_set' : ActorMethod<[Array<Principal>], Result>,
-  'role_user_add' : ActorMethod<[Principal], Result>,
-  'role_user_remove' : ActorMethod<[Principal], Result>,
-  'role_user_set' : ActorMethod<[Array<Principal>], Result>,
 }

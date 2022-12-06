@@ -33,12 +33,6 @@ export const idlFactory = ({ IDL }) => {
       ),
     'controller_main_get' : IDL.Func([IDL.Principal], [Result_2], ['query']),
     'controller_main_list' : IDL.Func([], [Result_3], ['query']),
-    'role_owner_add' : IDL.Func([IDL.Principal], [Result], []),
-    'role_owner_remove' : IDL.Func([IDL.Principal], [Result], []),
-    'role_owner_set' : IDL.Func([IDL.Vec(IDL.Principal)], [Result], []),
-    'role_user_add' : IDL.Func([IDL.Principal], [Result], []),
-    'role_user_remove' : IDL.Func([IDL.Principal], [Result], []),
-    'role_user_set' : IDL.Func([IDL.Vec(IDL.Principal)], [Result], []),
   });
 };
 export const init = ({ IDL }) => { return []; };

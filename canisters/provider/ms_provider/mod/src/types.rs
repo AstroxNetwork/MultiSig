@@ -16,6 +16,15 @@ pub struct SystemErr {
     pub msg: String
 }
 
+impl SystemErr {
+    pub fn new(code: u16, msg: &str) -> Self {
+        SystemErr {
+            code,
+            msg: msg.to_string(),
+        }
+    }
+}
+
 impl From<EgoError> for SystemErr {
     fn from(e: EgoError) -> Self {
         SystemErr{
