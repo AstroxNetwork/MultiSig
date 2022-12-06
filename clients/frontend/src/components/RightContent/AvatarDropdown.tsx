@@ -14,10 +14,9 @@ export type GlobalHeaderRightProps = {
   menu?: boolean;
 };
 
-
 const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
-  const { user } = useSelector((state: RootState) => state.global);
-  console.log('right==', user)
+  const { initialState } = useSelector((state: RootState) => state.global);
+  console.log('right==', initialState?.currentUser);
   const history = useHistory();
 
   /**
@@ -25,7 +24,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
    */
   const loginOut = async () => {
     const { search, pathname } = window.location;
-    localStorage.removeItem('userInfo')
+    localStorage.removeItem('userInfo');
     // Note: There may be security issues, please note
     if (window.location.pathname !== '/user/login') {
       history.push({
@@ -33,18 +32,14 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
       });
     }
   };
-  const onMenuClick = useCallback(
-    (event: MenuInfo) => {
-      const { key } = event;
-      if (key === 'logout') {
-        // setInitialState((s) => ({ ...s, currentUser: undefined }));
-        loginOut();
-        return;
-      }
-    },
-    [],
-  );
-
+  const onMenuClick = useCallback((event: MenuInfo) => {
+    const { key } = event;
+    if (key === 'logout') {
+      // setInitialState((s) => ({ ...s, currentUser: undefined }));
+      loginOut();
+      return;
+    }
+  }, []);
 
   const loading = (
     <span className={`${styles.action} ${styles.account}`}>
@@ -58,7 +53,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
     </span>
   );
 
-  if (!user) {
+  if (!initialState?.currentUser) {
     return loading;
   }
 
@@ -70,12 +65,12 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
       </Menu.Item>
     </Menu>
   );
- 
+
   return (
     <HeaderDropdown overlay={menuHeaderDropdown}>
       <span className={`${styles.action} ${styles.account}`}>
         <Avatar size="small" className={styles.avatar} alt="avatar" />
-        {user.username}
+        {initialState.currentUser?.principal}
       </span>
     </HeaderDropdown>
   );

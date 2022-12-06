@@ -8,7 +8,5 @@ import { storePostInstall } from './ego_store';
 
 // run post_infra
 describe('post_install', () => {
-  test('post install', async () => {
-
-  });
+  test('post install', async () => {});
 });
