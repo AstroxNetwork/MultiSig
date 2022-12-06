@@ -1,13 +1,14 @@
 import { IRoute } from "./renderRoutes/renderRoutes";
+import { BookOutlined, DatabaseOutlined, HistoryOutlined, HomeOutlined, TeamOutlined } from "@ant-design/icons";
 import HomePage from "@/pages/";
 import Component404 from '@/pages/404';
-import { AppstoreAddOutlined, BellOutlined, DatabaseOutlined, HistoryOutlined, HomeOutlined, SettingOutlined, TableOutlined, TeamOutlined, UngroupOutlined, UsergroupAddOutlined, UserOutlined } from "@ant-design/icons";
 import UserLayout from "@/layout/UserLayout";
 import GroupCreate from "@/pages/group/Create";
 import GroupList from "@/pages/group/List";
 import WalletAssets from "@/pages/wallet/Assets";
 import WalletTransactions from "@/pages/wallet/Transactions";
 import WalletCreate from "@/pages/wallet/WalletCreate";
+import AddressBook from "@/pages/wallet/AddressBook";
 
 
 
@@ -34,7 +35,7 @@ const routes: IRoute[] = [
             component: GroupList,
           },
           {
-            name: '群组创建',
+            name: 'Group create',
             hideInMenu: true,
             path: '/group/create',
             component: GroupCreate
@@ -57,6 +58,12 @@ const routes: IRoute[] = [
             icon: <HistoryOutlined />,
             path: '/wallet/transactions',
             component: WalletTransactions,
+          },
+          {
+            name: 'Address Book',
+            icon: <BookOutlined />,
+            path: '/wallet/book',
+            component: AddressBook,
           },
           {
             name: 'Wallet create',

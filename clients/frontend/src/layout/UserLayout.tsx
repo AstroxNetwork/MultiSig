@@ -128,7 +128,7 @@ export default (props: any) => {
   return (
     <ProLayout
       route={slideMode === 'group' ? menuRoute.routes?.find(route => route.path!.indexOf('group') > -1) : menuRoute.routes?.find(route => route.path!.indexOf('wallet') > -1)}
-      title={'Astrox Console'}
+      title={'Multi-sig'}
       navTheme="light"
       siderWidth={256}
       onMenuHeaderClick={(e) => {
@@ -138,7 +138,7 @@ export default (props: any) => {
       }}
       // formatMessage={userConfig.formatMessage || formatMessage}
       // menu={{ locale: userConfig.locale }}
-      // logo={Logo}
+      logo={null}
       // menuExtraRender={() => {
       //   return (
       //     <div>

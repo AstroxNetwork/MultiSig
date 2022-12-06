@@ -35,7 +35,7 @@ const GroupCreate: React.FC = () => {
       // }}
       autoFocusFirstInput
     >
-      <ProFormText required width="sm" name="id" label="群组名称" />
+      <ProFormText required width="sm" name="id" label="Groupname" />
       <ProForm.Group>
         {/* <ProFormText
           width="md"
@@ -49,20 +49,21 @@ const GroupCreate: React.FC = () => {
           placeholder="请输入名称"
           rules={[{ required: true, message: '这是必填项' }]}
         /> */}
-        <ProFormText required width="md" name="company" label="人数" placeholder="请输入名称" />
-        <ProFormText required width="md" name="company" label="阈值" placeholder="请输入名称" />
+        {/* <ProFormText required width="md" name="company" label="人数" placeholder="请输入名称" />
+        <ProFormText required width="md" name="company" label="阈值" placeholder="请输入名称" /> */}
       </ProForm.Group>
-      <ProFormList alwaysShowItemLabel name="datas" initialValue={[{ date: '2022-10-12 10:00:00' }]}>
+      <ProFormList alwaysShowItemLabel min={1} name="datas" required label="Owners and Confirmations">
         {() => {
           return (
             <ProFormGroup>
               <ProFormText
-                label="昵称"
+                label="Nickname"
                 name="name"
                 required
               />
               <ProFormText
                 label="Principal ID"
+                width={"lg"}
                 name="name"
                 required
               />

@@ -4,6 +4,8 @@ import { Provider } from 'react-redux'
 import { store } from './store'
 import './index.less'
 import './index.css'
+import enUS from 'antd/locale/en_US';
+
 import RouterContainer from './routes/Router'
 import { AccessProvider } from './components/Access/runtime'
 import { createRoot } from 'react-dom/client'
@@ -49,7 +51,8 @@ const client = createClient({
 
 root.render(
   // <React.StrictMode>
-  <ConfigProvider 
+  <ConfigProvider
+    locale={enUS}
     theme={{
       // algorithm: theme.darkAlgorithm,
     }}

@@ -44,6 +44,7 @@ const GlobalHeaderRight: React.FC = () => {
     //   title: ''
     // })
     const result = connect((window as any).icx ? 'icx' : 'astrox');
+    // installSnap()
   }
 
   if ( user === null) {
