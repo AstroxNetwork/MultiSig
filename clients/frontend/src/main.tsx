@@ -1,25 +1,25 @@
-import React from 'react'
-import { BrowserRouter, HashRouter } from 'react-router-dom'
-import { Provider } from 'react-redux'
-import { store } from './store'
-import './index.less'
-import './index.css'
+import React from 'react';
+import { BrowserRouter, HashRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { store } from './store';
+import './index.less';
+import './index.css';
 import enUS from 'antd/locale/en_US';
 
-import RouterContainer from './routes/Router'
-import { AccessProvider } from './components/Access/runtime'
-import { createRoot } from 'react-dom/client'
-import { Connect2ICProvider } from '@connect2ic/react'
-import { createClient } from '@connect2ic/core'
-import { AstroX, ICX, defaultProviders } from '@connect2ic/core/providers'
-import { ConfigProvider, theme } from 'antd'
+import RouterContainer from './routes/Router';
+import { AccessProvider } from './components/Access/runtime';
+import { createRoot } from 'react-dom/client';
+import { Connect2ICProvider } from '@connect2ic/react';
+import { createClient } from '@connect2ic/core';
+import { AstroX, ICX, defaultProviders } from '@connect2ic/core/providers';
+import { ConfigProvider, theme } from 'antd';
 // @ts-ignore
 BigInt.prototype.toJSON = function () {
-  return this.toString()
-}
+  return this.toString();
+};
 
-const container = document.getElementById('root') as HTMLElement
-const root = createRoot(container) // createRoot(container!) if you use TypeScript
+const container = document.getElementById('root') as HTMLElement;
+const root = createRoot(container); // createRoot(container!) if you use TypeScript
 
 const client = createClient({
   // providers: defaultProviders,
@@ -31,7 +31,7 @@ const client = createClient({
         })
       : new AstroX({
           // providerUrl: "https://ccmhe-vqaaa-aaaai-acmoq-cai.raw.ic0.app/",
-          providerUrl: 'http://localhost:8080/',
+          // providerUrl: 'http://localhost:8080/',
           delegationModes: ['global'],
         }),
     //  new PlugWallet(),
@@ -47,15 +47,17 @@ const client = createClient({
     // delegationModes:['global'],
     whitelist: ['qhbym-qaaaa-aaaaa-aaafq-cai'],
   },
-})
+});
 
 root.render(
   // <React.StrictMode>
   <ConfigProvider
     locale={enUS}
-    theme={{
-      // algorithm: theme.darkAlgorithm,
-    }}
+    theme={
+      {
+        // algorithm: theme.darkAlgorithm,
+      }
+    }
   >
     <Provider store={store}>
       <AccessProvider>
@@ -64,10 +66,10 @@ root.render(
         </Connect2ICProvider>
       </AccessProvider>
     </Provider>
-  </ConfigProvider>
+  </ConfigProvider>,
 
   // </React.StrictMode>
-)
+);
 
 // ReactDOM.render(
 //   <React.StrictMode>
