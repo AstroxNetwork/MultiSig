@@ -17,7 +17,7 @@
     "post_install": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --verbose --testPathIgnorePatterns=/scripts/ --testPathPattern=/post_install/ -t",
     "ms:frontend": "cd ./clients/ego_dev_frontend && pnpm install && pnpm dev",
     "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --testPathIgnorePatterns=/post_install/ --testPathPattern=/ego_dev/",
-    "ms:script": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --verbose --testPathIgnorePatterns=/post_install/ --testPathPattern=/scripts/ -t",
+    "script": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --verbose --testPathIgnorePatterns=/post_install/ --testPathPattern=/scripts/ -t",
     "format": "prettier --write {scripts,clients}/**/*.{js,ts,less,json}",
     "format:json": "prettier --write artifacts/**/*.json",
     "format:idl": "prettier --write clients/idls/**/*.ts",

@@ -63,7 +63,7 @@ fn post_upgrade() {
 #[query(name = "controller_main_list")]
 #[candid_method(query, rename = "controller_main_list")]
 fn controller_main_list() -> Result<Vec<Controller>, SystemErr>{
-    println!("ms_provider: controller_main_list");
+    ic_cdk::println!("ms_provider: controller_main_list");
     let user = caller();
     let controllers = Service::controller_main_list(&user);
     Ok(controllers)
@@ -72,7 +72,7 @@ fn controller_main_list() -> Result<Vec<Controller>, SystemErr>{
 #[query(name = "controller_main_get")]
 #[candid_method(query, rename = "controller_main_get")]
 pub fn controller_main_get(controller_id: Principal) -> Result<Controller, SystemErr> {
-    println!("ms_provider: controller_main_get");
+    ic_cdk::println!("ms_provider: controller_main_get");
     let user = caller();
     match Service::controller_main_get(&user, &controller_id) {
         Some(controller) => Ok(controller),
@@ -83,7 +83,7 @@ pub fn controller_main_get(controller_id: Principal) -> Result<Controller, Syste
 #[update(name = "controller_main_create")]
 #[candid_method(update, rename = "controller_main_create")]
 pub async fn controller_main_create(request: ControllerMainCreateRequest) -> Result<Controller, SystemErr> {
-    println!("ms_provider: controller_main_create");
+    ic_cdk::println!("ms_provider: controller_main_create");
     let user = caller();
 
     let canister_id = REGISTRY.with(|registry| registry.borrow().canister_get_one("ego_store")).unwrap();

@@ -14,9 +14,12 @@ use ms_controller_mod::service::Service;
 use ms_controller_mod::state::CONTROLLER;
 use ms_controller_mod::types::{AppActionCreateRequest, Errors, SystemErr};
 use ms_controller_mod::types::Errors::TooManyUser;
+use ms_controller_mod::ego_lib::inject_ego_macros;
 
 inject_canister_users!();
 inject_canister_registry!();
+
+inject_ego_macros!();
 
 /********************  methods for canister_registry_macro   ********************/
 fn on_canister_added(_name: &str, _canister_id: Principal) {
@@ -26,7 +29,7 @@ fn on_canister_added(_name: &str, _canister_id: Principal) {
 #[candid_method(init)]
 pub fn init() {
   let caller = caller();
-  ic_cdk::println!("ms_provider: init, caller is {}", caller.clone());
+  ic_cdk::println!("controller: init, caller is {}", caller.clone());
 
   ic_cdk::println!("==> add caller as the owner");
   owner_add(caller.clone());
@@ -41,7 +44,7 @@ struct PersistState {
 
 #[pre_upgrade]
 fn pre_upgrade() {
-  ic_cdk::println!("controller:pre_upgrade");
+  ic_cdk::println!("controller: pre_upgrade");
 
   let controller = CONTROLLER.with(|controller| controller.borrow().clone());
   let user = users_pre_upgrade();
@@ -53,7 +56,7 @@ fn pre_upgrade() {
 
 #[post_upgrade]
 fn post_upgrade() {
-  ic_cdk::println!("controller:post_upgrade");
+  ic_cdk::println!("controller: post_upgrade");
 
   let (state,): (PersistState,) = storage::stable_restore().unwrap();
   CONTROLLER.with(|controller| *controller.borrow_mut() = state.controller);

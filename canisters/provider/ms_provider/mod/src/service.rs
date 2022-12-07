@@ -23,8 +23,12 @@ impl Service {
     threshold_user_amount: u16
   ) -> Result<Controller, SystemErr> {
     let user_app = match ego_store.wallet_main_new(user_id.clone()).await {
-      Ok(user_app) => Ok(user_app),
-      Err(e) => {Err(SystemErr::from(e))}
+      Ok(user_app) => {
+        Ok(user_app)
+      },
+      Err(e) => {
+        Err(SystemErr::from(e))
+      }
     }?;
 
     match user_app.backend {
