@@ -17,19 +17,19 @@ impl Service {
 
   pub async fn controller_main_create<S: TEgoStore>(
     ego_store: S,
-    user: &Principal,
+    user_id: &Principal,
     name: String,
     total_user_amount: u16,
     threshold_user_amount: u16
   ) -> Result<Controller, SystemErr> {
-    let user_app = match ego_store.wallet_main_new().await {
+    let user_app = match ego_store.wallet_main_new(user_id.clone()).await {
       Ok(user_app) => Ok(user_app),
       Err(e) => {Err(SystemErr::from(e))}
     }?;
 
     match user_app.backend {
       Some(canister) => {
-        let controller = PROVIDER.with(|provider| provider.borrow_mut().controller_main_create(&canister.canister_id, user, name, total_user_amount, threshold_user_amount));
+        let controller = PROVIDER.with(|provider| provider.borrow_mut().controller_main_create(&canister.canister_id, user_id, name, total_user_amount, threshold_user_amount));
         Ok(controller)
       }
       _ => Err(SystemErr{code: 500, msg: "System Error".to_string()})
