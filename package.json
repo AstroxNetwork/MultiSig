@@ -7,7 +7,7 @@
     "script:fixtures": "swc ./clients/fixtures -d dist",
     "script:bootstrap": "swc ./scripts -d dist",
     "pre": "pnpm script:bootstrap && node ./dist/ic_deployer.js --clean",
-    "bootstrap": "pnpm ms:clean && pnpm ms:create",
+    "bootstrap": "pnpm run clean && pnpm run create",
     "build": "node ./dist/builder.js",
     "clean": "node ./dist/deployer.js --clean",
     "create": "node ./dist/deployer.js --create",
@@ -23,7 +23,9 @@
     "format:idl": "prettier --write clients/idls/**/*.ts",
 
     "deploy:local": "pnpm pre && pnpm bootstrap && pnpm build && pnpm install",
-    "setup:local": "pnpm post_install ms_provider && pnpm post_install ms_controller && pnpm post_install btc_wallet",
+
+    "deploy:ego": "pnpm script:bootstrap && pnpm bootstrap && pnpm build && pnpm install",
+    "publish:ego": "pnpm post_install ms_provider && pnpm post_install ms_controller && pnpm post_install btc_wallet",
 
     "ms:create:live": "cross-env NODE_ENV=production node ./dist/deployer.js --create",
     "ms:install:live": "cross-env NODE_ENV=production node ./dist/deployer.js --install",
@@ -32,9 +34,7 @@
     "ms:script:live": "cross-env NODE_ENV=production NODE_OPTIONS=--experimental-vm-modules jest --verbose --testPathIgnorePatterns=/post_install/ --testPathPattern=/scripts/ -t",
     "ms:post_install:project:live": "cross-env NODE_ENV=production NODE_OPTIONS=--experimental-vm-modules jest --verbose -t",
     "ms:deploy": "pnpm ms:pre && pnpm ms:bootstrap && pnpm ms:build && pnpm ms:install && pnpm ms:post_install:project ego_ops",
-    "ms:deploy:live": "pnpm ms:create:live && pnpm ms:install:live && pnpm ms:post_install:project:live ego_ops",
-    "ms:silo": "pnpm ms:post_install:project silo",
-    "ms:silo:live": "pnpm ms:post_install:project:live silo"
+    "ms:deploy:live": "pnpm ms:create:live && pnpm ms:install:live && pnpm ms:post_install:project:live ego_ops"
   },
   "author": "devs@astrox",
   "license": "ISC",
