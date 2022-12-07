@@ -7,6 +7,7 @@ import { getCanisterId, hasOwnProperty } from '@/settings/utils';
 
 import { _SERVICE as EgoOpsService, Category } from '@/ego/ego_ops';
 import { _SERVICE as EgoStoreService } from '@/ego/ego_store';
+import { _SERVICE as MsProviderService } from '@/idls/ms_provider';
 import { idlFactory } from '@/ego/ego_ops.idl';
 import { DeployMode } from '@/ego/ego_dev';
 
@@ -29,6 +30,11 @@ describe('ms_provider', () => {
       wallet_app_id: 'astrox_ms_controller',
       wallet_provider: ms_provider_id,
     });
+
+    let msProviderOperator = await getOperator<MsProviderService>('ms_provider');
+
+    const ego_store_id = Principal.fromText(getCanisterId('ego_store')!);
+    await msProviderOperator.canister_add("ego_store", ego_store_id);
   });
 });
 

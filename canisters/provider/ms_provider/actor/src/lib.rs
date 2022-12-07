@@ -81,7 +81,7 @@ pub fn controller_main_get(controller_id: Principal) -> Result<Controller, Syste
 }
 
 #[update(name = "controller_main_create")]
-#[candid_method(query, rename = "controller_main_create")]
+#[candid_method(update, rename = "controller_main_create")]
 pub async fn controller_main_create(request: ControllerMainCreateRequest) -> Result<Controller, SystemErr> {
     println!("ms_provider: controller_main_create");
     let user = caller();
