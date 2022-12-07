@@ -60,22 +60,27 @@ const GroupCreate: React.FC = () => {
             try {
               console.log(values);
               console.log(initialState.providerActor);
-              const resp1 =
-                await initialState.providerActor?.controller_main_get(
-                  Principal.fromText(initialState.currentUser?.principal!),
-                );
-              console.log(resp1);
+              // const resp1 =
+              //   await initialState.providerActor?.controller_main_get(
+              //     Principal.fromText(initialState.currentUser?.principal!),
+              //   );
+              // console.log(resp1);
+              const params = {
+                ...values,
+                total_user_amount: Number(values.total_user_amount),
+                threshold_user_amount: Number(values.threshold_user_amount),
+              };
+              console.log('params', params);
               const resp =
-                await initialState.providerActor?.controller_main_create({
-                  ...values,
-                  total_user_amount: Number(values.total_user_amount),
-                  threshold_user_amount: Number(values.threshold_user_amount),
-                });
+                await initialState.providerActor?.controller_main_create(
+                  params,
+                );
               console.log(resp);
               setCreateResp(resp['Ok']);
               message.success('提交成功');
               return true;
             } catch (err) {
+              console.log(err);
               return false;
             }
           }}

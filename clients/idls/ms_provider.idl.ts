@@ -29,7 +29,7 @@ export const idlFactory = ({ IDL }) => {
     'controller_main_create' : IDL.Func(
         [ControllerMainCreateRequest],
         [Result_2],
-        ['query'],
+        [],
       ),
     'controller_main_get' : IDL.Func([IDL.Principal], [Result_2], ['query']),
     'controller_main_list' : IDL.Func([], [Result_3], ['query']),
