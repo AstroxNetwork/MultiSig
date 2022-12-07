@@ -61,7 +61,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
     <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick}>
       <Menu.Item key="logout">
         <LogoutOutlined />
-        退出登录
+        Logout
       </Menu.Item>
     </Menu>
   );
@@ -70,7 +70,10 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
     <HeaderDropdown overlay={menuHeaderDropdown}>
       <span className={`${styles.action} ${styles.account}`}>
         <Avatar size="small" className={styles.avatar} alt="avatar" />
-        {initialState.currentUser?.principal}
+        {`${initialState.currentUser?.principal?.slice(
+          0,
+          6,
+        )}...${initialState.currentUser?.principal?.slice(-4)}`}
       </span>
     </HeaderDropdown>
   );

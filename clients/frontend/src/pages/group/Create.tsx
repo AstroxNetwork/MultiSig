@@ -5,9 +5,10 @@ import {
   ProFormInstance,
   ProFormList,
   ProFormText,
+  StepsForm,
 } from '@ant-design/pro-components';
 import { PageContainer } from '@ant-design/pro-layout';
-import { message } from 'antd';
+import { Button, message } from 'antd';
 import { useRef } from 'react';
 import { useSelector } from 'react-redux';
 
@@ -18,72 +19,99 @@ const GroupCreate: React.FC = () => {
   console.log('providerActor', initialState?.providerActor);
   return (
     <PageContainer ghost>
-      <ProForm<{
-        name: string;
-        company?: string;
-        useMode?: string;
-      }>
+      <StepsForm
+        formRef={formRef}
         onFinish={async values => {
           console.log(values);
           const val1 = await formRef.current?.validateFields();
-          console.log('validateFields:', val1);
-          const val2 =
-            await formRef.current?.validateFieldsReturnFormatValue?.();
-          console.log('validateFieldsReturnFormatValue:', val2);
+          // const resp =
+          // await initialState.providerActor?.controller_main_create();
           message.success('提交成功');
+          return true;
         }}
-        formRef={formRef}
-        params={{ id: '100' }}
-        formKey="base-form-use-demo"
-        // request={async () => {
-        //   await waitTime(1500);
-        //   return {
-        //     name: '蚂蚁设计有限公司',
-        //     useMode: 'chapter',
-        //   };
-        // }}
-        autoFocusFirstInput
+        submitter={{
+          render: props => {
+            if (props.step === 0) {
+              return (
+                <Button type="primary" onClick={() => props.onSubmit?.()}>
+                  Next
+                </Button>
+              );
+            }
+            if (props.step === 1) {
+              return (
+                <Button
+                  type="primary"
+                  key="goToTree"
+                  onClick={() => props.onSubmit?.()}
+                >
+                  Submit
+                </Button>
+              );
+            }
+          },
+        }}
       >
-        <ProFormText required width="sm" name="id" label="Groupname" />
-        <ProForm.Group>
-          {/* <ProFormText
-          width="md"
-          name="name"
-          required
-          dependencies={[['contract', 'name']]}
-          addonBefore={<a>客户名称应该怎么获得？</a>}
-          addonAfter={<a>点击查看更多</a>}
-          label="签约客户名称"
-          tooltip="最长为 24 位"
-          placeholder="请输入名称"
-          rules={[{ required: true, message: '这是必填项' }]}
-        /> */}
-          {/* <ProFormText required width="md" name="company" label="人数" placeholder="请输入名称" />
-        <ProFormText required width="md" name="company" label="阈值" placeholder="请输入名称" /> */}
-        </ProForm.Group>
-        <ProFormList
-          alwaysShowItemLabel
-          min={1}
-          name="datas"
-          // @ts-ignore
-          required
-          label="Owners and Confirmations"
-        >
-          {() => {
-            return (
-              <ProFormGroup>
-                <ProFormText label="Nickname" name="name" required />
-                <ProFormText
-                  label="Principal ID"
-                  width={'lg'}
-                  name="name"
-                  required
-                />
-              </ProFormGroup>
-            );
+        <StepsForm.StepForm
+          onFinish={async values => {
+            console.log(values);
+            const val1 = await formRef.current?.validateFields();
+            // const resp =
+            // await initialState.providerActor?.controller_main_create();
+            message.success('提交成功');
+            return true;
           }}
-        </ProFormList>
-      </ProForm>
+          title="Create group"
+        >
+          <ProFormText required width="sm" name="name" label="Groupname" />
+          <ProForm.Group>
+            <ProFormText
+              required
+              width="md"
+              name="total_user_amount"
+              label="Total"
+              placeholder="Please enter"
+            />
+            <ProFormText
+              required
+              width="md"
+              name="threshold_user_amount"
+              label="Threshold"
+              placeholder="Please enter"
+            />
+          </ProForm.Group>
+        </StepsForm.StepForm>
+        <StepsForm.StepForm
+          name="step2"
+          onFinish={async () => {
+            return true;
+          }}
+          title={'Owners and Confirmations'}
+        >
+          <ProFormList
+            alwaysShowItemLabel
+            min={1}
+            name="datas"
+            // @ts-ignore
+            required
+            label="Owners and Confirmations"
+          >
+            {() => {
+              return (
+                <ProFormGroup>
+                  <ProFormText label="Nickname" name="name" required />
+                  <ProFormText
+                    label="Principal ID"
+                    width={'md'}
+                    name="principal"
+                    required
+                  />
+                </ProFormGroup>
+              );
+            }}
+          </ProFormList>
+        </StepsForm.StepForm>
+      </StepsForm>
     </PageContainer>
   );
 };

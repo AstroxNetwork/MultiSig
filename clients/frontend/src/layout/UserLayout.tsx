@@ -9,11 +9,11 @@ import { useDispatch } from 'react-redux';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import { CreateActorResult, IConnector } from '@connect2ic/core';
 import { useConnect, useWallet } from '@connect2ic/react';
-import { _SERVICE as controllerService } from '@/../../idls/ms_controller';
 import { _SERVICE as providerService } from '@/../../idls/ms_provider';
-import { _SERVICE as btcService } from '@/../../idls/btc_wallet';
-import { idlFactory as controllerIdl } from '@/../../idls/ms_controller.idl';
 import { idlFactory as providerIdl } from '@/../../idls/ms_provider.idl';
+import { _SERVICE as controllerService } from '@/../../idls/ms_controller';
+import { idlFactory as controllerIdl } from '@/../../idls/ms_controller.idl';
+import { _SERVICE as btcService } from '@/../../idls/btc_wallet';
 import { idlFactory as btcIdl } from '@/../../idls/btc_wallet.idl';
 // import { matchRoutes } from 'react-router';
 import routes from '@/routes/routes';
@@ -111,13 +111,20 @@ export default (props: any) => {
   const handleInitialState = async () => {
     console.log(activeProvider);
     console.log(walletProvider);
-
+    // console.log(
+    //   'process.env.MS_CONTROLLER_CANISTERID!',
+    //   process.env.MS_CONTROLLER_CANISTERID!,
+    // );
+    console.log(
+      'process.env.MS_PROVIDER_CANISTERID!',
+      process.env.MS_PROVIDER_CANISTERID!,
+    );
     const providerActorResult = (await walletProvider?.createActor(
-      process.env.MS_CONTROLLER_CANISTERID!,
+      process.env.MS_PROVIDER_CANISTERID!,
       providerIdl,
     )) as CreateActorResult<providerService>;
     const controllerActorResult = (await walletProvider?.createActor(
-      process.env.MS_PROVIDER_CANISTERID!,
+      process.env.MS_CONTROLLER_CANISTERID!,
       controllerIdl,
     )) as CreateActorResult<controllerService>;
     const btcActorResult = (await walletProvider?.createActor(
@@ -131,7 +138,7 @@ export default (props: any) => {
       ? controllerActorResult.value
       : null;
     const btcActor = btcActorResult.isOk() ? btcActorResult.value : null;
-    dispatch.global.save({
+    await dispatch.global.save({
       initialState: {
         currentUser: activeProvider,
         providerActor,
@@ -139,13 +146,14 @@ export default (props: any) => {
         btcActor,
       },
     });
+    dispatch.app.queryGroups({});
   };
 
   console.log('menuRoute', menuRoute);
   return (
     <ProLayout
       route={
-        slideMode === 'group'
+        slideMode === 'home'
           ? menuRoute.routes?.find(route => route.path!.indexOf('group') > -1)
           : menuRoute.routes?.find(route => route.path!.indexOf('wallet') > -1)
       }
@@ -170,7 +178,7 @@ export default (props: any) => {
       menuHeaderRender={() => {
         return (
           <>
-            {slideMode === 'group' ? (
+            {slideMode === 'home' ? (
               <div>Group header</div>
             ) : (
               <div>

@@ -17,7 +17,7 @@ try {
   folder = fs.readdirSync(canisterIdsFilePath);
   console.log('folder', folder);
   for (let i = 0; i < folder.length; i++) {
-    if (folder[i].indexOf('ego') > -1) {
+    if (folder[i].indexOf('ms') > -1) {
       const key = folder[i].split('.')[0];
       const fileJSON = JSON.parse(
         fs.readFileSync(`${canisterIdsFilePath}/${folder[i]}`, 'utf-8'),

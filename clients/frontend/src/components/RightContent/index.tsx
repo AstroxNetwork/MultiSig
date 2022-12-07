@@ -15,7 +15,6 @@ import { useDispatch } from 'react-redux';
 export type SiderTheme = 'light' | 'dark';
 
 const GlobalHeaderRight: React.FC = () => {
-  const { user } = useSelector((state: RootState) => state.global);
   const { connect, activeProvider } = useConnect();
   const [identity, setIdentity] = useState<SnapIdentity>();
   const [installed, setInstalled] = useState<boolean>(false);
