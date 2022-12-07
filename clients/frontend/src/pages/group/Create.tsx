@@ -1,4 +1,4 @@
-import { RootState } from '@/store';
+import { RootDispatch, RootState } from '@/store';
 import {
   ProForm,
   ProFormGroup,
@@ -16,11 +16,13 @@ import { useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { CreateActorResult } from '@connect2ic/core';
 import { Principal } from '@dfinity/principal';
-import { getActor } from '@/utils';
+import { getActor, hasOwnProperty } from '@/utils';
+import { useDispatch } from 'react-redux';
 
 const GroupCreate: React.FC = () => {
   const formRef = useRef<ProFormInstance>();
   const { initialState } = useSelector((state: RootState) => state.global);
+  const dispatch = useDispatch<RootDispatch>();
   const [createResp, setCreateResp] = useState<Controller>();
   console.log('controllerActor', initialState?.controllerActor);
   console.log('providerActor', initialState?.providerActor);
@@ -56,34 +58,7 @@ const GroupCreate: React.FC = () => {
       >
         <StepsForm.StepForm
           onFinish={async values => {
-            console.log(values);
-            const val1 = await formRef.current?.validateFields();
-            try {
-              console.log(values);
-              console.log(initialState.providerActor);
-              // const resp1 =
-              //   await initialState.providerActor?.controller_main_get(
-              //     Principal.fromText(initialState.currentUser?.principal!),
-              //   );
-              // console.log(resp1);
-              const params = {
-                ...values,
-                total_user_amount: Number(values.total_user_amount),
-                threshold_user_amount: Number(values.threshold_user_amount),
-              };
-              console.log('params', params);
-              const resp =
-                await initialState.providerActor?.controller_main_create(
-                  params,
-                );
-              console.log(resp);
-              setCreateResp(resp['Ok']);
-              message.success('提交成功');
-              return true;
-            } catch (err) {
-              console.log(err);
-              return false;
-            }
+            return dispatch.controller.groupCreate(values);
           }}
           title="Create group"
         >
