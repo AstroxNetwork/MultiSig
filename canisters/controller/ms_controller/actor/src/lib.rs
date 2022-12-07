@@ -77,13 +77,16 @@ fn controller_init(total_user_amount: u16, threshold_user_amount: u16) {
 /* ===== begin user relative method ===== */
 #[update(name = "role_user_add", guard = "owner_guard")]
 #[candid_method(update, rename = "role_user_add")]
-fn role_user_add(name: String, user_id: Principal) -> Result<(), SystemErr> {
+fn role_user_add(pusers: BTreeMap<Principal, String>) -> Result<(), SystemErr> {
   ic_cdk::println!("controller: role_user_add");
 
   CONTROLLER.with(|controller| {
-    let user_count = users().unwrap().len() as u16;
-    if controller.borrow().total_user_amount > user_count {
-      user_add_with_name(name, user_id);
+    let user_count = users().unwrap().len();
+    if controller.borrow().total_user_amount > (user_count as u16 + pusers.len() as u16) {
+      pusers.iter().for_each(|(user_id, name)| {
+        user_add_with_name(name.clone(), user_id.clone());
+      });
+
       Ok(())
     } else {
       Err(SystemErr::from(TooManyUser))
