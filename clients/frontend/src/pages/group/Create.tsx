@@ -16,6 +16,7 @@ import { useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { CreateActorResult } from '@connect2ic/core';
 import { Principal } from '@dfinity/principal';
+import { getActor } from '@/utils';
 
 const GroupCreate: React.FC = () => {
   const formRef = useRef<ProFormInstance>();
@@ -109,11 +110,11 @@ const GroupCreate: React.FC = () => {
           onFinish={async values => {
             console.log('step2', values);
             if (initialState.currentUser) {
-              const resp = (await initialState.currentUser.createActor(
+              const controllerActor = await getActor<controllerService>(
+                initialState.currentUser,
                 createResp?.id,
                 controllerIdl,
-              )) as CreateActorResult<controllerService>;
-              const controllerActor = resp.isOk() ? resp.value : null;
+              );
               const params = values.data.map(
                 (o: { name: any; principal: any }) => [
                   Principal.fromText(o.principal),

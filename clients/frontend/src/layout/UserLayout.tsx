@@ -123,27 +123,27 @@ export default (props: any) => {
       process.env.MS_PROVIDER_CANISTERID!,
       providerIdl,
     )) as CreateActorResult<providerService>;
-    const controllerActorResult = (await walletProvider?.createActor(
-      process.env.MS_CONTROLLER_CANISTERID!,
-      controllerIdl,
-    )) as CreateActorResult<controllerService>;
-    const btcActorResult = (await walletProvider?.createActor(
-      process.env.BTC_WALLET_CANISTERID!,
-      btcIdl,
-    )) as CreateActorResult<btcService>;
+    // const controllerActorResult = (await walletProvider?.createActor(
+    //   process.env.MS_CONTROLLER_CANISTERID!,
+    //   controllerIdl,
+    // )) as CreateActorResult<controllerService>;
+    // const btcActorResult = (await walletProvider?.createActor(
+    //   process.env.BTC_WALLET_CANISTERID!,
+    //   btcIdl,
+    // )) as CreateActorResult<btcService>;
     const providerActor = providerActorResult.isOk()
       ? providerActorResult.value
       : null;
-    const controllerActor = controllerActorResult.isOk()
-      ? controllerActorResult.value
-      : null;
-    const btcActor = btcActorResult.isOk() ? btcActorResult.value : null;
+    // const controllerActor = controllerActorResult.isOk()
+    //   ? controllerActorResult.value
+    //   : null;
+    // const btcActor = btcActorResult.isOk() ? btcActorResult.value : null;
     await dispatch.global.save({
       initialState: {
         currentUser: activeProvider,
         providerActor,
-        controllerActor,
-        btcActor,
+        controllerActor: null,
+        btcActor: null,
       },
     });
     dispatch.app.queryGroups({});
