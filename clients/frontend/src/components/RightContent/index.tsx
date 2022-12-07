@@ -20,6 +20,7 @@ const GlobalHeaderRight: React.FC = () => {
   const [installed, setInstalled] = useState<boolean>(false);
   const dispatch = useDispatch<RootDispatch>();
 
+  console.log(activeProvider);
   const installSnap = useCallback(async () => {
     const installResult = await initiateICPSnap();
     if (!installResult.isSnapInstalled) {
@@ -47,7 +48,7 @@ const GlobalHeaderRight: React.FC = () => {
     // installSnap()
   };
 
-  if (activeProvider === null) {
+  if (!activeProvider) {
     return (
       <div className="flex" onClick={loginModal}>
         <div className="leading-5">
