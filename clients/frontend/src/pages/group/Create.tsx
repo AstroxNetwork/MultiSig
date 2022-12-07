@@ -8,13 +8,19 @@ import {
   StepsForm,
 } from '@ant-design/pro-components';
 import { PageContainer } from '@ant-design/pro-layout';
+import { Controller } from '@/../../idls/ms_provider';
+import { idlFactory as controllerIdl } from '../../../../idls/ms_controller.idl';
+import { _SERVICE as controllerService } from '../../../../idls/ms_controller';
 import { Button, message } from 'antd';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { CreateActorResult } from '@connect2ic/core';
+import { Principal } from '@dfinity/principal';
 
 const GroupCreate: React.FC = () => {
   const formRef = useRef<ProFormInstance>();
   const { initialState } = useSelector((state: RootState) => state.global);
+  const [createResp, setCreateResp] = useState<Controller>();
   console.log('controllerActor', initialState?.controllerActor);
   console.log('providerActor', initialState?.providerActor);
   return (
@@ -22,11 +28,6 @@ const GroupCreate: React.FC = () => {
       <StepsForm
         formRef={formRef}
         onFinish={async values => {
-          console.log(values);
-          const val1 = await formRef.current?.validateFields();
-          // const resp =
-          // await initialState.providerActor?.controller_main_create();
-          message.success('提交成功');
           return true;
         }}
         submitter={{
@@ -56,10 +57,27 @@ const GroupCreate: React.FC = () => {
           onFinish={async values => {
             console.log(values);
             const val1 = await formRef.current?.validateFields();
-            // const resp =
-            // await initialState.providerActor?.controller_main_create();
-            message.success('提交成功');
-            return true;
+            try {
+              console.log(values);
+              console.log(initialState.providerActor);
+              const resp1 =
+                await initialState.providerActor?.controller_main_get(
+                  Principal.fromText(initialState.currentUser?.principal!),
+                );
+              console.log(resp1);
+              const resp =
+                await initialState.providerActor?.controller_main_create({
+                  ...values,
+                  total_user_amount: Number(values.total_user_amount),
+                  threshold_user_amount: Number(values.threshold_user_amount),
+                });
+              console.log(resp);
+              setCreateResp(resp['Ok']);
+              message.success('提交成功');
+              return true;
+            } catch (err) {
+              return false;
+            }
           }}
           title="Create group"
         >
@@ -83,15 +101,33 @@ const GroupCreate: React.FC = () => {
         </StepsForm.StepForm>
         <StepsForm.StepForm
           name="step2"
-          onFinish={async () => {
-            return true;
+          onFinish={async values => {
+            console.log('step2', values);
+            if (initialState.currentUser) {
+              const resp = (await initialState.currentUser.createActor(
+                createResp?.id,
+                controllerIdl,
+              )) as CreateActorResult<controllerService>;
+              const controllerActor = resp.isOk() ? resp.value : null;
+              const params = values.data.map(
+                (o: { name: any; principal: any }) => [
+                  Principal.fromText(o.principal),
+                  o.name,
+                ],
+              );
+              const result = await controllerActor?.role_user_add(params);
+              console.log('result', result);
+              message.success('提交成功');
+              return true;
+            }
+            return false;
           }}
           title={'Owners and Confirmations'}
         >
           <ProFormList
             alwaysShowItemLabel
             min={1}
-            name="datas"
+            name="data"
             // @ts-ignore
             required
             label="Owners and Confirmations"

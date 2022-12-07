@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/store';
 // @ts-ignore
 import { client } from '@/main';
+import { useConnect } from '@connect2ic/react';
 
 export type GlobalHeaderRightProps = {
   menu?: boolean;
@@ -16,21 +17,16 @@ export type GlobalHeaderRightProps = {
 
 const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
   const { initialState } = useSelector((state: RootState) => state.global);
+  const { disconnect } = useConnect();
   console.log('right==', initialState?.currentUser);
   const history = useHistory();
-
+  console.log(initialState?.currentUser?.principal);
   /**
    * 退出登录，并且将当前的 url 保存
    */
   const loginOut = async () => {
     const { search, pathname } = window.location;
-    localStorage.removeItem('userInfo');
-    // Note: There may be security issues, please note
-    if (window.location.pathname !== '/user/login') {
-      history.push({
-        pathname: '/user/login',
-      });
-    }
+    disconnect();
   };
   const onMenuClick = useCallback((event: MenuInfo) => {
     const { key } = event;
