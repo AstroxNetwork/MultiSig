@@ -122,7 +122,7 @@ async fn app_main_create() -> Result<(), SystemErr> {
 
   let ego_store = EgoStore::new(canister_id);
 
-  Service::app_main_create(ego_store, "btc_wallet".to_string()).await
+  Service::app_main_create(ego_store, "ms_btc_wallet".to_string()).await
 }
 
 #[update(name = "app_action_create", guard = "user_guard")]

@@ -11,7 +11,7 @@ import {
 
 interface ThisArgv {
   [x: string]: unknown;
-  infra: boolean | undefined;
+  provider: boolean | undefined;
   apps: boolean | undefined;
   idl: boolean | undefined;
   project: string | undefined;
@@ -20,23 +20,10 @@ interface ThisArgv {
 }
 
 const argv = yargs
-  .option('infra', {
-    description: 'build infra only',
-    type: 'boolean',
-  })
-  .option('apps', {
-    description: 'build apps only',
-    type: 'boolean',
-  })
   .option('idl', {
     alias: 'i',
     description: 'build idl only',
     type: 'boolean',
-  })
-  .option('project', {
-    alias: 'p',
-    description: 'build project only',
-    type: 'string',
   })
   .help()
   .alias('help', 'h').argv;
