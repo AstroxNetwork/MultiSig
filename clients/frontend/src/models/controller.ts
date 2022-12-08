@@ -10,14 +10,20 @@ import {
 import { idlFactory as controllerIdl } from '@/../../idls/ms_controller.idl';
 import { getActor, hasOwnProperty } from '@/utils';
 import { message } from 'antd';
+import { ActorSubclass } from '@dfinity/agent';
+import { Principal } from '@dfinity/principal';
 
 type ControllerProps = {
-  controller: Controller | null;
+  activeController: Controller | null;
+  activeControllerActor: ActorSubclass<controllerService> | null;
+  actions: Action[];
 };
 
 export const controller = createModel<RootModel>()({
   state: {
-    controller: null,
+    activeController: null,
+    activeControllerActor: null,
+    actions: [],
   } as ControllerProps,
   reducers: {
     save(state, payload) {
@@ -38,17 +44,18 @@ export const controller = createModel<RootModel>()({
         };
         console.log('params', params);
         const resp = await providerActor?.controller_main_create(params);
-        if (hasOwnProperty(resp, 'Ok')) {
+        if (resp && hasOwnProperty(resp, 'Ok')) {
           console.log(resp);
-          const controller: Controller = resp['Ok'];
-          dispatch.controller.save({ controller });
-          const controllerActor = await getActor<controllerService>(
-            rootState.global.initialState.currentUser!,
-            controller.id,
+          const controller = resp['Ok'] as Controller;
+          const controllerActor = await getActor(
+            payload.provider,
+            controller.id.toText(),
             controllerIdl,
           );
-          // 绑定btc_wallet
-          await controllerActor?.app_main_create();
+          await dispatch.controller.save({
+            activeController: controller,
+            activeControllerActor: controllerActor,
+          });
           return true;
         } else {
           message.success('error');
@@ -59,29 +66,41 @@ export const controller = createModel<RootModel>()({
         return false;
       }
     },
-    async queryWallets(payload: { contrlCanisterId: string }, rootState) {
+
+    async userAdd(payload, rootState) {
       try {
-        console.log('queryWallets start', payload);
-        const result =
-          await rootState.global.initialState.currentUser?.createActor<controllerService>(
-            payload.contrlCanisterId,
-            controllerIdl,
+        console.log('userAdd start');
+        const ctrl = rootState.controller.activeControllerActor;
+        if (ctrl) {
+          const params = payload.data.map(
+            (o: { name: any; principal: any }) => [
+              Principal.fromText(o.principal),
+              o.name,
+            ],
           );
-        const controllerActor = result?.isOk() ? result.value : null;
-        if (controllerActor) {
-          const wallets: any = controllerActor.app_action_list();
-          dispatch.app.save({
-            wallets: wallets['Ok'],
-          });
-        } else {
-          console.log('controllerActor null');
+          console.log('params', params);
+          const result = await ctrl?.role_user_add(params);
+          console.log('result', result);
         }
-        // let result = await queryTokenList(payload);
-        // dispatch.app.save({
-        //   wallets: result.data,
-        // });
       } catch (err) {
-        console.log('queryWallets catch', err);
+        console.log('userAdd err', err);
+      }
+    },
+    async queryActions(payload, rootState) {
+      try {
+        console.log('queryActions start');
+        const ctrl = rootState.controller.activeControllerActor;
+        if (ctrl) {
+          const result = await ctrl.app_action_list();
+          console.log('result', result);
+          if (hasOwnProperty(result, 'Ok')) {
+            dispatch.controller.save({ actions: result['Ok'] });
+          } else {
+            console.log('result err', result);
+          }
+        }
+      } catch (err) {
+        console.log('queryActions catch', err);
       }
     },
   }),

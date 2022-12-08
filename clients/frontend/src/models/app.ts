@@ -12,7 +12,6 @@ import { idlFactory as controllerIdl } from '@/../../idls/ms_controller.idl';
 type AppProps = {
   groups: Controller[];
   wallets: Action[];
-  slideMode: 'group' | 'home';
 };
 
 export const app = createModel<RootModel>()({
@@ -30,7 +29,10 @@ export const app = createModel<RootModel>()({
     },
   },
   effects: dispatch => ({
-    async queryGroups(payload, rootState) {
+    async queryGroups(
+      payload,
+      rootState,
+    ): Promise<Array<Controller> | undefined> {
       try {
         console.log('queryGroups start', payload);
         const providerActor = rootState.global.initialState?.providerActor;
@@ -40,33 +42,9 @@ export const app = createModel<RootModel>()({
           groups: result['Ok'],
         });
         console.log('controllers ===', result['Ok']);
+        return result['Ok'];
       } catch (err) {
         console.log('queryGroups catch', err);
-      }
-    },
-    async queryWallets(payload: { contrlCanisterId: string }, rootState) {
-      try {
-        console.log('queryWallets start', payload);
-        const result =
-          await rootState.global.initialState.currentUser?.createActor<controllerService>(
-            payload.contrlCanisterId,
-            controllerIdl,
-          );
-        const controllerActor = result?.isOk() ? result.value : null;
-        if (controllerActor) {
-          const wallets: any = controllerActor.app_action_list();
-          dispatch.app.save({
-            wallets: wallets['Ok'],
-          });
-        } else {
-          console.log('controllerActor null');
-        }
-        // let result = await queryTokenList(payload);
-        // dispatch.app.save({
-        //   wallets: result.data,
-        // });
-      } catch (err) {
-        console.log('queryWallets catch', err);
       }
     },
   }),

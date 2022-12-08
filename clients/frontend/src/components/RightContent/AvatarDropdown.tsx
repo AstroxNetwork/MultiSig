@@ -17,10 +17,7 @@ export type GlobalHeaderRightProps = {
 
 const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
   const { initialState } = useSelector((state: RootState) => state.global);
-  const { disconnect } = useConnect();
-  console.log('right==', initialState?.currentUser);
-  const history = useHistory();
-  console.log(initialState?.currentUser?.principal);
+  const { disconnect, activeProvider } = useConnect();
   /**
    * 退出登录，并且将当前的 url 保存
    */
@@ -49,7 +46,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
     </span>
   );
 
-  if (!initialState?.currentUser) {
+  if (!activeProvider) {
     return loading;
   }
 
@@ -66,10 +63,10 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
     <HeaderDropdown overlay={menuHeaderDropdown}>
       <span className={`${styles.action} ${styles.account}`}>
         <Avatar size="small" className={styles.avatar} alt="avatar" />
-        {`${initialState.currentUser?.principal?.slice(
+        {`${activeProvider?.principal?.slice(
           0,
           6,
-        )}...${initialState.currentUser?.principal?.slice(-4)}`}
+        )}...${activeProvider?.principal?.slice(-4)}`}
       </span>
     </HeaderDropdown>
   );

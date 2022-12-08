@@ -14,121 +14,67 @@ import { _SERVICE as controllerService } from '../../../../idls/ms_controller';
 import { Button, message } from 'antd';
 import { useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { CreateActorResult } from '@connect2ic/core';
 import { Principal } from '@dfinity/principal';
 import { getActor, hasOwnProperty } from '@/utils';
 import { useDispatch } from 'react-redux';
+import { useConnect } from '@connect2ic/react';
+import { useHistory } from 'react-router-dom';
 
 const GroupCreate: React.FC = () => {
   const formRef = useRef<ProFormInstance>();
   const { initialState } = useSelector((state: RootState) => state.global);
+  const loading = useSelector((state: RootState) => state.loading);
+  const { activeController } = useSelector(
+    (state: RootState) => state.controller,
+  );
   const dispatch = useDispatch<RootDispatch>();
   const [createResp, setCreateResp] = useState<Controller>();
-  console.log('controllerActor', initialState?.controllerActor);
-  console.log('providerActor', initialState?.providerActor);
+  const { activeProvider } = useConnect();
+  const history = useHistory();
+  console.log('controllerActor', activeController);
   return (
     <PageContainer ghost>
-      <StepsForm
+      <ProForm
         formRef={formRef}
         onFinish={async values => {
-          return true;
+          await dispatch.controller.groupCreate({
+            ...values,
+            provider: activeProvider,
+          });
+          dispatch.app.queryGroups({});
+          // const activeControllerActor = await getActor()
+          history.replace('/group/setting?create=true');
         }}
-        submitter={{
-          render: props => {
-            if (props.step === 0) {
-              return (
-                <Button type="primary" onClick={() => props.onSubmit?.()}>
-                  Next
-                </Button>
-              );
-            }
-            if (props.step === 1) {
-              return (
-                <Button
-                  type="primary"
-                  key="goToTree"
-                  onClick={() => props.onSubmit?.()}
-                >
-                  Submit
-                </Button>
-              );
-            }
-          },
-        }}
+        // submitter={{
+        //   submitButtonProps: (
+        //     <Button
+        //       type="primary"
+        //       key="goToTree"
+        //       loading={loading.models.controller}
+        //     >
+        //       Submit
+        //     </Button>
+        //   ),
+        // }}
       >
-        <StepsForm.StepForm
-          onFinish={async values => {
-            return dispatch.controller.groupCreate(values);
-          }}
-          title="Create group"
-        >
-          <ProFormText required width="sm" name="name" label="Groupname" />
-          <ProForm.Group>
-            <ProFormText
-              required
-              width="md"
-              name="total_user_amount"
-              label="Total"
-              placeholder="Please enter"
-            />
-            <ProFormText
-              required
-              width="md"
-              name="threshold_user_amount"
-              label="Threshold"
-              placeholder="Please enter"
-            />
-          </ProForm.Group>
-        </StepsForm.StepForm>
-        <StepsForm.StepForm
-          name="step2"
-          onFinish={async values => {
-            console.log('step2', values);
-            if (initialState.currentUser) {
-              const controllerActor = await getActor<controllerService>(
-                initialState.currentUser,
-                createResp?.id,
-                controllerIdl,
-              );
-              const params = values.data.map(
-                (o: { name: any; principal: any }) => [
-                  Principal.fromText(o.principal),
-                  o.name,
-                ],
-              );
-              const result = await controllerActor?.role_user_add(params);
-              console.log('result', result);
-              message.success('提交成功');
-              return true;
-            }
-            return false;
-          }}
-          title={'Owners and Confirmations'}
-        >
-          <ProFormList
-            alwaysShowItemLabel
-            min={1}
-            name="data"
-            // @ts-ignore
+        <ProFormText required width="sm" name="name" label="Groupname" />
+        <ProForm.Group>
+          <ProFormText
             required
-            label="Owners and Confirmations"
-          >
-            {() => {
-              return (
-                <ProFormGroup>
-                  <ProFormText label="Nickname" name="name" required />
-                  <ProFormText
-                    label="Principal ID"
-                    width={'md'}
-                    name="principal"
-                    required
-                  />
-                </ProFormGroup>
-              );
-            }}
-          </ProFormList>
-        </StepsForm.StepForm>
-      </StepsForm>
+            width="md"
+            name="total_user_amount"
+            label="Total"
+            placeholder="Please enter"
+          />
+          <ProFormText
+            required
+            width="md"
+            name="threshold_user_amount"
+            label="Threshold"
+            placeholder="Please enter"
+          />
+        </ProForm.Group>
+      </ProForm>
     </PageContainer>
   );
 };
