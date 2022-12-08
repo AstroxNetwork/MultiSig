@@ -66,10 +66,11 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
     <HeaderDropdown overlay={menuHeaderDropdown}>
       <span className={`${styles.action} ${styles.account}`}>
         <Avatar size="small" className={styles.avatar} alt="avatar" />
-        {`${initialState.currentUser?.principal?.slice(
-          0,
-          6,
-        )}...${initialState.currentUser?.principal?.slice(-4)}`}
+        {`${initialState.currentUser?.principal
+          ?.toText()
+          .slice(0, 6)}...${initialState.currentUser?.principal
+          ?.toText()
+          .slice(-4)}`}
       </span>
     </HeaderDropdown>
   );

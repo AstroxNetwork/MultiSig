@@ -8,6 +8,7 @@ import {
   _SERVICE as controllerService,
 } from '@/../../idls/ms_controller';
 import { idlFactory as controllerIdl } from '@/../../idls/ms_controller.idl';
+import { client1 } from '@/main';
 
 type AppProps = {
   groups: Controller[];
@@ -47,14 +48,15 @@ export const app = createModel<RootModel>()({
     async queryWallets(payload: { contrlCanisterId: string }, rootState) {
       try {
         console.log('queryWallets start', payload);
-        const result =
-          await rootState.global.initialState.currentUser?.createActor<controllerService>(
-            payload.contrlCanisterId,
-            controllerIdl,
-          );
-        const controllerActor = result?.isOk() ? result.value : null;
+
+        const controllerActor = await client1.createActor<controllerService>(
+          controllerIdl,
+          payload.contrlCanisterId,
+        );
+        console.log('controllerActor', controllerActor);
         if (controllerActor) {
           const wallets: any = controllerActor.app_action_list();
+          console.log('wallets', wallets);
           dispatch.app.save({
             wallets: wallets['Ok'],
           });

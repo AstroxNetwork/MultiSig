@@ -22,11 +22,14 @@ import { ActorSubclass } from '@dfinity/agent';
 import { useSelector } from 'react-redux';
 import { RootDispatch, RootState } from '@/store';
 import { ArrowLeftOutlined } from '@ant-design/icons';
+import { getActor } from '@/utils';
+import { client1 } from '@/main';
+import { ClientConnecttion } from '@kasumisk/sdk';
 
 const loginPath = '/home';
 
 export interface InitialStateType {
-  currentUser: IConnector | null;
+  currentUser: ClientConnecttion | null;
   providerActor: ActorSubclass<providerService> | null;
   controllerActor: ActorSubclass<controllerService> | null;
   btcActor: ActorSubclass<btcService> | null;
@@ -109,39 +112,33 @@ export default (props: any) => {
   }, [isConnected]);
 
   const handleInitialState = async () => {
-    console.log(activeProvider);
-    console.log(walletProvider);
-    // console.log(
-    //   'process.env.MS_CONTROLLER_CANISTERID!',
-    //   process.env.MS_CONTROLLER_CANISTERID!,
-    // );
+    const isAuthenticated = async () => {
+      try {
+        const result = await client1.isConnect();
+        return result;
+      } catch (error) {
+        console.log('error', error);
+      }
+      return false;
+    };
+    const result = await isAuthenticated();
+    if (result === false) {
+      return;
+    }
     console.log(
       'process.env.MS_PROVIDER_CANISTERID!',
       process.env.MS_PROVIDER_CANISTERID!,
     );
-    const providerActorResult = (await walletProvider?.createActor(
-      process.env.MS_PROVIDER_CANISTERID!,
+
+    const providerActor = await client1.createActor(
       providerIdl,
-    )) as CreateActorResult<providerService>;
-    // const controllerActorResult = (await walletProvider?.createActor(
-    //   process.env.MS_CONTROLLER_CANISTERID!,
-    //   controllerIdl,
-    // )) as CreateActorResult<controllerService>;
-    // const btcActorResult = (await walletProvider?.createActor(
-    //   process.env.BTC_WALLET_CANISTERID!,
-    //   btcIdl,
-    // )) as CreateActorResult<btcService>;
-    const providerActor = providerActorResult.isOk()
-      ? providerActorResult.value
-      : null;
-    // const controllerActor = controllerActorResult.isOk()
-    //   ? controllerActorResult.value
-    //   : null;
-    // const btcActor = btcActorResult.isOk() ? btcActorResult.value : null;
-    await dispatch.global.save({
+      process.env.MS_PROVIDER_CANISTERID!,
+    );
+    console.log('providerActor=====', providerActor);
+    dispatch.global.save({
       initialState: {
-        currentUser: activeProvider,
         providerActor,
+        currentUser: client1,
         controllerActor: null,
         btcActor: null,
       },

@@ -45,7 +45,18 @@ const client = createClient({
     // ledgerHost: "http://localhost:8000",
     // whitelist: ["ryjl3-tyaaa-aaaaa-aaaba-cai"],
     // delegationModes:['global'],
-    whitelist: ['qhbym-qaaaa-aaaaa-aaafq-cai'],
+    // whitelist: ['qhbym-qaaaa-aaaaa-aaafq-cai'],
+  },
+});
+
+import { ClientConnecttion } from '@kasumisk/sdk';
+
+export const client1 = new ClientConnecttion({
+  clientOptions: {
+    identityProvider: 'http://localhost:8080/login#authorize',
+    walletProviderUrl: 'http://localhost:8080/#transaction',
+    signerProviderUrl: 'http://localhost:8080/#signer',
+    delegationTargets: ['q3fc5-haaaa-aaaaa-aaahq-cai'],
   },
 });
 

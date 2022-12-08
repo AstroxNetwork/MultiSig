@@ -15,6 +15,7 @@
     "@astrox/icsnap": "^0.0.13",
     "@astrox/icsnap-adapter": "^0.0.13",
     "@astrox/icsnap-types": "^0.0.13",
+    "@kasumisk/sdk": "0.0.9",
     "@connect2ic/core": "0.2.0-beta.20",
     "@connect2ic/react": "0.2.0-beta.20",
     "@rematch/core": "^2.1.2",

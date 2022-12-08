@@ -5,22 +5,26 @@ import { Modal, Space } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useConnect } from '@connect2ic/react';
+import { idlFactory as providerIdl } from '@/../../idls/ms_provider.idl';
 // import { useModel, SelectLang } from 'umi';
 import Avatar from './AvatarDropdown';
 import styles from './index.module.less';
 import { initiateICPSnap } from '@/services/metamask';
 import { SnapIdentity } from '@astrox/icsnap-adapter';
 import { useDispatch } from 'react-redux';
+import { client1 } from '@/main';
+import { getActor } from '@/utils';
 
 export type SiderTheme = 'light' | 'dark';
 
 const GlobalHeaderRight: React.FC = () => {
-  const { connect, activeProvider } = useConnect();
+  const initialState = useSelector(
+    (state: RootState) => state.global.initialState,
+  );
   const [identity, setIdentity] = useState<SnapIdentity>();
   const [installed, setInstalled] = useState<boolean>(false);
   const dispatch = useDispatch<RootDispatch>();
 
-  console.log(activeProvider);
   const installSnap = useCallback(async () => {
     const installResult = await initiateICPSnap();
     if (!installResult.isSnapInstalled) {
@@ -40,15 +44,31 @@ const GlobalHeaderRight: React.FC = () => {
     }
   }, [identity]);
 
-  const loginModal = () => {
+  const loginModal = async () => {
     // Modal.info({
     //   title: ''
     // })
-    const result = connect((window as any).icx ? 'icx' : 'astrox');
+    // const result = connect((window as any).icx ? 'icx' : 'astrox');
+    const result = await client1.connect();
+    if (result) {
+      const providerActor = await client1.createActor(
+        providerIdl,
+        process.env.MS_PROVIDER_CANISTERID!,
+      );
+
+      dispatch.global.save({
+        initialState: {
+          providerActor,
+          currentUser: client1,
+          controllerActor: null,
+          btcActor: null,
+        },
+      });
+    }
     // installSnap()
   };
-
-  if (!activeProvider) {
+  console.log('initialState', initialState);
+  if (!initialState.currentUser) {
     return (
       <div className="flex" onClick={loginModal}>
         <div className="leading-5">

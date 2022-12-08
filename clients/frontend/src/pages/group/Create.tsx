@@ -22,6 +22,9 @@ import { useDispatch } from 'react-redux';
 const GroupCreate: React.FC = () => {
   const formRef = useRef<ProFormInstance>();
   const { initialState } = useSelector((state: RootState) => state.global);
+  const controller = useSelector(
+    (state: RootState) => state.controller.controller,
+  );
   const dispatch = useDispatch<RootDispatch>();
   const [createResp, setCreateResp] = useState<Controller>();
   console.log('controllerActor', initialState?.controllerActor);
@@ -31,6 +34,12 @@ const GroupCreate: React.FC = () => {
       <StepsForm
         formRef={formRef}
         onFinish={async values => {
+          const controllerActor = await getActor<controllerService>(
+            initialState.currentUser!,
+            controller?.id,
+            controllerIdl,
+          );
+          await controllerActor?.app_main_create();
           return true;
         }}
         submitter={{
