@@ -16,7 +16,6 @@ use ic_btc_types::{
 inject_canister_users!();
 inject_ego_macros!();
 
-// inject_canister_users!();
 
 #[init]
 #[candid_method(init)]
