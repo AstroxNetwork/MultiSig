@@ -1,6 +1,6 @@
 use std::collections::BTreeMap;
 use async_trait::async_trait;
-use ego_lib::ego_types::{AppId, Canister, CanisterType, UserApp, EgoError, QueryParam, App};
+use ego_lib::ego_types::{AppId, Canister, CanisterType, UserApp, EgoError, QueryParam, App, WalletApp, Category};
 use ego_lib::ego_store::TEgoStore;
 use ic_cdk::export::Principal;
 use mockall::mock;
@@ -14,7 +14,7 @@ mock! {
 
   #[async_trait]
   impl TEgoStore for Store {
-    async fn wallet_main_new(&self) -> Result<UserApp, EgoError>;
+    async fn wallet_main_new(&self, user_id: Principal) -> Result<WalletApp, EgoError>;
     async fn app_main_list(&self, query_param: QueryParam) -> Result<Vec<App>, EgoError>;
     async fn wallet_app_install(&self, app_id: AppId) -> Result<UserApp, EgoError>;
     async fn wallet_app_upgrade(&self, app_id: AppId) -> Result<UserApp, EgoError>;
@@ -64,6 +64,10 @@ async fn app_main_create() {
     assert_eq!(APP_NAME.to_string(), app_id);
     let user_app = UserApp {
       app_id: "btc_wallet".to_string(),
+      name: "btc_wallet".to_string(),
+      category: Category::System,
+      logo: "".to_string(),
+      description: "".to_string(),
       current_version: Default::default(),
       frontend: None,
       backend: Some(Canister{

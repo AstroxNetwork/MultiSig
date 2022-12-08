@@ -99,3 +99,21 @@ pub async fn controller_main_create(request: ControllerMainCreateRequest) -> Res
     }
 }
 
+#[update(name = "controller_user_add")]
+#[candid_method(update, rename = "controller_user_add")]
+pub fn controller_user_add(user_id: Principal)  {
+    ic_cdk::println!("ms_provider: controller_user_add");
+    let controller_id = caller();
+
+    Service::controller_user_add(&controller_id, &user_id);
+}
+
+#[update(name = "controller_user_remove")]
+#[candid_method(update, rename = "controller_user_remove")]
+pub fn controller_user_remove(user_id: Principal)  {
+    ic_cdk::println!("ms_provider: controller_user_remove");
+    let controller_id = caller();
+
+    Service::controller_user_remove(&controller_id, &user_id);
+}
+

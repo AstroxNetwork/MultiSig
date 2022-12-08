@@ -1,6 +1,6 @@
 use std::collections::BTreeMap;
 use async_trait::async_trait;
-use ego_lib::ego_types::{AppId, UserApp, EgoError, QueryParam, App, Version, Canister, CanisterType};
+use ego_lib::ego_types::{AppId, UserApp, EgoError, QueryParam, App, Version, Canister, CanisterType, WalletApp};
 use ego_lib::ego_store::TEgoStore;
 use ic_cdk::export::Principal;
 use mockall::mock;
@@ -14,7 +14,7 @@ mock! {
 
   #[async_trait]
   impl TEgoStore for Store {
-    async fn wallet_main_new(&self) -> Result<UserApp, EgoError>;
+    async fn wallet_main_new(&self, user_id: Principal) -> Result<WalletApp, EgoError>;
     async fn app_main_list(&self, query_param: QueryParam) -> Result<Vec<App>, EgoError>;
     async fn wallet_app_install(&self, app_id: AppId) -> Result<UserApp, EgoError>;
     async fn wallet_app_upgrade(&self, app_id: AppId) -> Result<UserApp, EgoError>;
@@ -33,7 +33,6 @@ mock! {
 
 static APP_NAME: &str = "btc_wallet";
 static BTC_WALLET_ID: &str = "222v3-hyaaa-aaaaf-a35yq-cai";
-
 
 static PROVIDER1_ID: &str = "2222s-4iaaa-aaaaf-ax2uq-cai";
 static PROVIDER1_NAME: &str = "provider_1";
@@ -117,8 +116,8 @@ async fn controller_main_create(){
 
   let mut store = MockStore::new();
 
-  store.expect_wallet_main_new().returning(move || {
-    let user_app = UserApp{
+  store.expect_wallet_main_new().returning(move |_| {
+    let user_app = WalletApp{
       app_id: APP_NAME.to_string(),
       current_version: Version{
         major: 1,
@@ -142,4 +141,41 @@ async fn controller_main_create(){
   assert_eq!(PROVIDER2_NAME.to_string(), controller.name);
   assert_eq!(5, controller.total_user_amount);
   assert_eq!(2, controller.threshold_user_amount);
+}
+
+#[test]
+fn controller_user_operation(){
+  set_up();
+
+  let user1 = Principal::from_text(USER1_ID).unwrap();
+  let provider1_principal = Principal::from_text(PROVIDER1_ID).unwrap();
+
+  let controllers = Service::controller_main_list(&user1);
+  assert_eq!(1, controllers.len());
+  assert_eq!(provider1_principal, controllers[0].id);
+
+  PROVIDER.with(|provider| {
+    assert!(provider.borrow().controllers.get(&provider1_principal).as_ref().unwrap().users.contains_key(&user1));
+  });
+
+  // remove the user
+  Service::controller_user_remove(&provider1_principal, &user1);
+
+  let controllers = Service::controller_main_list(&user1);
+  assert_eq!(0, controllers.len());
+
+  PROVIDER.with(|provider| {
+    assert!(!provider.borrow().controllers.get(&provider1_principal).as_ref().unwrap().users.contains_key(&user1));
+  });
+
+  // add back the user
+  Service::controller_user_add(&provider1_principal, &user1);
+
+  let controllers = Service::controller_main_list(&user1);
+  assert_eq!(1, controllers.len());
+  assert_eq!(provider1_principal, controllers[0].id);
+
+  PROVIDER.with(|provider| {
+    assert!(provider.borrow().controllers.get(&provider1_principal).as_ref().unwrap().users.contains_key(&user1));
+  });
 }

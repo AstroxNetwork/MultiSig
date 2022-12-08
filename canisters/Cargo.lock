@@ -137,6 +137,7 @@ name = "btc_wallet"
 version = "0.1.0"
 dependencies = [
  "astrox_macros",
+ "btc_wallet_mod",
  "candid",
  "ic-cdk",
  "ic-cdk-macros",
@@ -151,6 +152,7 @@ name = "btc_wallet_mod"
 version = "0.1.0"
 dependencies = [
  "candid",
+ "ego_lib",
  "ic-cdk",
  "ic-cdk-macros",
  "ic-types 0.4.2",
