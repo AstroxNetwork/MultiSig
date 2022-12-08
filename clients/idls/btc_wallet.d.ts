@@ -1,104 +1,50 @@
 import type { Principal } from '@dfinity/principal';
 import type { ActorMethod } from '@dfinity/agent';
 
-<<<<<<< HEAD
-export interface Config {
-  'blocks_source' : Principal,
-  'fees' : Fees,
-  'network' : Network,
-  'stability_threshold' : bigint,
-  'syncing' : Flag,
-}
-export interface Fees {
-  'get_current_fee_percentiles' : bigint,
-  'get_utxos_maximum' : bigint,
-  'get_current_fee_percentiles_maximum' : bigint,
-  'send_transaction_per_byte' : bigint,
-  'get_balance' : bigint,
-  'get_utxos_cycles_per_ten_instructions' : bigint,
-  'get_utxos_base' : bigint,
-  'get_balance_maximum' : bigint,
-  'send_transaction_base' : bigint,
-}
-export type Flag = { 'disabled' : null } |
-  { 'enabled' : null };
-export interface GetBalanceRequest {
-  'network' : NetworkInRequest,
-  'address' : string,
-  'min_confirmations' : [] | [number],
-}
-export interface GetCurrentFeePercentilesRequest {
-  'network' : NetworkInRequest,
-}
-export interface GetUtxosRequest {
-  'network' : NetworkInRequest,
-  'filter' : [] | [UtxosFilterInRequest],
-  'address' : string,
-}
-export interface GetUtxosResponse {
-  'next_page' : [] | [Array<number>],
-  'tip_height' : number,
-  'tip_block_hash' : Array<number>,
-  'utxos' : Array<Utxo>,
-}
-export interface HttpRequest {
-  'url' : string,
-  'method' : string,
-  'body' : Array<number>,
-  'headers' : Array<[string, string]>,
-}
-export interface HttpResponse {
-  'body' : Array<number>,
-  'headers' : Array<[string, string]>,
-  'status_code' : number,
-}
-export type Network = { 'mainnet' : null } |
-  { 'regtest' : null } |
-  { 'testnet' : null };
-export type NetworkInRequest = { 'Mainnet' : null } |
-  { 'mainnet' : null } |
+export type EgoBtcError = { 'UnknownError' : string } |
+  { 'AddressNotFound' : null };
+export interface GetAddressResponse { 'address' : string }
+export type Network = { 'Mainnet' : null } |
   { 'Regtest' : null } |
-  { 'regtest' : null } |
-  { 'Testnet' : null } |
-  { 'testnet' : null };
+  { 'Testnet' : null };
 export interface OutPoint { 'txid' : Array<number>, 'vout' : number }
-export interface SendTransactionRequest {
-  'transaction' : Array<number>,
-  'network' : NetworkInRequest,
+export type Result = { 'Ok' : GetAddressResponse } |
+  { 'Err' : EgoBtcError };
+export type Result_1 = { 'Ok' : UserBalanceResponse } |
+  { 'Err' : EgoBtcError };
+export type Result_2 = { 'Ok' : SendResponse } |
+  { 'Err' : EgoBtcError };
+export type Result_3 = { 'Ok' : null } |
+  { 'Err' : string };
+export interface SendRequest {
+  'path' : string,
+  'to_address' : string,
+  'amount_in_satoshi' : bigint,
 }
-export interface SetConfigRequest {
-  'fees' : [] | [Fees],
-  'stability_threshold' : [] | [bigint],
-  'syncing' : [] | [Flag],
+export interface SendResponse {
+  'tx_id' : string,
+  'from_address' : string,
+  'amount_in_satoshi' : bigint,
 }
+export interface UserBalanceResponse { 'balance' : bigint }
 export interface Utxo {
   'height' : number,
   'value' : bigint,
   'outpoint' : OutPoint,
 }
-export type UtxosFilterInRequest = { 'Page' : Array<number> } |
-  { 'page' : Array<number> } |
-  { 'min_confirmations' : number } |
-  { 'MinConfirmations' : number };
 export interface _SERVICE {
-  'bitcoin_get_balance' : ActorMethod<[GetBalanceRequest], bigint>,
-  'bitcoin_get_current_fee_percentiles' : ActorMethod<
-    [GetCurrentFeePercentilesRequest],
-    Array<bigint>,
-  >,
-  'bitcoin_get_utxos' : ActorMethod<[GetUtxosRequest], GetUtxosResponse>,
-  'bitcoin_send_transaction' : ActorMethod<[SendTransactionRequest], undefined>,
-  'get_config' : ActorMethod<[], Config>,
-  'http_request' : ActorMethod<[HttpRequest], HttpResponse>,
-  'set_config' : ActorMethod<[SetConfigRequest], undefined>,
-  'wallet_config' : ActorMethod<[Config], undefined>,
-=======
-export type Result = { 'Ok' : null } |
-  { 'Err' : string };
-export interface _SERVICE {
-  'role_op_add' : ActorMethod<[Principal], Result>,
-  'role_owner_set' : ActorMethod<[Array<Principal>], Result>,
-  'role_user_add' : ActorMethod<[Principal], Result>,
-  'role_user_remove' : ActorMethod<[Principal], Result>,
->>>>>>> 25d6209 (upgrade dep)
+  'btc_address_get' : ActorMethod<[string], Result>,
+  'btc_address_get_all' : ActorMethod<[], Array<string>>,
+  'btc_address_set' : ActorMethod<[string], string>,
+  'btc_balance_get' : ActorMethod<[string], bigint>,
+  'btc_balance_path_get' : ActorMethod<[string], Result_1>,
+  'btc_fee_get' : ActorMethod<[], Array<bigint>>,
+  'btc_network_get' : ActorMethod<[], Network>,
+  'btc_network_set' : ActorMethod<[Network], Network>,
+  'btc_tx_send' : ActorMethod<[SendRequest], Result_2>,
+  'btc_utxos_get' : ActorMethod<[string], Array<Utxo>>,
+  'role_op_add' : ActorMethod<[Principal], Result_3>,
+  'role_owner_set' : ActorMethod<[Array<Principal>], Result_3>,
+  'role_user_add' : ActorMethod<[Principal], Result_3>,
+  'role_user_remove' : ActorMethod<[Principal], Result_3>,
 }

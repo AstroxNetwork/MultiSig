@@ -33,6 +33,12 @@ fn btc_network_set(network: Network) -> Network {
     btc_wallet_mod::service::BtcService::set_network(network)
 }
 
+#[query(name = "btc_network_get")]
+#[candid_method(query, rename = "btc_network_get")]
+fn btc_network_get() -> Network {
+    btc_wallet_mod::service::BtcService::get_network()
+}
+
 #[update(name = "btc_address_set")]
 #[candid_method(update, rename = "btc_address_set")]
 async fn btc_address_set(path: String) -> String {
@@ -47,7 +53,7 @@ async fn btc_address_get(path: String) -> Result<GetAddressResponse, EgoBtcError
 
 #[query(name = "btc_address_get_all")]
 #[candid_method(query, rename = "btc_address_get_all")]
-async fn btc_address_get_all(path: String) -> Vec<String> {
+async fn btc_address_get_all() -> Vec<String> {
     btc_wallet_mod::service::BtcService::get_all_addresses()
 }
 

@@ -1,4 +1,7 @@
-use ic_btc_types::{GetBalanceRequest, GetCurrentFeePercentilesRequest, GetUtxosRequest, GetUtxosResponse, MillisatoshiPerByte, Network, NetworkInRequest, Satoshi, SendTransactionRequest};
+use ic_btc_types::{
+    GetBalanceRequest, GetCurrentFeePercentilesRequest, GetUtxosRequest, GetUtxosResponse,
+    MillisatoshiPerByte, Network, NetworkInRequest, Satoshi, SendTransactionRequest,
+};
 use ic_cdk::{api::call::call_with_payment, export::Principal};
 
 // The fees for the various bitcoin endpoints.
@@ -13,17 +16,18 @@ const SEND_TRANSACTION_PER_BYTE_CYCLES: u64 = 20_000_000;
 /// Relies on the `bitcoin_get_balance` endpoint.
 /// See https://internetcomputer.org/docs/current/references/ic-interface-spec/#ic-bitcoin_get_balance
 pub async fn get_balance(network: Network, address: String) -> u64 {
+    ic_cdk::print(network.to_string());
     let balance_res: Result<(Satoshi,), _> = call_with_payment(
         Principal::management_canister(),
         "bitcoin_get_balance",
         (GetBalanceRequest {
             address,
-            network:NetworkInRequest::from(network),
+            network: NetworkInRequest::from(network),
             min_confirmations: None,
         },),
         GET_BALANCE_COST_CYCLES,
     )
-        .await;
+    .await;
 
     balance_res.unwrap().0
 }
@@ -40,12 +44,12 @@ pub async fn get_utxos(network: Network, address: String) -> GetUtxosResponse {
         "bitcoin_get_utxos",
         (GetUtxosRequest {
             address,
-            network:NetworkInRequest::from(network),
+            network: NetworkInRequest::from(network),
             filter: None,
         },),
         GET_UTXOS_COST_CYCLES,
     )
-        .await;
+    .await;
 
     utxos_res.unwrap().0
 }
@@ -59,10 +63,12 @@ pub async fn get_current_fee_percentiles(network: Network) -> Vec<MillisatoshiPe
     let res: Result<(Vec<MillisatoshiPerByte>,), _> = call_with_payment(
         Principal::management_canister(),
         "bitcoin_get_current_fee_percentiles",
-        (GetCurrentFeePercentilesRequest { network:NetworkInRequest::from(network) },),
+        (GetCurrentFeePercentilesRequest {
+            network: NetworkInRequest::from(network),
+        },),
         GET_CURRENT_FEE_PERCENTILES_CYCLES,
     )
-        .await;
+    .await;
 
     res.unwrap().0
 }
@@ -79,12 +85,12 @@ pub async fn send_transaction(network: Network, transaction: Vec<u8>) {
         Principal::management_canister(),
         "bitcoin_send_transaction",
         (SendTransactionRequest {
-            network:NetworkInRequest::from(network),
+            network: NetworkInRequest::from(network),
             transaction,
         },),
         transaction_fee,
     )
-        .await;
+    .await;
 
     res.unwrap();
 }

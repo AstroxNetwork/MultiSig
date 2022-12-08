@@ -37,17 +37,7 @@ export const idlFactory = ({ IDL }) => {
     'app_action_get' : IDL.Func([IDL.Nat64], [Result_1], ['query']),
     'app_action_list' : IDL.Func([], [Result_2], []),
     'app_main_create' : IDL.Func([], [Result_3], []),
-<<<<<<< HEAD
-    'canister_add' : IDL.Func([IDL.Text, IDL.Principal], [Result_4], []),
-    'canister_list' : IDL.Func([], [Result_5], []),
-    'canister_remove' : IDL.Func([IDL.Text, IDL.Principal], [Result_4], []),
-    'controller_init' : IDL.Func([IDL.Nat16, IDL.Nat16], [], []),
-    'role_op_add' : IDL.Func([IDL.Principal], [Result_4], []),
-    'role_owner_set' : IDL.Func([IDL.Vec(IDL.Principal)], [Result_4], []),
-    'role_user_add' : IDL.Func(
-=======
     'batch_user_add' : IDL.Func(
->>>>>>> 25d6209 (upgrade dep)
         [IDL.Vec(IDL.Tuple(IDL.Principal, IDL.Text))],
         [Result_3],
         [],

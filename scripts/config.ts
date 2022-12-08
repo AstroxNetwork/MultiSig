@@ -55,6 +55,10 @@ export const dfxConfigTemplate = {
     build: {
       packtool: '',
     },
+    bitcoin: {
+      enabled: true,
+      nodes: ['127.0.0.1:18444'],
+    },
   },
   networks: {
     local: {
@@ -64,10 +68,6 @@ export const dfxConfigTemplate = {
     mainnet: {
       providers: ['https://identity.ic0.app'],
       type: 'persistent',
-    },
-    bitcoin: {
-      enabled: true,
-      nodes: ['127.0.0.1:18444'],
     },
   },
   version: 1,

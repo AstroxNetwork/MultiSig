@@ -63,11 +63,11 @@ impl BtcService {
     pub async fn set_address(path: String) -> String {
         let network = BtcService::get_network();
         let key = BtcService::get_key();
-        let address = bitcoin_wallet::get_p2pkh_address(network, key.clone(), path).await;
+        let address = bitcoin_wallet::get_p2pkh_address(network, key.clone(), path.clone()).await;
         BTCSTORE.with(|s| {
             s.borrow_mut()
                 .user_address
-                .insert(key.clone(), address.clone())
+                .insert(path.clone(), address.clone())
         });
         address
     }
