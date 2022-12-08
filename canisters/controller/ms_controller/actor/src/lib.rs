@@ -78,9 +78,9 @@ fn controller_init(total_user_amount: u16, threshold_user_amount: u16) {
 }
 
 /* ===== begin user relative method ===== */
-#[update(name = "role_user_add", guard = "owner_guard")]
-#[candid_method(update, rename = "role_user_add")]
-fn role_user_add(pusers: BTreeMap<Principal, String>) -> Result<(), SystemErr> {
+#[update(name = "batch_user_add", guard = "owner_guard")]
+#[candid_method(update, rename = "batch_user_add")]
+fn batch_user_add(pusers: BTreeMap<Principal, String>) -> Result<(), SystemErr> {
   ic_cdk::println!("controller: role_user_add");
 
   CONTROLLER.with(|controller| {
@@ -97,15 +97,6 @@ fn role_user_add(pusers: BTreeMap<Principal, String>) -> Result<(), SystemErr> {
   })
 }
 
-#[update(name = "role_user_remove", guard = "owner_guard")]
-#[candid_method(update, rename = "role_user_remove")]
-fn role_user_remove(user_id: Principal) -> Result<(), SystemErr> {
-  ic_cdk::println!("controller: role_user_remove");
-
-  user_remove(user_id);
-
-  Ok(())
-}
 
 #[query(name = "role_user_list", guard = "owner_guard")]
 #[candid_method(query, rename = "role_user_list")]

@@ -39,7 +39,7 @@ describe('scripts', () => {
       controller_id,
     );
 
-    await controller.role_user_add([[user1, "user1"], [user2, "user2"]])
+    await controller.batch_user_add([[user1, "user1"], [user2, "user2"]])
 
     let users = await controller.role_user_list()
     console.log(users)

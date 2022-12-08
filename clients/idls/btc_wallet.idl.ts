@@ -1,4 +1,5 @@
 export const idlFactory = ({ IDL }) => {
+<<<<<<< HEAD
   const NetworkInRequest = IDL.Variant({
     'Mainnet' : IDL.Null,
     'mainnet' : IDL.Null,
@@ -98,6 +99,14 @@ export const idlFactory = ({ IDL }) => {
     'http_request' : IDL.Func([HttpRequest], [HttpResponse], ['query']),
     'set_config' : IDL.Func([SetConfigRequest], [], []),
     'wallet_config' : IDL.Func([Config], [], []),
+=======
+  const Result = IDL.Variant({ 'Ok' : IDL.Null, 'Err' : IDL.Text });
+  return IDL.Service({
+    'role_op_add' : IDL.Func([IDL.Principal], [Result], []),
+    'role_owner_set' : IDL.Func([IDL.Vec(IDL.Principal)], [Result], []),
+    'role_user_add' : IDL.Func([IDL.Principal], [Result], []),
+    'role_user_remove' : IDL.Func([IDL.Principal], [Result], []),
+>>>>>>> 25d6209 (upgrade dep)
   });
 };
 export const init = ({ IDL }) => { return []; };

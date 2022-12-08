@@ -34,14 +34,13 @@ dependencies = [
 
 [[package]]
 name = "astrox_macros"
-version = "0.1.2"
+version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1ef5dc0539af39e12683f6c25cc983084fe06f44e66008d852d399439dad1b4a"
+checksum = "946d2eeb7640758d7a84c44cc8819704e6df19154015b5fe4beb9cafaad9c8d1"
 dependencies = [
- "candid 0.7.18",
- "ic-cdk 0.5.7",
- "ic-cdk-macros 0.5.7",
- "ic-types 0.4.2",
+ "candid",
+ "ic-cdk",
+ "ic-cdk-macros",
  "serde",
 ]
 
@@ -171,10 +170,10 @@ version = "0.1.0"
 dependencies = [
  "astrox_macros",
  "btc_wallet_mod",
- "candid 0.8.4",
+ "candid",
  "ic-btc-types",
- "ic-cdk 0.6.8",
- "ic-cdk-macros 0.6.8",
+ "ic-cdk",
+ "ic-cdk-macros",
  "serde",
  "serde_bytes",
  "serde_json",
@@ -187,17 +186,18 @@ dependencies = [
  "bitcoin",
  "bs58",
  "byteorder",
- "candid 0.8.4",
- "ego_lib 0.2.1",
+ "candid",
+ "ego_lib",
  "hex",
  "ic-btc-types",
- "ic-cdk 0.6.8",
- "ic-cdk-macros 0.6.8",
+ "ic-cdk",
+ "ic-cdk-macros",
  "ic-stable-structures",
  "lazy_static",
  "ripemd",
  "serde",
  "serde_bytes",
+ "serde_json",
  "sha2",
  "thousands",
 ]
@@ -216,33 +216,6 @@ checksum = "dfb24e866b15a1af2a1b663f10c6b6b8f397a84aadb828f12e5b289ec23a3a3c"
 
 [[package]]
 name = "candid"
-version = "0.7.18"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d510cc32b8b991acc955dd3d5e0cb6f404069d1dccd9203ee90f5865557c9165"
-dependencies = [
- "anyhow",
- "binread",
- "byteorder",
- "candid_derive 0.4.5",
- "codespan-reporting",
- "hex",
- "ic-types 0.5.0",
- "lalrpop",
- "lalrpop-util",
- "leb128",
- "logos",
- "num-bigint",
- "num-traits",
- "num_enum",
- "paste",
- "pretty",
- "serde",
- "serde_bytes",
- "thiserror",
-]
-
-[[package]]
-name = "candid"
 version = "0.8.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "244005a1917bb7614cd775ca8a5d59efeb5ac74397bb14ba29a19347ebd78591"
@@ -250,7 +223,7 @@ dependencies = [
  "anyhow",
  "binread",
  "byteorder",
- "candid_derive 0.5.0",
+ "candid_derive",
  "codespan-reporting",
  "crc32fast",
  "data-encoding",
@@ -268,18 +241,6 @@ dependencies = [
  "serde_bytes",
  "sha2",
  "thiserror",
-]
-
-[[package]]
-name = "candid_derive"
-version = "0.4.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2e02c03c4d547674a3f3f3109538fb49871fbe636216daa019f06a62faca9061"
-dependencies = [
- "lazy_static",
- "proc-macro2",
- "quote",
- "syn",
 ]
 
 [[package]]
@@ -407,28 +368,13 @@ checksum = "1435fa1053d8b2fbbe9be7e97eca7f33d37b28409959813daefc1446a14247f1"
 
 [[package]]
 name = "ego_lib"
-version = "0.1.9"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4b6786790e349ce14b2039c71422a91884298fcfdca9fa1def03c89619c68d1c"
-dependencies = [
- "async-trait",
- "candid 0.7.18",
- "ic-cdk 0.5.7",
- "serde",
- "serde_bytes",
- "serde_json",
- "tracing",
-]
-
-[[package]]
-name = "ego_lib"
 version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0abb21afc0d6467970c8a5e6160bcb5a7a1fcc7f5e173362071e8f84953321b8"
 dependencies = [
  "async-trait",
- "candid 0.8.4",
- "ic-cdk 0.6.8",
+ "candid",
+ "ic-cdk",
  "serde",
  "serde_bytes",
  "serde_json",
@@ -524,20 +470,9 @@ name = "ic-btc-types"
 version = "0.1.0"
 source = "git+https://github.com/dfinity/ic?rev=c905ede6e62f167994de24c8ccf7ee37a4d8ac67#c905ede6e62f167994de24c8ccf7ee37a4d8ac67"
 dependencies = [
- "candid 0.8.4",
+ "candid",
  "serde",
  "serde_bytes",
-]
-
-[[package]]
-name = "ic-cdk"
-version = "0.5.7"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0554d77b453140eefcb8c8192a342927f8c48cfda911dfa3cd4561a919dbd32f"
-dependencies = [
- "candid 0.7.18",
- "cfg-if",
- "serde",
 ]
 
 [[package]]
@@ -546,27 +481,12 @@ version = "0.6.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e2693ba66f3d54284643713ca2be0b23f91a02cb3ab793a22ffd75f95593305e"
 dependencies = [
- "candid 0.8.4",
+ "candid",
  "cfg-if",
- "ic-cdk-macros 0.6.8",
+ "ic-cdk-macros",
  "ic0",
  "serde",
  "serde_bytes",
-]
-
-[[package]]
-name = "ic-cdk-macros"
-version = "0.5.7"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "954a421ace8b8c8e52d2847c4aa68c80101396134c800ecb12f63457937c4ab4"
-dependencies = [
- "candid 0.7.18",
- "ic-cdk 0.5.7",
- "proc-macro2",
- "quote",
- "serde",
- "serde_tokenstream",
- "syn",
 ]
 
 [[package]]
@@ -575,7 +495,7 @@ version = "0.6.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cb423dab7c5bf19d4abccabd2ffe35e09b9dde611d478ea3afe0347b50fa727f"
 dependencies = [
- "candid 0.8.4",
+ "candid",
  "proc-macro2",
  "quote",
  "serde",
@@ -588,36 +508,6 @@ name = "ic-stable-structures"
 version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7cf57a7a43948acb3bc11572533f57e52f60cbbf33d7c699678ac9d1a9307537"
-
-[[package]]
-name = "ic-types"
-version = "0.4.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0a7d9569a4c91d5c9c202c1666f799a9761bab70a2b59464ee78c45b005e47b8"
-dependencies = [
- "crc32fast",
- "data-encoding",
- "hex",
- "serde",
- "serde_bytes",
- "sha2",
- "thiserror",
-]
-
-[[package]]
-name = "ic-types"
-version = "0.5.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "79a17269dff0ec6ca4c3d04e18fca97d018ff53d809e6d92348fc22f9588e1a5"
-dependencies = [
- "crc32fast",
- "data-encoding",
- "hex",
- "serde",
- "serde_bytes",
- "sha2",
- "thiserror",
-]
 
 [[package]]
 name = "ic0"
@@ -792,10 +682,9 @@ name = "ms_controller"
 version = "0.1.0"
 dependencies = [
  "astrox_macros",
- "candid 0.7.18",
- "ic-cdk 0.5.7",
- "ic-cdk-macros 0.5.7",
- "ic-types 0.4.2",
+ "candid",
+ "ic-cdk",
+ "ic-cdk-macros",
  "ms_controller_mod",
  "serde",
  "serde_bytes",
@@ -807,11 +696,10 @@ name = "ms_controller_mod"
 version = "0.1.0"
 dependencies = [
  "async-trait",
- "candid 0.7.18",
- "ego_lib 0.1.9",
- "ic-cdk 0.5.7",
- "ic-cdk-macros 0.5.7",
- "ic-types 0.4.2",
+ "candid",
+ "ego_lib",
+ "ic-cdk",
+ "ic-cdk-macros",
  "mockall",
  "serde",
  "serde_bytes",
@@ -824,10 +712,9 @@ name = "ms_provider"
 version = "0.1.0"
 dependencies = [
  "astrox_macros",
- "candid 0.7.18",
- "ic-cdk 0.5.7",
- "ic-cdk-macros 0.5.7",
- "ic-types 0.4.2",
+ "candid",
+ "ic-cdk",
+ "ic-cdk-macros",
  "ms_provider_mod",
  "serde",
  "serde_bytes",
@@ -839,11 +726,10 @@ name = "ms_provider_mod"
 version = "0.1.0"
 dependencies = [
  "async-trait",
- "candid 0.7.18",
- "ego_lib 0.1.9",
- "ic-cdk 0.5.7",
- "ic-cdk-macros 0.5.7",
- "ic-types 0.4.2",
+ "candid",
+ "ego_lib",
+ "ic-cdk",
+ "ic-cdk-macros",
  "mockall",
  "serde",
  "serde_json",

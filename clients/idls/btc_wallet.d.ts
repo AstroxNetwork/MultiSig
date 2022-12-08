@@ -1,6 +1,7 @@
 import type { Principal } from '@dfinity/principal';
 import type { ActorMethod } from '@dfinity/agent';
 
+<<<<<<< HEAD
 export interface Config {
   'blocks_source' : Principal,
   'fees' : Fees,
@@ -91,4 +92,13 @@ export interface _SERVICE {
   'http_request' : ActorMethod<[HttpRequest], HttpResponse>,
   'set_config' : ActorMethod<[SetConfigRequest], undefined>,
   'wallet_config' : ActorMethod<[Config], undefined>,
+=======
+export type Result = { 'Ok' : null } |
+  { 'Err' : string };
+export interface _SERVICE {
+  'role_op_add' : ActorMethod<[Principal], Result>,
+  'role_owner_set' : ActorMethod<[Array<Principal>], Result>,
+  'role_user_add' : ActorMethod<[Principal], Result>,
+  'role_user_remove' : ActorMethod<[Principal], Result>,
+>>>>>>> 25d6209 (upgrade dep)
 }
