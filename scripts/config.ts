@@ -25,7 +25,7 @@ export const infraConfig: Configs = [
   {
     category: 'provider',
     package: 'ms_provider',
-    bin_name: 'ms-ms_provider',
+    bin_name: 'ms-provider',
     config: './configs/ms_provider.json',
     post_install_sequence: 100
   },
