@@ -47,8 +47,8 @@ export const idlFactory = ({ IDL }) => {
         [Result_3],
         [],
       ),
+    'role_user_list' : IDL.Func([], [Result_6], ['query']),
     'role_user_remove' : IDL.Func([IDL.Principal], [Result_3], []),
-    'user_list' : IDL.Func([], [Result_6], ['query']),
   });
 };
 export const init = ({ IDL }) => { return []; };

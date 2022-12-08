@@ -85,7 +85,7 @@ fn role_user_add(pusers: BTreeMap<Principal, String>) -> Result<(), SystemErr> {
 
   CONTROLLER.with(|controller| {
     let user_count = users().unwrap().len();
-    if controller.borrow().total_user_amount > (user_count as u16 + pusers.len() as u16) {
+    if controller.borrow().total_user_amount >= (user_count as u16 + pusers.len() as u16) {
       pusers.iter().for_each(|(user_id, name)| {
         user_add_with_name(name.clone(), user_id.clone());
       });
@@ -107,10 +107,10 @@ fn role_user_remove(user_id: Principal) -> Result<(), SystemErr> {
   Ok(())
 }
 
-#[query(name = "user_list", guard = "owner_guard")]
-#[candid_method(query, rename = "user_list")]
-fn user_list() -> Result<BTreeMap<Principal, String>, SystemErr> {
-  ic_cdk::println!("controller: user_list");
+#[query(name = "role_user_list", guard = "owner_guard")]
+#[candid_method(query, rename = "role_user_list")]
+fn role_user_list() -> Result<BTreeMap<Principal, String>, SystemErr> {
+  ic_cdk::println!("controller: role_user_list");
 
   Ok(users().unwrap())
 }

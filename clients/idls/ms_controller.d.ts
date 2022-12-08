@@ -42,6 +42,6 @@ export interface _SERVICE {
   'controller_init' : ActorMethod<[number, number], undefined>,
   'role_owner_set' : ActorMethod<[Array<Principal>], Result_4>,
   'role_user_add' : ActorMethod<[Array<[Principal, string]>], Result_3>,
+  'role_user_list' : ActorMethod<[], Result_6>,
   'role_user_remove' : ActorMethod<[Principal], Result_3>,
-  'user_list' : ActorMethod<[], Result_6>,
 }
