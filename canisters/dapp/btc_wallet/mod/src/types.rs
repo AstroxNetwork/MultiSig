@@ -7,7 +7,7 @@ use ic_cdk::export::{
 
 #[derive(CandidType, Deserialize, Clone, Debug)]
 pub struct AddManagersRequest {
-    pub managers: Vec<Principal>
+    pub managers: Vec<Principal>,
 }
 
 #[derive(CandidType, Deserialize, Clone, Debug)]
@@ -17,7 +17,7 @@ pub struct AddManagersResponse {
 
 #[derive(CandidType, Deserialize, Clone, Debug)]
 pub struct RmManagersRequest {
-    pub managers: Vec<Principal>
+    pub managers: Vec<Principal>,
 }
 
 #[derive(CandidType, Deserialize, Clone, Debug)]
@@ -102,7 +102,7 @@ pub struct GetFeesResponse {
 
 #[derive(CandidType, Deserialize, Clone, Debug)]
 pub struct SendRequest {
-    pub username: String,
+    pub path: String,
     pub to_address: String,
     pub amount_in_satoshi: u64,
 }
@@ -116,19 +116,18 @@ pub struct SendResponse {
 
 #[derive(CandidType, Deserialize, Clone, Debug)]
 pub enum EgoBtcError {
-    UserNotFound,
+    AddressNotFound,
     UnknownError(String),
 }
 
 impl From<EgoBtcError> for EgoError {
     fn from(e: EgoBtcError) -> Self {
         match e {
-            EgoBtcError::UserNotFound => EgoError::new(8001, "user not found"),
+            EgoBtcError::AddressNotFound => EgoError::new(8001, "address not found"),
             EgoBtcError::UnknownError(_) => EgoError::new(8003, "unknown error"),
         }
     }
 }
-
 
 #[derive(CandidType, Serialize, Deserialize, Debug)]
 pub struct ECDSAPublicKeyReply {
@@ -167,23 +166,23 @@ pub struct SignWithECDSA {
     pub key_id: EcdsaKeyId,
 }
 
-
-
-
 #[derive(Clone, Debug, CandidType, Deserialize, Serialize)]
 pub struct EgoError {
     pub code: u16,
-    pub msg: String
+    pub msg: String,
 }
 
-impl EgoError{
-    pub fn new(code: u16, msg: &str) -> Self{
-        EgoError{code, msg: msg.to_string()}
+impl EgoError {
+    pub fn new(code: u16, msg: &str) -> Self {
+        EgoError {
+            code,
+            msg: msg.to_string(),
+        }
     }
 }
 
 impl From<std::string::String> for EgoError {
     fn from(msg: String) -> Self {
-        EgoError{code:255, msg}
+        EgoError { code: 255, msg }
     }
 }

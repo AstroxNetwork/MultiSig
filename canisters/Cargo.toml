@@ -5,7 +5,8 @@ members = [
     "controller/ms_controller/actor",
     "controller/ms_controller/mod",
     "dapp/btc_wallet/actor",
-    "dapp/btc_wallet/mod"
+    "dapp/btc_wallet/mod",
+    "helpers/tecdsa_signer"
 ]
 
 [profile.release]

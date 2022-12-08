@@ -9,11 +9,16 @@
 //! * Option to set the fee.
 use crate::{bitcoin_api, ecdsa_api};
 use bitcoin::util::psbt::serialize::Serialize;
-use bitcoin::{blockdata::script::Builder, hashes::Hash, Address, AddressType, OutPoint, Script, EcdsaSighashType, Transaction, TxIn, TxOut, Txid, Witness};
+use bitcoin::{
+    blockdata::script::Builder, hashes::Hash, Address, AddressType, EcdsaSighashType, OutPoint,
+    PackedLockTime, Script, Sequence, Transaction, TxIn, TxOut, Txid, Witness,
+};
 use ic_btc_types::{MillisatoshiPerByte, Network, Satoshi, Utxo};
 use ic_cdk::print;
 use sha2::Digest;
 use std::str::FromStr;
+use tecdsa_signer::service::SignerService;
+use tecdsa_signer::types::{ECDSAPublicKeyPayload, SignWithECDSAReply, SignatureReply};
 
 const SIG_HASH_TYPE: EcdsaSighashType = EcdsaSighashType::All;
 
@@ -21,13 +26,16 @@ const SIG_HASH_TYPE: EcdsaSighashType = EcdsaSighashType::All;
 pub async fn get_p2pkh_address(
     network: Network,
     key_name: String,
-    derivation_path: Vec<Vec<u8>>,
+    derivation_path: String,
 ) -> String {
     // Fetch the public key of the given derivation path.
-    let public_key = ecdsa_api::ecdsa_public_key(key_name, derivation_path).await;
+    // let public_key = ecdsa_api::ecdsa_public_key(key_name, derivation_path).await;
+    let public_key = SignerService::get_public_key(derivation_path, Some(key_name)).await;
 
-    // Compute the address.
-    public_key_to_p2pkh_address(network, &public_key)
+    match public_key {
+        Ok(r) => public_key_to_p2pkh_address(network, &r.public_key),
+        Err(e) => ic_cdk::trap(e.as_str()),
+    }
 }
 
 /// Sends a transaction to the network that transfers the given amount to the
@@ -35,7 +43,7 @@ pub async fn get_p2pkh_address(
 /// at the given derivation path.
 pub async fn send(
     network: Network,
-    derivation_path: Vec<Vec<u8>>,
+    derivation_path: String,
     key_name: String,
     dst_address: String,
     amount: Satoshi,
@@ -55,7 +63,11 @@ pub async fn send(
 
     // Fetch our public key, P2PKH address, and UTXOs.
     let own_public_key =
-        ecdsa_api::ecdsa_public_key(key_name.clone(), derivation_path.clone()).await;
+        match SignerService::get_public_key(derivation_path.clone(), Some(key_name)).await {
+            Ok(r) => r.public_key,
+            Err(e) => ic_cdk::trap(e.as_str()),
+        };
+
     let own_address = public_key_to_p2pkh_address(network, &own_public_key);
 
     print("Fetching UTXOs...");
@@ -75,7 +87,7 @@ pub async fn send(
         amount,
         fee_per_byte,
     )
-        .await;
+    .await;
 
     let tx_bytes = transaction.serialize();
     print(&format!("Transaction to sign: {}", hex::encode(tx_bytes)));
@@ -85,11 +97,10 @@ pub async fn send(
         &own_public_key,
         &own_address,
         transaction,
-        key_name,
-        derivation_path,
-        ecdsa_api::sign_with_ecdsa,
+        derivation_path.clone(),
+        SignerService::sign,
     )
-        .await;
+    .await;
 
     let signed_transaction_bytes = signed_transaction.serialize();
     print(&format!(
@@ -136,10 +147,9 @@ async fn build_transaction(
             own_address,
             transaction.clone(),
             String::from(""), // mock key name
-            vec![], // mock derivation path
-            mock_signer,
+            mock_signer,      // mock derivation path
         )
-            .await;
+        .await;
 
         let signed_tx_bytes_len = signed_transaction.serialize().len() as u64;
 
@@ -191,7 +201,7 @@ fn build_transaction_with_fee(
                 txid: Txid::from_hash(Hash::from_slice(&utxo.outpoint.txid).unwrap()),
                 vout: utxo.outpoint.vout,
             },
-            sequence: 0xffffffff,
+            sequence: Sequence(0xffffffff),
             witness: Witness::new(),
             script_sig: Script::new(),
         })
@@ -214,7 +224,7 @@ fn build_transaction_with_fee(
     Ok(Transaction {
         input: inputs,
         output: outputs,
-        lock_time: 0,
+        lock_time: PackedLockTime(0),
         version: 2,
     })
 }
@@ -230,13 +240,12 @@ async fn sign_transaction<SignFun, Fut>(
     own_public_key: &[u8],
     own_address: &Address,
     mut transaction: Transaction,
-    key_name: String,
-    derivation_path: Vec<Vec<u8>>,
+    derivation_path: String,
     signer: SignFun,
 ) -> Transaction
-    where
-        SignFun: Fn(String, Vec<Vec<u8>>, Vec<u8>) -> Fut,
-        Fut: std::future::Future<Output = Vec<u8>>,
+where
+    SignFun: Fn(String, Vec<u8>) -> Fut,
+    Fut: std::future::Future<Output = Result<SignatureReply, String>>,
 {
     // Verify that our own address is P2PKH.
     assert_eq!(
@@ -250,7 +259,10 @@ async fn sign_transaction<SignFun, Fut>(
         let sighash =
             txclone.signature_hash(index, &own_address.script_pubkey(), SIG_HASH_TYPE.to_u32());
 
-        let signature = signer(key_name.clone(), derivation_path.clone(), sighash.to_vec()).await;
+        let signature = match signer(derivation_path.clone(), sighash.to_vec()).await {
+            Ok(s) => s.signature,
+            Err(e) => ic_cdk::trap(e.as_str()),
+        };
 
         // Convert signature to DER.
         let der_signature = sec1_to_der(signature);
@@ -296,8 +308,13 @@ fn public_key_to_p2pkh_address(network: Network, public_key: &[u8]) -> String {
 }
 
 // A mock for rubber-stamping ECDSA signatures.
-async fn mock_signer(_key_name: String, _derivation_path: Vec<Vec<u8>>, _message_hash: Vec<u8>) -> Vec<u8> {
-    vec![1; 64]
+async fn mock_signer(
+    _derivation_path: String,
+    _message_hash: Vec<u8>,
+) -> Result<SignatureReply, String> {
+    Ok(SignatureReply {
+        signature: vec![1; 64],
+    })
 }
 
 // Converts a SEC1 ECDSA signature to the DER format.
@@ -329,7 +346,7 @@ fn sec1_to_der(sec1_signature: Vec<u8>) -> Vec<u8> {
         vec![0x02, s.len() as u8],
         s,
     ]
-        .into_iter()
-        .flatten()
-        .collect()
+    .into_iter()
+    .flatten()
+    .collect()
 }

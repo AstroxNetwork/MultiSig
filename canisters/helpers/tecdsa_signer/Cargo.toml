@@ -1,0 +1,29 @@
+[package]
+name = "tecdsa_signer"
+version = "0.1.0"
+edition = "2021"
+
+
+[lib]
+path = "src/mod.rs"
+
+[dependencies]
+async-trait = "0.1.57"
+ic-cdk = "0.6.8"
+ic-cdk-macros = "0.6.8"
+ic-certified-map = "0.3.0"
+bitcoin = "0.29.1"
+hdpath =  { version = "0.6.1", features = ["with-bitcoin"] }
+candid = "0.8.1"
+hex = "0.4.3"
+hex-literal = "0.3.4"
+itertools = "0.10.3"
+serde = "1.0.136"
+serde_json = "1.0.79"
+serde_bytes = "0.11.5"
+serde_cbor = "0.11.2"
+serde_with = "1.12.0"
+sha2 = "0.10.2"
+multibase = "0.9"
+k256 = { version = "0.11.4", default-features = false, features = [ "ecdsa", "sha256","pem","keccak256" ] }
+
