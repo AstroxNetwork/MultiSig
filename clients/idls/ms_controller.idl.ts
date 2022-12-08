@@ -41,6 +41,7 @@ export const idlFactory = ({ IDL }) => {
     'canister_list' : IDL.Func([], [Result_5], []),
     'canister_remove' : IDL.Func([IDL.Text, IDL.Principal], [Result_4], []),
     'controller_init' : IDL.Func([IDL.Nat16, IDL.Nat16], [], []),
+    'role_op_add' : IDL.Func([IDL.Principal], [Result_4], []),
     'role_owner_set' : IDL.Func([IDL.Vec(IDL.Principal)], [Result_4], []),
     'role_user_add' : IDL.Func(
         [IDL.Vec(IDL.Tuple(IDL.Principal, IDL.Text))],

@@ -32,4 +32,6 @@ export interface _SERVICE {
   >,
   'controller_main_get' : ActorMethod<[Principal], Result_2>,
   'controller_main_list' : ActorMethod<[], Result_3>,
+  'controller_user_add' : ActorMethod<[Principal], undefined>,
+  'controller_user_remove' : ActorMethod<[Principal], undefined>,
 }

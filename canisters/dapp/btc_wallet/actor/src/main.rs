@@ -9,7 +9,7 @@ fn main() {}
 fn main() {
     use ic_btc_types::*;
     use candid::Principal;
-    use btc_wallet_mod::types::{Config,HttpRequest,HttpResponse,SetConfigRequest};
+
     candid::export_service!();
     std::print!("{}", __export_service());
 }

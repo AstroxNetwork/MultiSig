@@ -27,24 +27,24 @@ export const infraConfig: Configs = [
     package: 'ms_provider',
     bin_name: 'ms-provider',
     config: './configs/ms_provider.json',
-    post_install_sequence: 100
+    post_install_sequence: 100,
   },
   {
     category: 'controller',
     package: 'ms_controller',
     bin_name: 'ms-controller',
     config: './configs/ms_controller.json',
-    post_install_sequence: 100,
-    no_deploy: true
+    post_install_sequence: 99,
+    no_deploy: true,
   },
   {
     category: 'dapp',
     package: 'btc_wallet',
     bin_name: 'btc-wallet',
     config: './configs/btc_wallet.json',
-    post_install_sequence: 100,
-    no_deploy: true
-  }
+    post_install_sequence: 98,
+    no_deploy: false,
+  },
 ];
 
 export const appsConfig: Configs = [];
@@ -64,6 +64,10 @@ export const dfxConfigTemplate = {
     mainnet: {
       providers: ['https://identity.ic0.app'],
       type: 'persistent',
+    },
+    bitcoin: {
+      enabled: true,
+      nodes: ['127.0.0.1:18444'],
     },
   },
   version: 1,

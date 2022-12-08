@@ -40,6 +40,7 @@ export interface _SERVICE {
   'canister_list' : ActorMethod<[], Result_5>,
   'canister_remove' : ActorMethod<[string, Principal], Result_4>,
   'controller_init' : ActorMethod<[number, number], undefined>,
+  'role_op_add' : ActorMethod<[Principal], Result_4>,
   'role_owner_set' : ActorMethod<[Array<Principal>], Result_4>,
   'role_user_add' : ActorMethod<[Array<[Principal, string]>], Result_3>,
   'role_user_list' : ActorMethod<[], Result_6>,
