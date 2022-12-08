@@ -34,9 +34,9 @@ dependencies = [
 
 [[package]]
 name = "astrox_macros"
-version = "0.1.1"
+version = "0.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "30c898419d8e065ec0566eb721c37fa8f678bdff43d2c8f092ac8d3cb241bb01"
+checksum = "1ef5dc0539af39e12683f6c25cc983084fe06f44e66008d852d399439dad1b4a"
 dependencies = [
  "candid",
  "ic-cdk",
@@ -317,9 +317,9 @@ checksum = "1435fa1053d8b2fbbe9be7e97eca7f33d37b28409959813daefc1446a14247f1"
 
 [[package]]
 name = "ego_lib"
-version = "0.1.7"
+version = "0.1.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "59dab705e3f0a1f42fd2d495b43cf05de9f2830a0eb4ab97ea506e31709dff02"
+checksum = "4b6786790e349ce14b2039c71422a91884298fcfdca9fa1def03c89619c68d1c"
 dependencies = [
  "async-trait",
  "candid",
