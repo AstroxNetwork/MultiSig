@@ -9,6 +9,7 @@ import {
 } from '@ant-design/pro-components';
 import { useConnect } from '@connect2ic/react';
 import { idlFactory as controllerIdl } from '@/../../idls/ms_controller.idl';
+import { _SERVICE as controllerService } from '@/../../idls/ms_controller';
 import { Button, List } from 'antd';
 import { useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
@@ -47,7 +48,7 @@ const GroupSetting = () => {
 
   const getUsers = async () => {
     try {
-      const result = await activeControllerActor?.user_list();
+      const result = await activeControllerActor?.role_user_list();
       console.log('result', result);
       if (hasOwnProperty(result!, 'Ok')) {
         setUsers(result['Ok'] as Users);
@@ -58,8 +59,21 @@ const GroupSetting = () => {
   };
 
   const createApp = async () => {
-    const result = await activeControllerActor?.app_main_create();
-    console.log('createApp result', result);
+    try {
+      console.log('createApp start');
+      console.log('activeProvider', activeProvider);
+      console.log('activeProvider', activeProvider);
+      const activeControllerActor = await getActor<controllerService>(
+        activeProvider!,
+        activeController?.id.toText()!,
+        controllerIdl,
+      );
+      console.log(activeControllerActor);
+      const result = await activeControllerActor?.app_main_create();
+      console.log('createApp result', result);
+    } catch (err) {
+      console.log('err', err);
+    }
   };
 
   return (

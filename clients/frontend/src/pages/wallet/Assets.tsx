@@ -5,12 +5,15 @@ import { useConnect } from '@connect2ic/react';
 import { idlFactory as controllerIdl } from '@/../../idls/ms_controller.idl';
 import { Button, List } from 'antd';
 import { useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 
 const WalletAssets = () => {
   const { activeProvider } = useConnect();
   const { activeController, activeControllerActor } = useSelector(
     (state: RootState) => state.controller,
   );
+
+  const history = useHistory();
 
   const createAction = async () => {
     try {
@@ -32,6 +35,14 @@ const WalletAssets = () => {
         <List.Item>
           <Button type="primary" onClick={createAction}>
             Send
+          </Button>
+          <Button
+            type="primary"
+            onClick={() => {
+              history.replace('/group/setting?create=true');
+            }}
+          >
+            Setting
           </Button>
         </List.Item>
       </List>

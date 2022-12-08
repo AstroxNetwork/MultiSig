@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { LogoutOutlined } from '@ant-design/icons';
+import { CopyOutlined, LogoutOutlined } from '@ant-design/icons';
 import { Avatar, Menu, message, Spin } from 'antd';
 import styles from './index.module.less';
 import type { MenuInfo } from 'rc-menu/lib/interface';
@@ -32,6 +32,16 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
       loginOut();
       return;
     }
+    if (key === 'copy') {
+      // setInitialState((s) => ({ ...s, currentUser: undefined }));
+      try {
+        navigator.clipboard.writeText(activeProvider?.principal!);
+        message.success('Copied!');
+      } catch (err) {
+        console.log('err', err);
+      }
+      return;
+    }
   }, []);
 
   const loading = (
@@ -55,6 +65,10 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
       <Menu.Item key="logout">
         <LogoutOutlined />
         Logout
+      </Menu.Item>
+      <Menu.Item key="copy">
+        <CopyOutlined />
+        Copy
       </Menu.Item>
     </Menu>
   );

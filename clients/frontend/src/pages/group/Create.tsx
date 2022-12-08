@@ -43,7 +43,9 @@ const GroupCreate: React.FC = () => {
           });
           dispatch.app.queryGroups({});
           // const activeControllerActor = await getActor()
-          history.replace('/group/setting?create=true');
+          setTimeout(() => {
+            history.replace('/group/setting?create=true');
+          }, 100);
         }}
         // submitter={{
         //   submitButtonProps: (
