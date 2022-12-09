@@ -45,5 +45,8 @@ describe('scripts', () => {
     console.log(users)
 
     await controller.app_main_create()
+
+    let resp = await controller.app_action_get()
+    console.log(resp)
   });
 });
