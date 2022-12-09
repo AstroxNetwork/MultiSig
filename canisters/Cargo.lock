@@ -189,6 +189,7 @@ dependencies = [
  "astrox_macros",
  "btc_wallet_mod",
  "candid",
+ "ego_lib 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "ic-btc-types",
  "ic-cdk",
  "ic-cdk-macros",

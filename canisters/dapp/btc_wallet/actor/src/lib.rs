@@ -6,7 +6,7 @@ use serde::Serialize;
 use std::collections::BTreeMap;
 
 use astrox_macros::inject_canister_users;
-use btc_wallet_mod::ego_lib::inject_ego_macros;
+use ego_lib::inject_ego_macros;
 use btc_wallet_mod::service::BtcStore;
 use btc_wallet_mod::tecdsa_signer::types::TSignerManager;
 use btc_wallet_mod::types::{
