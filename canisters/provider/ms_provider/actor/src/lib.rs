@@ -9,7 +9,7 @@ use astrox_macros::inject_canister_registry;
 use astrox_macros::inject_canister_users;
 use ms_provider_mod::ego_lib::ego_store::EgoStore;
 use ms_provider_mod::model::{Controller, Provider};
-use ms_provider_mod::ms_controller::{MsController, TMsController};
+use ms_provider_mod::ms_controller::{MsController};
 use ms_provider_mod::state::PROVIDER;
 use ms_provider_mod::service::Service;
 
@@ -89,10 +89,11 @@ pub async fn controller_main_create(request: ControllerMainCreateRequest) -> Res
     let canister_id = REGISTRY.with(|registry| registry.borrow().canister_get_one("ego_store")).unwrap();
     let ego_store = EgoStore::new(canister_id);
 
-    match Service::controller_main_create(ego_store, &user, request.name, request.total_user_amount, request.threshold_user_amount).await {
+    let ms_controller = MsController::new();
+
+
+    match Service::controller_main_create(ego_store, ms_controller, &user, request.name, request.total_user_amount, request.threshold_user_amount).await {
         Ok(controller) => {
-            let ms_controller = MsController::new(controller.id);
-            ms_controller.controller_init(request.total_user_amount, request.threshold_user_amount);
             Ok(controller)
         },
         Err(e) => Err(e),

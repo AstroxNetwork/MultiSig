@@ -53,12 +53,12 @@ impl From<std::string::String> for SystemErr {
 impl From<Errors> for SystemErr {
   fn from(e: Errors) -> Self {
     match e {
-      Errors::NotFound => SystemErr::new(1000, "Not Found"),
-      Errors::SystemError => SystemErr::new(1001, "System Error"),
-      Errors::Signed => SystemErr::new(1002, "Already Signed"),
-      Errors::WrongStatus  => SystemErr::new(1003, "Wrong Status"),
-      Errors::TooManyUser  => SystemErr::new(1004, "Too Many Users"),
-      Errors::AppNotInstalled => SystemErr::new(1005, "Wallet App Not Installed"),
+      Errors::NotFound => SystemErr::new(404, "Not Found"),
+      Errors::SystemError => SystemErr::new(500, "System Error"),
+      Errors::Signed => SystemErr::new(404, "Already Signed"),
+      Errors::WrongStatus  => SystemErr::new(404, "Wrong Status"),
+      Errors::TooManyUser  => SystemErr::new(404, "Too Many Users"),
+      Errors::AppNotInstalled => SystemErr::new(404, "Wallet App Not Installed"),
     }
   }
 }

@@ -43,14 +43,17 @@ export const idlFactory = ({ IDL }) => {
         [],
       ),
     'canister_add' : IDL.Func([IDL.Text, IDL.Principal], [Result_4], []),
+    'canister_controller_add' : IDL.Func([IDL.Principal], [Result_4], []),
+    'canister_controller_remove' : IDL.Func([IDL.Principal], [Result_4], []),
     'canister_list' : IDL.Func([], [Result_5], []),
     'canister_remove' : IDL.Func([IDL.Text, IDL.Principal], [Result_4], []),
     'controller_init' : IDL.Func([IDL.Nat16, IDL.Nat16], [], []),
     'role_op_add' : IDL.Func([IDL.Principal], [Result_4], []),
+    'role_owner_add' : IDL.Func([IDL.Principal], [Result_4], []),
+    'role_owner_remove' : IDL.Func([IDL.Principal], [Result_4], []),
     'role_owner_set' : IDL.Func([IDL.Vec(IDL.Principal)], [Result_4], []),
-    'role_user_add' : IDL.Func([IDL.Principal], [Result_4], []),
     'role_user_list' : IDL.Func([], [Result_6], ['query']),
-    'role_user_remove' : IDL.Func([IDL.Principal], [Result_4], []),
+    'role_user_remove' : IDL.Func([IDL.Principal], [Result_3], []),
   });
 };
 export const init = ({ IDL }) => { return []; };

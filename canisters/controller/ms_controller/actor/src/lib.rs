@@ -1,6 +1,6 @@
 use candid::{candid_method};
 use ic_cdk::export::candid::{CandidType, Deserialize};
-use ic_cdk::{storage};
+use ic_cdk::{api, storage};
 use ic_cdk_macros::*;
 use serde::Serialize;
 
@@ -14,7 +14,7 @@ use ms_controller_mod::service::Service;
 use ms_controller_mod::state::CONTROLLER;
 use ms_controller_mod::types::{AppActionCreateRequest, Errors, SystemErr};
 use ms_controller_mod::types::Errors::TooManyUser;
-use ms_controller_mod::ego_lib::inject_ego_macros;
+use ego_lib::inject_ego_macros;
 
 inject_canister_users!();
 inject_canister_registry!();
@@ -22,7 +22,8 @@ inject_canister_registry!();
 inject_ego_macros!();
 
 /********************  methods for canister_registry_macro   ********************/
-fn on_canister_added(_name: &str, _canister_id: Principal) {
+fn on_canister_added(name: &str, canister_id: Principal) {
+  ic_cdk::println!("on_canister_added name: {}, canister_id: {}", name, canister_id);
 }
 
 #[init]
@@ -81,13 +82,16 @@ fn controller_init(total_user_amount: u16, threshold_user_amount: u16) {
 #[update(name = "batch_user_add", guard = "owner_guard")]
 #[candid_method(update, rename = "batch_user_add")]
 fn batch_user_add(pusers: BTreeMap<Principal, String>) -> Result<(), SystemErr> {
-  ic_cdk::println!("controller: role_user_add");
+  ic_cdk::println!("controller: batch_user_add");
 
   CONTROLLER.with(|controller| {
     let user_count = users().unwrap().len();
     if controller.borrow().total_user_amount >= (user_count as u16 + pusers.len() as u16) {
+      let provider_id = REGISTRY.with(|registry| registry.borrow().canister_get_one("provider")).unwrap();
+
       pusers.iter().for_each(|(user_id, name)| {
         user_add_with_name(name.clone(), user_id.clone());
+        let _result = api::call::notify(provider_id, "controller_user_add", (user_id,));
       });
 
       Ok(())
@@ -97,6 +101,20 @@ fn batch_user_add(pusers: BTreeMap<Principal, String>) -> Result<(), SystemErr> 
   })
 }
 
+#[update(name = "role_user_remove", guard = "owner_guard")]
+#[candid_method(update, rename = "role_user_remove")]
+pub fn role_user_remove(user_id: Principal) -> Result<(), SystemErr> {
+  if is_owner(user_id) {
+    Err(SystemErr::new(404, "Owner can not be removed"))
+  } else {
+    user_remove(user_id);
+
+    let provider_id = REGISTRY.with(|registry| registry.borrow().canister_get_one("provider")).unwrap();
+    let _result = api::call::notify(provider_id, "controller_user_remove", (user_id,));
+
+    Ok(())
+  }
+}
 
 #[query(name = "role_user_list", guard = "owner_guard")]
 #[candid_method(query, rename = "role_user_list")]
@@ -106,6 +124,7 @@ fn role_user_list() -> Result<BTreeMap<Principal, String>, SystemErr> {
   Ok(users().unwrap())
 }
 /* ===== end user relative method ===== */
+
 
 #[update(name = "app_main_create", guard = "user_guard")]
 #[candid_method(update, rename = "app_main_create")]

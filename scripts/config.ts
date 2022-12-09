@@ -43,7 +43,7 @@ export const infraConfig: Configs = [
     bin_name: 'btc-wallet',
     config: './configs/btc_wallet.json',
     post_install_sequence: 98,
-    no_deploy: false,
+    no_deploy: true,
   },
 ];
 

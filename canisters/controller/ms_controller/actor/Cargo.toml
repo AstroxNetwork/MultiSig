@@ -19,5 +19,6 @@ ic-cdk-macros = "0.6.8"
 serde = "1.0"
 serde_json = "1.0"
 serde_bytes = "0.11"
-astrox_macros = "0.2.1"
+astrox_macros = "0.2.2"
+ego_lib = {path="../../../../../ego_lib"}
 ms_controller_mod = { path = "../mod" }
