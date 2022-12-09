@@ -42,11 +42,13 @@ const GroupSetting = () => {
         });
   console.log('initUsers', initUsers, activeControllerActor);
   useEffect(() => {
-    getUsers();
-    if (urlParams.get('create')) {
-      createApp();
+    if (activeControllerActor) {
+      getUsers();
+      if (urlParams.get('create')) {
+        createApp();
+      }
     }
-  }, []);
+  }, [activeControllerActor]);
 
   const getUsers = async () => {
     try {
@@ -62,15 +64,15 @@ const GroupSetting = () => {
 
   const createApp = async () => {
     try {
-      console.log('createApp start');
-      console.log('activeProvider', activeProvider);
-      console.log('activeProvider', activeProvider);
-      const activeControllerActor = await getActor<controllerService>(
-        activeProvider!,
-        activeController?.id.toText()!,
-        controllerIdl,
-      );
-      console.log(activeControllerActor);
+      // console.log('createApp start');
+      // console.log('activeProvider', activeProvider);
+      // console.log('activeProvider', activeProvider);
+      // const activeControllerActor = await getActor<controllerService>(
+      //   activeProvider!,
+      //   activeController?.id.toText()!,
+      //   controllerIdl,
+      // );
+      // console.log(activeControllerActor);
       const result = await activeControllerActor?.app_main_create();
       console.log('createApp result', result);
     } catch (err) {
