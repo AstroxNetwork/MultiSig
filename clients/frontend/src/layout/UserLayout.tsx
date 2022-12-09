@@ -135,13 +135,21 @@ export default (props: any) => {
     });
     const groups = await dispatch.app.queryGroups({});
     if (groups && groups.length > 0) {
+      const local = localStorage.getItem('ACTIVE_GROUP');
+      let selectGroup = null;
+      if (local) {
+        const findGroup = groups.find(group => group.id.toText() === local);
+        selectGroup = findGroup ?? groups[0];
+      } else {
+        selectGroup = groups[0];
+      }
       const activeControllerActor = await getActor(
         activeProvider!,
-        groups[0].id.toText(),
+        selectGroup.id.toText(),
         controllerIdl,
       );
       dispatch.controller.save({
-        activeController: groups[0],
+        activeController: selectGroup,
         activeControllerActor,
       });
       history.replace('/wallet/assets');
@@ -164,6 +172,7 @@ export default (props: any) => {
       activeController: group,
       activeControllerActor: controllerActor,
     });
+    localStorage.setItem('ACTIVE_GROUP', group.id.toText());
     // dispatch.app.queryWallets({ contrlCanisterId: group.id.toText() });
     setGroupVisable(false);
     history.push('/wallet/assets');
@@ -223,12 +232,21 @@ export default (props: any) => {
                     onClose={() => {
                       setGroupVisable(false);
                     }}
+                    placement="left"
                     open={groupVisable}
                   >
                     <List
                       dataSource={groups}
                       renderItem={controller => (
-                        <List.Item onClick={() => selectGroup(controller)}>
+                        <List.Item
+                          className={`${
+                            controller.id.toText() ===
+                            activeController.id.toText()
+                              ? 'bg-stone-100'
+                              : ''
+                          }`}
+                          onClick={() => selectGroup(controller)}
+                        >
                           <List.Item.Meta
                             avatar={
                               <>
