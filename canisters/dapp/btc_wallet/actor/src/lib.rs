@@ -5,6 +5,8 @@ use std::collections::BTreeMap;
 
 use astrox_macros::inject_canister_users;
 use btc_wallet_mod::ego_lib::inject_ego_macros;
+use btc_wallet_mod::service::BtcStore;
+use btc_wallet_mod::tecdsa_signer::types::TSignerManager;
 use btc_wallet_mod::types::{
     EgoBtcError, GetAddressResponse, SendRequest, SendResponse, UserBalanceResponse,
 };
@@ -12,6 +14,7 @@ use ic_btc_types::{
     GetBalanceRequest, GetCurrentFeePercentilesRequest, GetUtxosRequest, GetUtxosResponse,
     MillisatoshiPerByte, Network, Satoshi, SendTransactionRequest, Utxo,
 };
+use ic_cdk::storage;
 
 inject_canister_users!();
 inject_ego_macros!();
@@ -24,6 +27,33 @@ pub fn init() {
     ic_cdk::println!("==> add caller as the owner");
     owner_add(caller.clone());
     // TODO: Set btc_init
+}
+
+#[derive(CandidType, Deserialize, Serialize)]
+struct PersistState {
+    pub btc_store: BtcStore,
+    pub signer: TSignerManager,
+    pub user: User,
+}
+
+#[pre_upgrade]
+fn pre_upgrade() {
+    ic_cdk::println!("btc wallet: pre_upgrade");
+    let state = PersistState {
+        btc_store: btc_wallet_mod::service::pre_upgrade(),
+        signer: btc_wallet_mod::tecdsa_signer::state::pre_upgrade(),
+        user: users_pre_upgrade(),
+    };
+    storage::stable_save((state,)).unwrap();
+}
+
+#[post_upgrade]
+fn post_upgrade() {
+    ic_cdk::println!("btc wallet: post_upgrade");
+    let (state,): (PersistState,) = storage::stable_restore().unwrap();
+    users_post_upgrade(state.user);
+    btc_wallet_mod::service::post_upgrade(state.btc_store);
+    btc_wallet_mod::tecdsa_signer::state::post_upgrade(state.signer);
 }
 
 #[update(name = "btc_network_set", guard = "owner_guard")]

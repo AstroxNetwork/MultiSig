@@ -12,33 +12,17 @@ thread_local! {
 }
 pub const DEFAULT_PATH: &str = "m/44'/0'/0'/0/0";
 
+pub fn pre_upgrade() -> BtcStore {
+    BTCSTORE.with(|s| s.take().into())
+}
+
+pub fn post_upgrade(stable_state: BtcStore) {
+    BTCSTORE.with(|s| s.replace(stable_state));
+}
+
 pub struct BtcService {}
 
 impl BtcService {
-    // pub fn is_manager(principal: Principal) -> bool {
-    //     BTCSTORE.with(|b| b.borrow().is_manager(principal))
-    // }
-    //
-    // pub fn add_managers(managers: Vec<Principal>) -> u64 {
-    //     BTCSTORE.with(|b| {
-    //         let mut bb = b.borrow_mut();
-    //         for manager in managers {
-    //             bb.managers.insert(manager, "default".to_string());
-    //         }
-    //         bb.managers.len() as u64
-    //     })
-    // }
-    //
-    // pub fn remove_managers(managers: Vec<Principal>) -> u64 {
-    //     BTCSTORE.with(|b| {
-    //         let mut bb = b.borrow_mut();
-    //         for manager in managers {
-    //             bb.managers.remove(&manager);
-    //         }
-    //         bb.managers.len() as u64
-    //     })
-    // }
-
     pub fn set_network(network: Network) -> Network {
         BTCSTORE.with(|s| {
             let mut store = s.borrow_mut();
@@ -80,7 +64,7 @@ impl BtcService {
     }
 
     pub fn get_all_addresses() -> Vec<String> {
-        BTCSTORE.with(|s| s.borrow().user_address.keys().cloned().collect())
+        BTCSTORE.with(|s| s.borrow().user_address.values().cloned().collect())
     }
 
     pub async fn get_user_balance(path: String) -> Result<UserBalanceResponse, EgoBtcError> {
@@ -135,8 +119,6 @@ impl BtcService {
 }
 
 pub struct BtcStore {
-    // pub managers: HashMap<Principal, String>,
-    // <derive path: address>
     pub user_address: HashMap<String, String>,
     pub network: Network,
     pub ecdsa_key: String,
@@ -151,21 +133,4 @@ impl BtcStore {
             ecdsa_key: "test_key_1".to_string(),
         }
     }
-
-    // pub fn init_manager(&mut self, caller: Principal) {
-    //     self.managers.insert(caller, "init manager".to_string());
-    // }
-    //
-    // pub fn is_manager(&self, caller: Principal) -> bool {
-    //     self.managers.contains_key(&caller)
-    // }
 }
-
-// #[inline(always)]
-// pub fn manager_guard() -> Result<(), String> {
-//     if BTCSTORE.with(|b| b.borrow().is_manager(caller())) {
-//         Ok(())
-//     } else {
-//         Err(String::from("The caller is not the manager of contract"))
-//     }
-// }
