@@ -138,6 +138,16 @@ async fn app_main_create() -> Result<(), SystemErr> {
   Service::app_main_create(ego_store, "ms_btc_wallet".to_string()).await
 }
 
+#[query(name = "app_main_get", guard = "user_guard")]
+#[candid_method(query, rename = "app_main_get")]
+async fn app_main_get() -> Result<Option<Principal>, SystemErr> {
+  ic_cdk::println!("controller: app_main_get");
+
+  CONTROLLER.with(|controller| {
+    Ok(controller.borrow().app.clone())
+  })
+}
+
 #[update(name = "app_action_create", guard = "user_guard")]
 #[candid_method(update, rename = "app_action_create")]
 fn app_action_create(req: AppActionCreateRequest) -> Result<Action, SystemErr> {
