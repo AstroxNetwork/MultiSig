@@ -43,5 +43,7 @@ describe('scripts', () => {
 
     let users = await controller.role_user_list()
     console.log(users)
+
+    await controller.app_main_create()
   });
 });
