@@ -4,6 +4,7 @@ import {
   PageContainer,
   ProForm,
   ProFormGroup,
+  ProFormInstance,
   ProFormList,
   ProFormText,
 } from '@ant-design/pro-components';
@@ -12,10 +13,10 @@ import { idlFactory as controllerIdl } from '@/../../idls/ms_controller.idl';
 import { _SERVICE as controllerService } from '@/../../idls/ms_controller';
 import { Button, List } from 'antd';
 import { useSelector } from 'react-redux';
-import { useEffect, useState } from 'react';
-import { Principal } from '@dfinity/principal';
+import { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import { Principal } from '@dfinity/principal';
 
 type Users = Array<[Principal, string]>;
 const GroupSetting = () => {
@@ -27,6 +28,7 @@ const GroupSetting = () => {
   const history = useHistory();
   const [users, setUsers] = useState<Users>();
   const urlParams = new URLSearchParams(history.location.search);
+  const formRef = useRef<ProFormInstance>();
 
   const initUsers =
     users && users?.length > 0
@@ -88,6 +90,7 @@ const GroupSetting = () => {
             await dispatch.controller.userAdd(values);
             history.goBack();
           }}
+          formRef={formRef}
           title={'Owners and Confirmations'}
         >
           <ProFormList
@@ -98,8 +101,38 @@ const GroupSetting = () => {
             // @ts-ignore
             required
             label="Owners and Confirmations"
+            actionGuard={{
+              beforeRemoveRow: async index => {
+                const row = formRef.current?.getFieldValue('data');
+                console.log('index', index);
+                let promiseResp = 0;
+                console.log(row[index as number]);
+                try {
+                  const result = await activeControllerActor?.role_user_remove(
+                    Principal.fromText(row[index as number].principal),
+                  );
+                  if (result && hasOwnProperty(result, 'Ok')) {
+                    getUsers();
+                    promiseResp = 1;
+                  } else {
+                    promiseResp = 2;
+                  }
+                } catch (err) {
+                  console.log('err', err);
+                  promiseResp = 2;
+                }
+                return new Promise(resolve => {
+                  if (promiseResp === 1) {
+                    resolve(true);
+                  } else {
+                    resolve(false);
+                  }
+                });
+              },
+            }}
           >
-            {() => {
+            {(f, index, action) => {
+              console.log(f, index, action);
               return (
                 <ProFormGroup>
                   <ProFormText label="Nickname" name="name" required />

@@ -45,7 +45,7 @@ const client = createClient({
     // ledgerHost: "http://localhost:8000",
     // whitelist: ["ryjl3-tyaaa-aaaaa-aaaba-cai"],
     // delegationModes:['global'],
-    whitelist: ['qhbym-qaaaa-aaaaa-aaafq-cai'],
+    whitelist: [process.env.MS_PROVIDER_CANISTERID!],
   },
 });
 

@@ -34,6 +34,7 @@ export const getActor = async <T>(
   if (controllerActor !== null) {
     return controllerActor;
   } else {
-    return undefined;
+    throw new Error('createActor error');
+    // return undefined;
   }
 };

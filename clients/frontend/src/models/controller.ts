@@ -79,7 +79,7 @@ export const controller = createModel<RootModel>()({
             ],
           );
           console.log('params', params);
-          const result = await ctrl?.role_user_add(params);
+          const result = await ctrl?.batch_user_add(params);
           console.log('result', result);
         }
       } catch (err) {
