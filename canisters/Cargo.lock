@@ -189,7 +189,7 @@ dependencies = [
  "astrox_macros",
  "btc_wallet_mod",
  "candid",
- "ego_lib 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "ego_lib",
  "ic-btc-types",
  "ic-cdk",
  "ic-cdk-macros",
@@ -207,7 +207,7 @@ dependencies = [
  "bs58",
  "byteorder",
  "candid",
- "ego_lib 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "ego_lib",
  "hex",
  "ic-btc-types",
  "ic-cdk",
@@ -482,19 +482,6 @@ dependencies = [
  "elliptic-curve",
  "rfc6979",
  "signature",
-]
-
-[[package]]
-name = "ego_lib"
-version = "0.2.2"
-dependencies = [
- "async-trait",
- "candid",
- "ic-cdk",
- "serde",
- "serde_bytes",
- "serde_json",
- "tracing",
 ]
 
 [[package]]
@@ -926,7 +913,7 @@ version = "0.1.0"
 dependencies = [
  "astrox_macros",
  "candid",
- "ego_lib 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "ego_lib",
  "ic-cdk",
  "ic-cdk-macros",
  "ms_controller_mod",
@@ -941,7 +928,7 @@ version = "0.1.0"
 dependencies = [
  "async-trait",
  "candid",
- "ego_lib 0.2.2",
+ "ego_lib",
  "ic-cdk",
  "ic-cdk-macros",
  "mockall",
@@ -971,7 +958,7 @@ version = "0.1.0"
 dependencies = [
  "async-trait",
  "candid",
- "ego_lib 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "ego_lib",
  "ic-cdk",
  "ic-cdk-macros",
  "mockall",
