@@ -1,7 +1,7 @@
 use crate::state::SIGNER_STATE;
 use crate::types::{
     ECDSAPublicKeyPayload, ECDSASignerSetting, EcdsaCurve, GenericSigner, ManagerPayload,
-    SignatureReply,
+    SignatureReply, TecdsaSigner,
 };
 use crate::utils::cal_cache_key;
 use ic_cdk::export::candid::Principal;
@@ -31,22 +31,52 @@ impl SignerService {
     //     SIGNER_STATE.with(|s| s.borrow_mut().list_managers())
     // }
 
+    pub async fn update_signer_setting(
+        path: String,
+        setting: ECDSASignerSetting,
+    ) -> Result<(), String> {
+        SIGNER_STATE.with(|s| {
+            let mut sm = s.borrow_mut();
+            match sm.get_signer_mut(path.clone()) {
+                None => Err("Signer Not Found".to_string()),
+                Some(r) => {
+                    r.settings(setting.clone());
+                    Ok(())
+                }
+            }
+        })
+    }
+
     pub async fn get_public_key(
         path: String,
         key_name: Option<String>,
     ) -> Result<ECDSAPublicKeyPayload, String> {
+        let actual_key = {
+            if key_name.is_some() {
+                key_name.unwrap()
+            } else {
+                "dfx_test_key".to_string()
+            }
+        };
         match SIGNER_STATE.with(|s| {
             let mut sm = s.borrow_mut();
-            match sm.get_signer(path.clone()) {
+            match sm.get_signer_mut(path.clone()) {
                 None => sm.create_signer(
                     path.clone(),
                     Some(ECDSASignerSetting {
-                        key_name: key_name.map_or_else(|| "dfx_test_key".to_string(), |v| v),
+                        key_name: actual_key.clone(),
                         cycle_signing: 10_000_000_000,
                         curve: EcdsaCurve::Secp256k1,
                     }),
                 ),
-                Some(r) => Ok(r),
+                Some(r) => {
+                    r.settings(ECDSASignerSetting {
+                        key_name: actual_key.clone(),
+                        cycle_signing: 10_000_000_000,
+                        curve: EcdsaCurve::Secp256k1,
+                    });
+                    Ok(r.clone())
+                }
             }
         }) {
             Ok(s) => s.get_public_key().await,

@@ -34,11 +34,13 @@ export interface Utxo {
 }
 export interface _SERVICE {
   btc_address_get: ActorMethod<[string], Result>;
-  btc_address_get_all: ActorMethod<[string], Array<string>>;
+  btc_address_get_all: ActorMethod<[], Array<string>>;
   btc_address_set: ActorMethod<[string], string>;
   btc_balance_get: ActorMethod<[string], bigint>;
   btc_balance_path_get: ActorMethod<[string], Result_1>;
   btc_fee_get: ActorMethod<[], Array<bigint>>;
+  btc_key_get: ActorMethod<[], string>;
+  btc_network_get: ActorMethod<[], Network>;
   btc_network_set: ActorMethod<[Network], Network>;
   btc_tx_send: ActorMethod<[SendRequest], Result_2>;
   btc_utxos_get: ActorMethod<[string], Array<Utxo>>;

@@ -41,11 +41,13 @@ export const idlFactory = ({ IDL }) => {
   const Result_3 = IDL.Variant({ Ok: IDL.Null, Err: IDL.Text });
   return IDL.Service({
     btc_address_get: IDL.Func([IDL.Text], [Result], ['query']),
-    btc_address_get_all: IDL.Func([IDL.Text], [IDL.Vec(IDL.Text)], ['query']),
+    btc_address_get_all: IDL.Func([], [IDL.Vec(IDL.Text)], ['query']),
     btc_address_set: IDL.Func([IDL.Text], [IDL.Text], []),
     btc_balance_get: IDL.Func([IDL.Text], [IDL.Nat64], []),
     btc_balance_path_get: IDL.Func([IDL.Text], [Result_1], []),
     btc_fee_get: IDL.Func([], [IDL.Vec(IDL.Nat64)], []),
+    btc_key_get: IDL.Func([], [IDL.Text], ['query']),
+    btc_network_get: IDL.Func([], [Network], ['query']),
     btc_network_set: IDL.Func([Network], [Network], []),
     btc_tx_send: IDL.Func([SendRequest], [Result_2], []),
     btc_utxos_get: IDL.Func([IDL.Text], [IDL.Vec(Utxo)], []),

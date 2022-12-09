@@ -1,5 +1,6 @@
-use candid::Principal;
 use ic_btc_types::{MillisatoshiPerByte, Network, Utxo};
+use ic_cdk::export::candid::{CandidType, Deserialize};
+use serde::Serialize;
 use std::cell::RefCell;
 use std::collections::HashMap;
 
@@ -8,7 +9,7 @@ use crate::{bitcoin_api, bitcoin_wallet};
 use ic_cdk::caller;
 
 thread_local! {
-    pub static BTCSTORE: RefCell<BtcStore> = RefCell::new(BtcStore::new());
+    pub static BTCSTORE: RefCell<BtcStore> = RefCell::new(BtcStore::default());
 }
 pub const DEFAULT_PATH: &str = "m/44'/0'/0'/0/0";
 
@@ -118,14 +119,15 @@ impl BtcService {
     }
 }
 
+#[derive(CandidType, Serialize, Deserialize, Clone, Debug)]
 pub struct BtcStore {
     pub user_address: HashMap<String, String>,
     pub network: Network,
     pub ecdsa_key: String,
 }
 
-impl BtcStore {
-    pub fn new() -> Self {
+impl Default for BtcStore {
+    fn default() -> Self {
         BtcStore {
             //  managers: HashMap::default(),
             user_address: HashMap::default(),

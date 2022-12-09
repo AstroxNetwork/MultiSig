@@ -1,6 +1,8 @@
 use candid::candid_method;
 use candid::Principal as CanPrincipal;
+use ic_cdk::export::candid::{CandidType, Deserialize};
 use ic_cdk_macros::*;
+use serde::Serialize;
 use std::collections::BTreeMap;
 
 use astrox_macros::inject_canister_users;
@@ -56,7 +58,8 @@ fn post_upgrade() {
     btc_wallet_mod::tecdsa_signer::state::post_upgrade(state.signer);
 }
 
-#[update(name = "btc_network_set", guard = "owner_guard")]
+// #[update(name = "btc_network_set", guard = "owner_guard")]
+#[update(name = "btc_network_set")]
 #[candid_method(update, rename = "btc_network_set")]
 fn btc_network_set(network: Network) -> Network {
     btc_wallet_mod::service::BtcService::set_network(network)
@@ -68,7 +71,14 @@ fn btc_network_get() -> Network {
     btc_wallet_mod::service::BtcService::get_network()
 }
 
-#[update(name = "btc_address_set", guard = "owner_guard")]
+#[query(name = "btc_key_get")]
+#[candid_method(query, rename = "btc_key_get")]
+fn btc_key_get() -> String {
+    btc_wallet_mod::service::BtcService::get_key()
+}
+
+// #[update(name = "btc_address_set", guard = "owner_guard")]
+#[update(name = "btc_address_set")]
 #[candid_method(update, rename = "btc_address_set")]
 async fn btc_address_set(path: String) -> String {
     btc_wallet_mod::service::BtcService::set_address(path).await
@@ -80,7 +90,8 @@ async fn btc_address_get(path: String) -> Result<GetAddressResponse, EgoBtcError
     btc_wallet_mod::service::BtcService::get_address(path)
 }
 
-#[query(name = "btc_address_get_all", guard = "owner_guard")]
+// #[query(name = "btc_address_get_all", guard = "owner_guard")]
+#[query(name = "btc_address_get_all")]
 #[candid_method(query, rename = "btc_address_get_all")]
 async fn btc_address_get_all() -> Vec<String> {
     btc_wallet_mod::service::BtcService::get_all_addresses()
@@ -92,7 +103,8 @@ async fn btc_balance_get(address: String) -> u64 {
     btc_wallet_mod::service::BtcService::get_balance(address).await
 }
 
-#[update(name = "btc_balance_path_get", guard = "owner_guard")]
+// #[update(name = "btc_balance_path_get", guard = "owner_guard")]
+#[update(name = "btc_balance_path_get")]
 #[candid_method(update, rename = "btc_balance_path_get")]
 async fn btc_balance_path_get(path: String) -> Result<UserBalanceResponse, EgoBtcError> {
     btc_wallet_mod::service::BtcService::get_user_balance(path).await
@@ -104,7 +116,8 @@ async fn btc_utxos_get(address: String) -> Vec<Utxo> {
     btc_wallet_mod::service::BtcService::get_utxos(address).await
 }
 
-#[update(name = "btc_tx_send", guard = "owner_guard")]
+// #[update(name = "btc_tx_send", guard = "owner_guard")]
+#[update(name = "btc_tx_send")]
 #[candid_method(update, rename = "btc_tx_send")]
 async fn btc_tx_send(request: SendRequest) -> Result<SendResponse, EgoBtcError> {
     btc_wallet_mod::service::BtcService::send(

@@ -24,12 +24,16 @@ use std::str::{Bytes, FromStr};
 ///  #[async_trait]
 impl TecdsaSigner {
     /// create a new signer
-    fn create(path: String) -> Self {
-        let default_settings = ECDSASignerSetting {
-            key_name: "dfx_test_key".to_string(),
-            cycle_signing: 10_000_000_000,
-            curve: EcdsaCurve::Secp256k1,
-        };
+    fn create(path: String, setting: Option<ECDSASignerSetting>) -> Self {
+        let default_settings = setting.map_or_else(
+            || ECDSASignerSetting {
+                key_name: "dfx_test_key".to_string(),
+                cycle_signing: 10_000_000_000,
+                curve: EcdsaCurve::Secp256k1,
+            },
+            |o| o.clone(),
+        );
+        ic_cdk::println!("{}", default_settings.key_name.clone());
         TecdsaSigner {
             public_key_req: ECDSAPublicKey {
                 canister_id: Some(id()),
@@ -45,7 +49,7 @@ impl TecdsaSigner {
         }
     }
 
-    fn settings(&mut self, settings: ECDSASignerSetting) {
+    pub(crate) fn settings(&mut self, settings: ECDSASignerSetting) {
         self.public_key_req.key_id.name = settings.key_name.clone();
         self.public_key_req.key_id.curve = settings.curve.clone();
         self.setting = settings.clone();
@@ -181,10 +185,7 @@ impl TSignerManager {
         path: String,
         settings: Option<ECDSASignerSetting>,
     ) -> Result<TecdsaSigner, String> {
-        let mut signer = TecdsaSigner::create(path);
-        if settings.is_some() {
-            signer.settings(settings.unwrap());
-        }
+        let mut signer = TecdsaSigner::create(path, settings);
         self.add_signer(signer.clone())
     }
 
