@@ -24,9 +24,14 @@ import { ProLayout } from '@ant-design/pro-components';
 import { ActorSubclass } from '@dfinity/agent';
 import { useSelector } from 'react-redux';
 import { RootDispatch, RootState } from '@/store';
-import { ArrowLeftOutlined, DownOutlined } from '@ant-design/icons';
-import { getActor } from '@/utils';
+import {
+  ArrowLeftOutlined,
+  CopyOutlined,
+  DownOutlined,
+} from '@ant-design/icons';
+import { getActor, hasOwnProperty } from '@/utils';
 import { Avatar, Drawer, List } from 'antd';
+import { Principal } from '@dfinity/principal';
 
 const loginPath = '/home';
 
@@ -133,28 +138,51 @@ export default (props: any) => {
         providerActor,
       },
     });
-    const groups = await dispatch.app.queryGroups({});
-    if (groups && groups.length > 0) {
-      const local = localStorage.getItem('ACTIVE_GROUP');
-      let selectGroup = null;
-      if (local) {
-        const findGroup = groups.find(group => group.id.toText() === local);
-        selectGroup = findGroup ?? groups[0];
+    try {
+      const groups = await dispatch.app.queryGroups({});
+      if (groups && groups.length > 0) {
+        const local = localStorage.getItem('ACTIVE_GROUP');
+        let selectGroup = null;
+        if (local) {
+          const findGroup = groups.find(group => group.id.toText() === local);
+          selectGroup = findGroup ?? groups[0];
+        } else {
+          selectGroup = groups[0];
+        }
+        // 初始化controllerActor和btc_wallet
+        const activeControllerActor = await getActor<controllerService>(
+          activeProvider!,
+          selectGroup.id.toText(),
+          controllerIdl,
+        );
+        const walletResult = await activeControllerActor?.app_main_get();
+        console.log(walletResult);
+        if (walletResult && hasOwnProperty(walletResult, 'Ok')) {
+          const canisterId = (walletResult['Ok'] as [Principal])[0].toText();
+          const activeBtcWalletActor = await getActor<btcService>(
+            activeProvider!,
+            canisterId,
+            btcIdl,
+          );
+          dispatch.btc.save({ activeBtcWalletActor });
+          //设置网络
+          try {
+            await activeBtcWalletActor?.btc_network_set({ Regtest: null });
+          } catch (err) {
+            console.log('err', err);
+          }
+        }
+
+        dispatch.controller.save({
+          activeController: selectGroup,
+          activeControllerActor,
+        });
+        history.replace('/wallet/assets');
       } else {
-        selectGroup = groups[0];
+        history.replace('/group/home');
       }
-      const activeControllerActor = await getActor(
-        activeProvider!,
-        selectGroup.id.toText(),
-        controllerIdl,
-      );
-      dispatch.controller.save({
-        activeController: selectGroup,
-        activeControllerActor,
-      });
-      history.replace('/wallet/assets');
-    } else {
-      history.replace('/group/home');
+    } catch (err) {
+      console.log('err', err);
     }
   };
 
@@ -219,11 +247,21 @@ export default (props: any) => {
                     </div>
                     <div className="ml-2 text-ellipsis whitespace-nowrap flex-1">
                       <h3>{activeController.name}</h3>
-                      {`${activeController.id
-                        .toText()
-                        .slice(0, 6)}...${activeController.id
-                        .toText()
-                        .slice(-3)}`}
+                      <div className="flex">
+                        {`${activeController.id
+                          .toText()
+                          .slice(0, 6)}...${activeController.id
+                          .toText()
+                          .slice(-3)}`}
+                        <CopyOutlined
+                          onClick={e => {
+                            e.stopPropagation();
+                            navigator.clipboard.writeText(
+                              activeController.id.toText(),
+                            );
+                          }}
+                        />
+                      </div>
                     </div>
                     <DownOutlined />
                   </div>

@@ -15,9 +15,6 @@ import { identity } from '@/settings/identity';
 import { Principal } from '@dfinity/principal';
 import { ActorSubclass } from '@dfinity/agent';
 
-
-
-
 describe('ms_provider', () => {
   test('register ms_provider as a wallet provider to ego store', async () => {
     console.log(`register ms_provider\n`);
@@ -32,10 +29,12 @@ describe('ms_provider', () => {
     });
 
     console.log(`add ego_store to ms_provider\n`);
-    let msProviderOperator = await getOperator<MsProviderService>('ms_provider');
+    let msProviderOperator = await getOperator<MsProviderService>(
+      'ms_provider',
+    );
 
     const ego_store_id = Principal.fromText(getCanisterId('ego_store')!);
-    await msProviderOperator.canister_add("ego_store", ego_store_id);
+    await msProviderOperator.canister_add('ego_store', ego_store_id);
   });
 });
 
@@ -44,14 +43,14 @@ describe('ms_controller', () => {
     const ms_controller_wasm = fs.readFileSync(
       path.resolve(
         `${[process.cwd()]}` +
-        '/artifacts/ms_controller/ms_controller_opt.wasm',
+          '/artifacts/ms_controller/ms_controller_opt.wasm',
       ),
     );
 
     const ms_controller_version = {
       major: 1,
       minor: 0,
-      patch: 0,
+      patch: 1,
     };
 
     console.log(`release multisig controller\n`);
@@ -66,21 +65,18 @@ describe('ms_controller', () => {
   });
 });
 
-
-
 describe('btc_wallet', () => {
   test('release to ego dev', async () => {
     const btc_wallet_wasm = fs.readFileSync(
       path.resolve(
-        `${[process.cwd()]}` +
-        '/artifacts/btc_wallet/btc_wallet_opt.wasm',
+        `${[process.cwd()]}` + '/artifacts/btc_wallet/btc_wallet_opt.wasm',
       ),
     );
 
     const btc_wallet_controller_version = {
       major: 1,
       minor: 0,
-      patch: 0,
+      patch: 1,
     };
 
     console.log(`release btc wallet\n`);

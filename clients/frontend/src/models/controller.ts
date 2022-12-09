@@ -8,8 +8,7 @@ import {
   _SERVICE as controllerService,
 } from '@/../../idls/ms_controller';
 import { idlFactory as controllerIdl } from '@/../../idls/ms_controller.idl';
-import { _SERVICE as btcWalletService } from '@/../../idls/btc_wallet';
-import { idlFactory as btcWalletIdl } from '@/../../idls/btc_wallet.idl';
+
 import { getActor, hasOwnProperty } from '@/utils';
 import { message } from 'antd';
 import { ActorSubclass } from '@dfinity/agent';
@@ -18,7 +17,7 @@ import { Principal } from '@dfinity/principal';
 type ControllerProps = {
   activeController: Controller | null;
   activeControllerActor: ActorSubclass<controllerService> | null;
-  activeBtcWalletActor: ActorSubclass<btcWalletService> | null;
+
   actions: Action[];
 };
 
@@ -26,7 +25,6 @@ export const controller = createModel<RootModel>()({
   state: {
     activeController: null,
     activeControllerActor: null,
-    activeBtcWalletActor: null,
     actions: [],
   } as ControllerProps,
   reducers: {

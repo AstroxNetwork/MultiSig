@@ -22,11 +22,13 @@ export type Result_2 = { 'Ok' : Array<Action> } |
   { 'Err' : SystemErr };
 export type Result_3 = { 'Ok' : null } |
   { 'Err' : SystemErr };
-export type Result_4 = { 'Ok' : null } |
+export type Result_4 = { 'Ok' : [] | [Principal] } |
+  { 'Err' : SystemErr };
+export type Result_5 = { 'Ok' : null } |
   { 'Err' : string };
-export type Result_5 = { 'Ok' : Array<[string, Array<Principal>]> } |
+export type Result_6 = { 'Ok' : Array<[string, Array<Principal>]> } |
   { 'Err' : string };
-export type Result_6 = { 'Ok' : Array<[Principal, string]> } |
+export type Result_7 = { 'Ok' : Array<[Principal, string]> } |
   { 'Err' : SystemErr };
 export interface Sign { 'sign_at' : bigint, 'user_id' : Principal }
 export interface SystemErr { 'msg' : string, 'code' : number }
@@ -36,17 +38,18 @@ export interface _SERVICE {
   'app_action_get' : ActorMethod<[bigint], Result_1>,
   'app_action_list' : ActorMethod<[], Result_2>,
   'app_main_create' : ActorMethod<[], Result_3>,
+  'app_main_get' : ActorMethod<[], Result_4>,
   'batch_user_add' : ActorMethod<[Array<[Principal, string]>], Result_3>,
-  'canister_add' : ActorMethod<[string, Principal], Result_4>,
-  'canister_controller_add' : ActorMethod<[Principal], Result_4>,
-  'canister_controller_remove' : ActorMethod<[Principal], Result_4>,
-  'canister_list' : ActorMethod<[], Result_5>,
-  'canister_remove' : ActorMethod<[string, Principal], Result_4>,
+  'canister_add' : ActorMethod<[string, Principal], Result_5>,
+  'canister_controller_add' : ActorMethod<[Principal], Result_5>,
+  'canister_controller_remove' : ActorMethod<[Principal], Result_5>,
+  'canister_list' : ActorMethod<[], Result_6>,
+  'canister_remove' : ActorMethod<[string, Principal], Result_5>,
   'controller_init' : ActorMethod<[number, number], undefined>,
-  'role_op_add' : ActorMethod<[Principal], Result_4>,
-  'role_owner_add' : ActorMethod<[Principal], Result_4>,
-  'role_owner_remove' : ActorMethod<[Principal], Result_4>,
-  'role_owner_set' : ActorMethod<[Array<Principal>], Result_4>,
-  'role_user_list' : ActorMethod<[], Result_6>,
+  'role_op_add' : ActorMethod<[Principal], Result_5>,
+  'role_owner_add' : ActorMethod<[Principal], Result_5>,
+  'role_owner_remove' : ActorMethod<[Principal], Result_5>,
+  'role_owner_set' : ActorMethod<[Array<Principal>], Result_5>,
+  'role_user_list' : ActorMethod<[], Result_7>,
   'role_user_remove' : ActorMethod<[Principal], Result_3>,
 }

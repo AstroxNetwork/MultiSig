@@ -25,26 +25,17 @@ const client = createClient({
   // providers: defaultProviders,
   providers: [
     (window as any).icx
-      ? new ICX({
-          // providerUrl: "https://ccmhe-vqaaa-aaaai-acmoq-cai.raw.ic0.app/",
-          // providerUrl: "http://localhost:8080/",
-        })
+      ? new ICX({})
       : new AstroX({
           // providerUrl: "https://ccmhe-vqaaa-aaaai-acmoq-cai.raw.ic0.app/",
           providerUrl: 'http://localhost:8080/',
-          delegationModes: ['domain'],
+          delegationModes: ['global'],
         }),
     //  new PlugWallet(),
     //  new InternetIdentity()
   ],
   globalProviderConfig: {
-    // host: 'http://localhost:3000',
-    // dev: import.meta.env.DEV,
     dev: true,
-    // ledgerCanisterId: "ryjl3-tyaaa-aaaaa-aaaba-cai",
-    // ledgerHost: "http://localhost:8000",
-    // whitelist: ["ryjl3-tyaaa-aaaaa-aaaba-cai"],
-    // delegationModes:['global'],
     whitelist: [process.env.MS_PROVIDER_CANISTERID!],
   },
 });

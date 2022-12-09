@@ -20,18 +20,26 @@ export const msProviderActor = getActor<MsProviderService>(
 
 describe('scripts', () => {
   test('create controller', async () => {
-    let user1 = Ed25519KeyIdentity.fromJSON(JSON.stringify(endUsers[0]?.identity)).getPrincipal();
-    let user2 = Ed25519KeyIdentity.fromJSON(JSON.stringify(endUsers[1]?.identity)).getPrincipal()
+    let user1 = Ed25519KeyIdentity.fromJSON(
+      JSON.stringify(endUsers[0]?.identity),
+    ).getPrincipal();
+    let user2 = Ed25519KeyIdentity.fromJSON(
+      JSON.stringify(endUsers[1]?.identity),
+    ).getPrincipal();
 
-    console.log("create controller")
+    console.log('create controller');
     const actor = await msProviderActor;
 
-    let resp1 = await actor.controller_main_create({name: "test", total_user_amount: 5, threshold_user_amount: 2})
-    console.log(resp1)
+    let resp1 = await actor.controller_main_create({
+      name: 'test',
+      total_user_amount: 5,
+      threshold_user_amount: 2,
+    });
+    console.log(resp1);
 
     let controller_id = resp1.Ok.id;
-    console.log(controller_id)
-    console.log("add user")
+    console.log(controller_id);
+    console.log('add user');
 
     let controller = await getActor<MsControllerService>(
       identity,
@@ -39,14 +47,18 @@ describe('scripts', () => {
       controller_id,
     );
 
-    await controller.batch_user_add([[user1, "user1"], [user2, "user2"]])
+    await controller.batch_user_add([
+      [user1, 'user1'],
+      [user2, 'user2'],
+    ]);
 
-    let users = await controller.role_user_list()
-    console.log(users)
+    let users = await controller.role_user_list();
+    console.log(users);
 
-    await controller.app_main_create()
+    let wallet = await controller.app_main_create();
 
-    let resp = await controller.app_action_get()
-    console.log(resp)
+    console.log('wallet', wallet);
+    // let resp = await controller.app_action_get()
+    // console.log(resp)
   });
 });
