@@ -167,7 +167,7 @@ fn app_action_get(action_id: u64) -> Result<Action, SystemErr> {
 
 
 #[query(name = "app_action_list", guard = "user_guard")]
-#[candid_method(update, rename = "app_action_list")]
+#[candid_method(query, rename = "app_action_list")]
 fn app_action_list() -> Result<Vec<Action>, SystemErr> {
   ic_cdk::println!("controller: app_action_list");
 
@@ -175,10 +175,10 @@ fn app_action_list() -> Result<Vec<Action>, SystemErr> {
   Ok(actions)
 }
 
-#[query(name = "action_sign_create", guard = "user_guard")]
+#[update(name = "action_sign_create", guard = "user_guard")]
 #[candid_method(update, rename = "action_sign_create")]
 fn action_sign_create(action_id: u64) -> Result<Sign, SystemErr> {
-  ic_cdk::println!("controller: app_action_list");
+  ic_cdk::println!("controller: action_sign_create");
 
   let app = CONTROLLER.with(|controller| controller.borrow().app);
 

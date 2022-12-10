@@ -161,7 +161,7 @@ fn action_sign_create_multi_time(){
   let result = Service::action_sign_create(wallet2, 1, &user1_principal, 2);
   assert!(result.is_err());
 
-  assert_eq!(1002, result.unwrap_err().code);
+  assert_eq!(404, result.unwrap_err().code);
 }
 
 #[test]
@@ -179,6 +179,7 @@ fn action_sign_create_success(){
 
   let wallet1 = MockWallet::new();
   let sign1 = Service::action_sign_create(wallet1, 1, &user1_principal, user1_signat).unwrap();
+  println!("{:?}", sign1);
   assert_eq!(user1_signat, sign1.sign_at);
   action = Service::app_action_get(1).unwrap();
   assert_eq!(1, action.signs.len());
@@ -188,6 +189,7 @@ fn action_sign_create_success(){
   wallet2.expect_action_main_invoke().returning(|_| ());
 
   let sign2 = Service::action_sign_create(wallet2, 1, &user2_principal, user2_signat).unwrap();
+  println!("{:?}", sign2);
   assert_eq!(user2_signat, sign2.sign_at);
   action = Service::app_action_get(1).unwrap();
   assert_eq!(2, action.signs.len());

@@ -91,7 +91,6 @@ pub async fn controller_main_create(request: ControllerMainCreateRequest) -> Res
 
     let ms_controller = MsController::new();
 
-
     match Service::controller_main_create(ego_store, ms_controller, &user, request.name, request.total_user_amount, request.threshold_user_amount).await {
         Ok(controller) => {
             Ok(controller)
