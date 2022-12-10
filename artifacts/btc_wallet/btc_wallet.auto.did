@@ -30,8 +30,10 @@ service : () -> {
   btc_network_set : (Network) -> (Network);
   btc_tx_send : (SendRequest) -> (Result_2);
   btc_utxos_get : (text) -> (vec Utxo);
+  canister_controller_add : (principal) -> (Result_3);
+  canister_controller_remove : (principal) -> (Result_3);
   role_op_add : (principal) -> (Result_3);
+  role_owner_add : (principal) -> (Result_3);
+  role_owner_remove : (principal) -> (Result_3);
   role_owner_set : (vec principal) -> (Result_3);
-  role_user_add : (principal) -> (Result_3);
-  role_user_remove : (principal) -> (Result_3);
 }
