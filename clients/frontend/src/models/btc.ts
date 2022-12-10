@@ -82,7 +82,7 @@ export const btc = createModel<RootModel>()({
             result !== undefined
               ? result === BigInt(0)
                 ? '0'
-                : balanceToString(result, 8)
+                : balanceToString(result, 8).formatTotal
               : '--',
         });
       } catch (err) {

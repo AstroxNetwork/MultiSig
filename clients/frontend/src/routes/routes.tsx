@@ -55,12 +55,12 @@ const routes: IRoute[] = [
         path: '/wallet/transactions',
         component: WalletTransactions,
       },
-      {
-        name: 'Address Book',
-        icon: <BookOutlined />,
-        path: '/wallet/book',
-        component: AddressBook,
-      },
+      // {
+      //   name: 'Address Book',
+      //   icon: <BookOutlined />,
+      //   path: '/wallet/book',
+      //   component: AddressBook,
+      // },
       {
         name: 'Wallet create',
         hideInMenu: true,
