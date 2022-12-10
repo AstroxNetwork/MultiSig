@@ -28,6 +28,8 @@ impl AppWallet {
 
 impl TAppWallet for AppWallet {
   fn action_main_invoke(&self, path: String, to_address: String, amount_in_satoshi: u64, _extended: BTreeMap<String, String>) {
+    ic_cdk::println!("TAppWallet.action_main_invoke path:{}, to_address:{}, amount_in_satoshi:{}", path.clone(), to_address.clone(), amount_in_satoshi);
+
     let req = SendRequest{
       path,
       to_address,
