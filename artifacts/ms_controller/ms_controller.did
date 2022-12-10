@@ -1,0 +1,39 @@
+type Action = record {
+  id : nat64;
+  status : ActionStatus;
+  create_at : nat64;
+  signs : vec Sign;
+  due_at : nat64;
+  params : vec record { text; text };
+};
+type ActionStatus = variant { INIT; SUCCESS; TIMEOUT; SINGING };
+type AppActionCreateRequest = record { params : vec record { text; text } };
+type Result = variant { Ok : Sign; Err : SystemErr };
+type Result_1 = variant { Ok : Action; Err : SystemErr };
+type Result_2 = variant { Ok : vec Action; Err : SystemErr };
+type Result_3 = variant { Ok; Err : SystemErr };
+type Result_4 = variant { Ok; Err : text };
+type Result_5 = variant { Ok : vec record { text; vec principal }; Err : text };
+type Result_6 = variant {
+  Ok : vec record { principal; text };
+  Err : SystemErr;
+};
+type Sign = record { sign_at : nat64; user_id : principal };
+type SystemErr = record { msg : text; code : nat16 };
+service : () -> {
+  action_sign_create : (nat64) -> (Result);
+  app_action_create : (AppActionCreateRequest) -> (Result_1);
+  app_action_get : (nat64) -> (Result_1) query;
+  app_action_list : () -> (Result_2);
+  app_main_create : () -> (Result_3);
+  batch_user_add : (vec record { principal; text }) -> (Result_3);
+  canister_add : (text, principal) -> (Result_4);
+  canister_list : () -> (Result_5);
+  canister_remove : (text, principal) -> (Result_4);
+  controller_init : (nat16, nat16) -> ();
+  role_op_add : (principal) -> (Result_4);
+  role_owner_set : (vec principal) -> (Result_4);
+  role_user_add : (principal) -> (Result_4);
+  role_user_list : () -> (Result_6) query;
+  role_user_remove : (principal) -> (Result_4);
+}
