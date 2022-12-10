@@ -1,7 +1,7 @@
 export const SUB_ACCOUNT_BYTE_LENGTH = 32;
 export const CREATE_CANISTER_MEMO = BigInt(0x41455243); // CREA,
 export const TOP_UP_CANISTER_MEMO = BigInt(0x50555054); // TPUP
-
+export const BTC_PATH = "m/44'/0'/0'/0/0";
 export const TRANSACTION_FEE = BigInt(10_000);
 
 export const NET_ID = {

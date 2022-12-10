@@ -32,6 +32,7 @@ import {
 import { getActor, hasOwnProperty } from '@/utils';
 import { Avatar, Drawer, List } from 'antd';
 import { Principal } from '@dfinity/principal';
+import { BTC_PATH } from '@/utils/constants';
 
 const loginPath = '/home';
 
@@ -155,28 +156,11 @@ export default (props: any) => {
           selectGroup.id.toText(),
           controllerIdl,
         );
-        const walletResult = await activeControllerActor?.app_main_get();
-        console.log(walletResult);
-        if (walletResult && hasOwnProperty(walletResult, 'Ok')) {
-          const canisterId = (walletResult['Ok'] as [Principal])[0].toText();
-          const activeBtcWalletActor = await getActor<btcService>(
-            activeProvider!,
-            canisterId,
-            btcIdl,
-          );
-          dispatch.btc.save({ activeBtcWalletActor });
-          //设置网络
-          try {
-            await activeBtcWalletActor?.btc_network_set({ Regtest: null });
-          } catch (err) {
-            console.log('err', err);
-          }
-        }
-
-        dispatch.controller.save({
+        await dispatch.controller.save({
           activeController: selectGroup,
           activeControllerActor,
         });
+        dispatch.btc.initBTCWallet({ provider: activeProvider! });
         history.replace('/wallet/assets');
       } else {
         history.replace('/group/home');
@@ -191,18 +175,19 @@ export default (props: any) => {
   };
 
   const selectGroup = async (group: Controller) => {
-    const controllerActor = await getActor(
+    const controllerActor = await getActor<controllerService>(
       activeProvider!,
       group!.id.toText(),
       controllerIdl,
     );
-    dispatch.controller.save({
+    setGroupVisable(false);
+    await dispatch.controller.save({
       activeController: group,
       activeControllerActor: controllerActor,
     });
+    await dispatch.btc.initBTCWallet({ provider: activeProvider! });
     localStorage.setItem('ACTIVE_GROUP', group.id.toText());
     // dispatch.app.queryWallets({ contrlCanisterId: group.id.toText() });
-    setGroupVisable(false);
     history.push('/wallet/assets');
   };
 
