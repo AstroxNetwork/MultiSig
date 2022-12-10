@@ -5,15 +5,23 @@ export interface Action {
   'id' : bigint,
   'status' : ActionStatus,
   'create_at' : bigint,
+  'path' : string,
+  'to_address' : string,
   'signs' : Array<Sign>,
   'due_at' : bigint,
-  'params' : Array<[string, string]>,
+  'amount_in_satoshi' : bigint,
+  'extended' : Array<[string, string]>,
 }
 export type ActionStatus = { 'INIT' : null } |
   { 'SUCCESS' : null } |
   { 'TIMEOUT' : null } |
   { 'SINGING' : null };
-export interface AppActionCreateRequest { 'params' : Array<[string, string]> }
+export interface AppActionCreateRequest {
+  'path' : string,
+  'to_address' : string,
+  'amount_in_satoshi' : bigint,
+  'extended' : Array<[string, string]>,
+}
 export type Result = { 'Ok' : Sign } |
   { 'Err' : SystemErr };
 export type Result_1 = { 'Ok' : Action } |

@@ -3,7 +3,10 @@ export const idlFactory = ({ IDL }) => {
   const SystemErr = IDL.Record({ 'msg' : IDL.Text, 'code' : IDL.Nat16 });
   const Result = IDL.Variant({ 'Ok' : Sign, 'Err' : SystemErr });
   const AppActionCreateRequest = IDL.Record({
-    'params' : IDL.Vec(IDL.Tuple(IDL.Text, IDL.Text)),
+    'path' : IDL.Text,
+    'to_address' : IDL.Text,
+    'amount_in_satoshi' : IDL.Nat64,
+    'extended' : IDL.Vec(IDL.Tuple(IDL.Text, IDL.Text)),
   });
   const ActionStatus = IDL.Variant({
     'INIT' : IDL.Null,
@@ -15,9 +18,12 @@ export const idlFactory = ({ IDL }) => {
     'id' : IDL.Nat64,
     'status' : ActionStatus,
     'create_at' : IDL.Nat64,
+    'path' : IDL.Text,
+    'to_address' : IDL.Text,
     'signs' : IDL.Vec(Sign),
     'due_at' : IDL.Nat64,
-    'params' : IDL.Vec(IDL.Tuple(IDL.Text, IDL.Text)),
+    'amount_in_satoshi' : IDL.Nat64,
+    'extended' : IDL.Vec(IDL.Tuple(IDL.Text, IDL.Text)),
   });
   const Result_1 = IDL.Variant({ 'Ok' : Action, 'Err' : SystemErr });
   const Result_2 = IDL.Variant({ 'Ok' : IDL.Vec(Action), 'Err' : SystemErr });
@@ -39,7 +45,7 @@ export const idlFactory = ({ IDL }) => {
     'action_sign_create' : IDL.Func([IDL.Nat64], [Result], []),
     'app_action_create' : IDL.Func([AppActionCreateRequest], [Result_1], []),
     'app_action_get' : IDL.Func([IDL.Nat64], [Result_1], ['query']),
-    'app_action_list' : IDL.Func([], [Result_2], []),
+    'app_action_list' : IDL.Func([], [Result_2], ['query']),
     'app_main_create' : IDL.Func([], [Result_3], []),
     'app_main_get' : IDL.Func([], [Result_4], ['query']),
     'batch_user_add' : IDL.Func(

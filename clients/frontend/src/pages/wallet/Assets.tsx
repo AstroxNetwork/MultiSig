@@ -8,16 +8,20 @@ import {
 } from '@ant-design/pro-components';
 import { useConnect } from '@connect2ic/react';
 import { idlFactory as controllerIdl } from '@/../../idls/ms_controller.idl';
-import { Avatar, Button, Descriptions, List, message } from 'antd';
+import { Avatar, Button, Descriptions, List, message, Spin } from 'antd';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import Modal from 'antd/es/modal/Modal';
 import { BTC_PATH } from '@/utils/constants';
-import { balanceFromString } from '@/utils/converter';
+import { balanceFromString, balanceToString } from '@/utils/converter';
 import BTC_ICON from '@/assets/bitcoin.svg';
-import { CopyOutlined } from '@ant-design/icons';
+import {
+  CopyOutlined,
+  Loading3QuartersOutlined,
+  LoadingOutlined,
+} from '@ant-design/icons';
 
 const WalletAssets = () => {
   const { activeProvider } = useConnect();
@@ -28,6 +32,7 @@ const WalletAssets = () => {
   const { activeControllerActor } = useSelector(
     (state: RootState) => state.controller,
   );
+  const [balanceLoading, setBalanceLoading] = useState(false);
   const dispatch = useDispatch<RootDispatch>();
 
   const history = useHistory();
@@ -43,17 +48,14 @@ const WalletAssets = () => {
   const createAction = async (values: { [key: string]: string }) => {
     try {
       const result = await activeControllerActor?.app_action_create({
-        params: [
-          ['to_address', values.to_address],
-          ['path', BTC_PATH],
-          [
-            'amount_in_satoshi',
-            balanceFromString(values.amount_in_satoshi, 8).toString(),
-          ],
-        ],
+        to_address: values.to_address,
+        path: BTC_PATH,
+        amount_in_satoshi: balanceFromString(values.amount_in_satoshi, 8),
+        extended: [],
       });
       if (result && hasOwnProperty(result, 'Ok')) {
         message.success('Sent.');
+        setSendVisable(false);
       }
       console.log('result', result);
     } catch (err) {
@@ -118,7 +120,40 @@ const WalletAssets = () => {
                 />
               </div>
             }
-            description={`Balance: ${balance}`}
+            description={
+              <div className="flex">
+                <p className="mr-3">Balance: {balance}</p>
+                {balanceLoading ? (
+                  <Spin
+                    spinning={balanceLoading}
+                    size={'small'}
+                    indicator={<LoadingOutlined />}
+                  />
+                ) : (
+                  <Loading3QuartersOutlined
+                    onClick={async () => {
+                      setBalanceLoading(true);
+                      try {
+                        const result =
+                          await activeBtcWalletActor?.btc_balance_get(address);
+                        dispatch.btc.save({
+                          balance:
+                            result !== undefined
+                              ? result === BigInt(0)
+                                ? '0'
+                                : balanceToString(result, 8).formatTotal
+                              : '--',
+                        });
+                        setBalanceLoading(false);
+                      } catch (err) {
+                        console.log('err', err);
+                        setBalanceLoading(false);
+                      }
+                    }}
+                  />
+                )}
+              </div>
+            }
           />
           {/* <Button
             type="primary"

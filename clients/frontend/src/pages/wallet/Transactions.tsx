@@ -97,13 +97,15 @@ const WalletTransactions = () => {
           >
             <div className="flex">
               <Descriptions column={1}>
-                {action.params.map(arr => (
-                  <Descriptions.Item key={arr[0]} label={arr[0]}>
-                    {arr[0] === 'amount_in_satoshi'
-                      ? balanceToString(BigInt(arr[1]), 8).total
-                      : arr[1]}
-                  </Descriptions.Item>
-                ))}
+                <Descriptions.Item label={'Path'}>
+                  {action.path}
+                </Descriptions.Item>
+                <Descriptions.Item label={'toAddress'}>
+                  {action.to_address}
+                </Descriptions.Item>
+                <Descriptions.Item label={'Amount'}>
+                  {balanceToString(action.amount_in_satoshi, 8).formatTotal}
+                </Descriptions.Item>
               </Descriptions>
               <List
                 style={{ minWidth: 400 }}
