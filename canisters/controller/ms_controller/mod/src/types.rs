@@ -5,7 +5,10 @@ use serde::Serialize;
 
 #[derive(CandidType, Deserialize, Serialize)]
 pub struct AppActionCreateRequest {
-  pub params: BTreeMap<String, String>
+  pub path: String,
+  pub to_address: String,
+  pub amount_in_satoshi: u64,
+  pub extended: BTreeMap<String, String>
 }
 
 #[derive(Clone, Debug, CandidType, Deserialize, Serialize)]

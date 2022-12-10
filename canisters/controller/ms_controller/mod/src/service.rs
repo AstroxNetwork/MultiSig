@@ -34,10 +34,13 @@ impl Service {
   }
 
   pub fn app_action_create(
-    params: BTreeMap<String, String>,
+    path: String,
+    to_address: String,
+    amount_in_satoshi: u64,
+    extended: BTreeMap<String, String>,
     create_at: u64,
   ) -> Action {
-    CONTROLLER.with(|controller| controller.borrow_mut().app_action_create(params, create_at))
+    CONTROLLER.with(|controller| controller.borrow_mut().app_action_create(path, to_address, amount_in_satoshi, extended, create_at))
   }
 
   pub fn app_action_list() -> Vec<Action> {

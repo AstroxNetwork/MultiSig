@@ -153,7 +153,7 @@ async fn app_main_get() -> Result<Option<Principal>, SystemErr> {
 fn app_action_create(req: AppActionCreateRequest) -> Result<Action, SystemErr> {
   ic_cdk::println!("controller: app_action_create");
 
-  let action = Service::app_action_create(req.params, time());
+  let action = Service::app_action_create(req.path, req.to_address, req.amount_in_satoshi, req.extended, time());
   Ok(action)
 }
 
