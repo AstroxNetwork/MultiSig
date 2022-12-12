@@ -22,6 +22,7 @@ export const idlFactory = ({ IDL }) => {
     'path' : IDL.Text,
     'to_address' : IDL.Text,
     'amount_in_satoshi' : IDL.Nat64,
+    'extended' : IDL.Vec(IDL.Tuple(IDL.Text, IDL.Text)),
   });
   const SendResponse = IDL.Record({
     'tx_id' : IDL.Text,

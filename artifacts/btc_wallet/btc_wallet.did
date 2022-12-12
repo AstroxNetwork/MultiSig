@@ -10,6 +10,7 @@ type SendRequest = record {
   path : text;
   to_address : text;
   amount_in_satoshi : nat64;
+  extended : vec record { text; text };
 };
 type SendResponse = record {
   tx_id : text;

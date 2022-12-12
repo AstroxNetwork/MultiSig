@@ -4,6 +4,7 @@ use ic_cdk::export::{
     serde::Serialize,
     Principal,
 };
+use std::collections::BTreeMap;
 
 #[derive(CandidType, Deserialize, Clone, Debug)]
 pub struct AddManagersRequest {
@@ -105,6 +106,7 @@ pub struct SendRequest {
     pub path: String,
     pub to_address: String,
     pub amount_in_satoshi: u64,
+    pub extended: BTreeMap<String, String>,
 }
 
 #[derive(CandidType, Deserialize, Clone, Debug)]

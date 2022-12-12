@@ -20,6 +20,7 @@ export interface SendRequest {
   'path' : string,
   'to_address' : string,
   'amount_in_satoshi' : bigint,
+  'extended' : Array<[string, string]>,
 }
 export interface SendResponse {
   'tx_id' : string,
