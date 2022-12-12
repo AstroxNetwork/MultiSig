@@ -9,6 +9,7 @@ pub struct SendRequest {
   pub path: String,
   pub to_address: String,
   pub amount_in_satoshi: u64,
+  pub extended: BTreeMap<String, String>,
 }
 
 pub trait TAppWallet {
@@ -27,13 +28,14 @@ impl AppWallet {
 
 
 impl TAppWallet for AppWallet {
-  fn action_main_invoke(&self, path: String, to_address: String, amount_in_satoshi: u64, _extended: BTreeMap<String, String>) {
+  fn action_main_invoke(&self, path: String, to_address: String, amount_in_satoshi: u64, extended: BTreeMap<String, String>) {
     ic_cdk::println!("TAppWallet.action_main_invoke path:{}, to_address:{}, amount_in_satoshi:{}", path.clone(), to_address.clone(), amount_in_satoshi);
 
     let req = SendRequest{
       path,
       to_address,
-      amount_in_satoshi
+      amount_in_satoshi,
+      extended
     };
     let _result = api::call::notify(self.canister_id, "btc_tx_send", (req,));
   }
