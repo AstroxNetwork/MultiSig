@@ -62,9 +62,14 @@ export const btc = createModel<RootModel>()({
             await activeBtcWalletActor?.btc_address_set(BTC_PATH);
             await dispatch.btc.getAddress({});
             await dispatch.btc.getBalance({});
+            await dispatch.btc.getTxHistory({});
           } catch (err) {
             console.log('err', err);
           }
+        } else {
+          console.log();
+          await activeControllerActor?.app_main_create();
+          dispatch.btc.initBTCWallet({ provider: payload.provider });
         }
       } catch (err) {
         console.log('err', err);
@@ -118,9 +123,10 @@ export const btc = createModel<RootModel>()({
     },
     async getFee(payload, rootState) {
       try {
-        console.log('getFee start', payload);
+        console.log('getFee start');
         const { activeBtcWalletActor } = rootState.btc;
         let result = await activeBtcWalletActor?.btc_fee_get();
+        console.log('getFee result', result);
         dispatch.btc.save({
           fee: result,
         });
@@ -133,6 +139,7 @@ export const btc = createModel<RootModel>()({
         console.log('getTxHistory start', payload);
         const { activeBtcWalletActor, address } = rootState.btc;
         let result = await activeBtcWalletActor?.btc_utxos_get(address);
+        console.log('getTxHistory end', result);
         dispatch.btc.save({
           txHistory: result,
         });
