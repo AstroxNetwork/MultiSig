@@ -103,16 +103,16 @@ export type Result_3 = { 'Ok' : AppVersionUploadWasmResponse } |
   { 'Err' : EgoError };
 export type Result_4 = { 'Ok' : AppVersionWaitForAuditResponse } |
   { 'Err' : EgoError };
-export type Result_5 = { 'Ok' : null } |
+export type Result_5 = { 'Ok' : AppMainGetResponse } |
+  { 'Err' : EgoError };
+export type Result_6 = { 'Ok' : DeveloperAppListResponse } |
+  { 'Err' : EgoError };
+export type Result_7 = { 'Ok' : DeveloperMainGetResponse } |
+  { 'Err' : EgoError };
+export type Result_8 = { 'Ok' : null } |
   { 'Err' : string };
-export type Result_6 = { 'Ok' : Array<[string, Array<Principal>]> } |
+export type Result_9 = { 'Ok' : Array<[string, Array<Principal>]> } |
   { 'Err' : string };
-export type Result_7 = { 'Ok' : AppMainGetResponse } |
-  { 'Err' : EgoError };
-export type Result_8 = { 'Ok' : DeveloperAppListResponse } |
-  { 'Err' : EgoError };
-export type Result_9 = { 'Ok' : DeveloperMainGetResponse } |
-  { 'Err' : EgoError };
 export interface UserMainListRequest { 'name' : string }
 export interface UserMainListResponse { 'users' : Array<Developer> }
 export interface UserRoleSetRequest {
@@ -150,19 +150,18 @@ export interface _SERVICE {
   >,
   'app_version_wait_for_audit' : ActorMethod<[], Result_4>,
   'balance_get' : ActorMethod<[], bigint>,
-  'canister_add' : ActorMethod<[string, Principal], Result_5>,
-  'canister_list' : ActorMethod<[], Result_6>,
-  'canister_remove' : ActorMethod<[string, Principal], Result_5>,
-  'developer_app_get' : ActorMethod<[AppMainGetRequest], Result_7>,
-  'developer_app_list' : ActorMethod<[], Result_8>,
-  'developer_app_new' : ActorMethod<[AppMainNewRequest], Result_7>,
-  'developer_main_get' : ActorMethod<[], Result_9>,
+  'developer_app_get' : ActorMethod<[AppMainGetRequest], Result_5>,
+  'developer_app_list' : ActorMethod<[], Result_6>,
+  'developer_app_new' : ActorMethod<[AppMainNewRequest], Result_5>,
+  'developer_main_get' : ActorMethod<[], Result_7>,
   'developer_main_register' : ActorMethod<
     [DeveloperMainRegisterRequest],
-    Result_9,
+    Result_7,
   >,
-  'ego_owner_add' : ActorMethod<[Principal], Result_5>,
-  'ego_user_add' : ActorMethod<[Principal], Result_5>,
+  'ego_canister_add' : ActorMethod<[string, Principal], Result_8>,
+  'ego_canister_list' : ActorMethod<[], Result_9>,
+  'ego_owner_add' : ActorMethod<[Principal], Result_8>,
+  'ego_user_add' : ActorMethod<[Principal], Result_8>,
   'user_main_list' : ActorMethod<[UserMainListRequest], Result_10>,
   'user_role_set' : ActorMethod<[UserRoleSetRequest], Result_11>,
 }

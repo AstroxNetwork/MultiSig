@@ -51,11 +51,10 @@ export interface _SERVICE {
     Result,
   >,
   'balance_get' : ActorMethod<[], bigint>,
-  'canister_add' : ActorMethod<[string, Principal], Result_1>,
-  'canister_list' : ActorMethod<[], Result_2>,
   'canister_main_track' : ActorMethod<[], undefined>,
   'canister_relation_update' : ActorMethod<[string], undefined>,
-  'canister_remove' : ActorMethod<[string, Principal], Result_1>,
+  'ego_canister_add' : ActorMethod<[string, Principal], Result_1>,
+  'ego_canister_list' : ActorMethod<[], Result_2>,
   'ego_owner_add' : ActorMethod<[Principal], Result_1>,
   'ego_user_add' : ActorMethod<[Principal], Result_1>,
 }

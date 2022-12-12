@@ -108,16 +108,11 @@ export const idlFactory = ({ IDL }) => {
     'Ok' : AppVersionWaitForAuditResponse,
     'Err' : EgoError,
   });
-  const Result_5 = IDL.Variant({ 'Ok' : IDL.Null, 'Err' : IDL.Text });
-  const Result_6 = IDL.Variant({
-    'Ok' : IDL.Vec(IDL.Tuple(IDL.Text, IDL.Vec(IDL.Principal))),
-    'Err' : IDL.Text,
-  });
   const AppMainGetRequest = IDL.Record({ 'app_id' : IDL.Text });
   const AppMainGetResponse = IDL.Record({ 'app' : EgoDevApp });
-  const Result_7 = IDL.Variant({ 'Ok' : AppMainGetResponse, 'Err' : EgoError });
+  const Result_5 = IDL.Variant({ 'Ok' : AppMainGetResponse, 'Err' : EgoError });
   const DeveloperAppListResponse = IDL.Record({ 'apps' : IDL.Vec(EgoDevApp) });
-  const Result_8 = IDL.Variant({
+  const Result_6 = IDL.Variant({
     'Ok' : DeveloperAppListResponse,
     'Err' : EgoError,
   });
@@ -137,11 +132,16 @@ export const idlFactory = ({ IDL }) => {
     'is_manager' : IDL.Bool,
   });
   const DeveloperMainGetResponse = IDL.Record({ 'developer' : Developer });
-  const Result_9 = IDL.Variant({
+  const Result_7 = IDL.Variant({
     'Ok' : DeveloperMainGetResponse,
     'Err' : EgoError,
   });
   const DeveloperMainRegisterRequest = IDL.Record({ 'name' : IDL.Text });
+  const Result_8 = IDL.Variant({ 'Ok' : IDL.Null, 'Err' : IDL.Text });
+  const Result_9 = IDL.Variant({
+    'Ok' : IDL.Vec(IDL.Tuple(IDL.Text, IDL.Vec(IDL.Principal))),
+    'Err' : IDL.Text,
+  });
   const UserMainListRequest = IDL.Record({ 'name' : IDL.Text });
   const UserMainListResponse = IDL.Record({ 'users' : IDL.Vec(Developer) });
   const Result_10 = IDL.Variant({
@@ -178,20 +178,19 @@ export const idlFactory = ({ IDL }) => {
       ),
     'app_version_wait_for_audit' : IDL.Func([], [Result_4], ['query']),
     'balance_get' : IDL.Func([], [IDL.Nat], []),
-    'canister_add' : IDL.Func([IDL.Text, IDL.Principal], [Result_5], []),
-    'canister_list' : IDL.Func([], [Result_6], []),
-    'canister_remove' : IDL.Func([IDL.Text, IDL.Principal], [Result_5], []),
-    'developer_app_get' : IDL.Func([AppMainGetRequest], [Result_7], ['query']),
-    'developer_app_list' : IDL.Func([], [Result_8], ['query']),
-    'developer_app_new' : IDL.Func([AppMainNewRequest], [Result_7], []),
-    'developer_main_get' : IDL.Func([], [Result_9], ['query']),
+    'developer_app_get' : IDL.Func([AppMainGetRequest], [Result_5], ['query']),
+    'developer_app_list' : IDL.Func([], [Result_6], ['query']),
+    'developer_app_new' : IDL.Func([AppMainNewRequest], [Result_5], []),
+    'developer_main_get' : IDL.Func([], [Result_7], ['query']),
     'developer_main_register' : IDL.Func(
         [DeveloperMainRegisterRequest],
-        [Result_9],
+        [Result_7],
         [],
       ),
-    'ego_owner_add' : IDL.Func([IDL.Principal], [Result_5], []),
-    'ego_user_add' : IDL.Func([IDL.Principal], [Result_5], []),
+    'ego_canister_add' : IDL.Func([IDL.Text, IDL.Principal], [Result_8], []),
+    'ego_canister_list' : IDL.Func([], [Result_9], []),
+    'ego_owner_add' : IDL.Func([IDL.Principal], [Result_8], []),
+    'ego_user_add' : IDL.Func([IDL.Principal], [Result_8], []),
     'user_main_list' : IDL.Func([UserMainListRequest], [Result_10], ['query']),
     'user_role_set' : IDL.Func([UserRoleSetRequest], [Result_11], []),
   });

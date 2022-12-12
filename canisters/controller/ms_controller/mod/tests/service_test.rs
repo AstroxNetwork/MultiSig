@@ -2,6 +2,7 @@ use std::collections::BTreeMap;
 use async_trait::async_trait;
 use ego_lib::ego_types::{AppId, Canister, CanisterType, UserApp, EgoError, QueryParam, App, WalletApp, Category};
 use ego_lib::ego_store::TEgoStore;
+use ego_lib::ego_canister::TEgoCanister;
 use ic_cdk::export::Principal;
 use mockall::mock;
 use ms_controller_mod::model::{Action, ActionStatus};
@@ -28,6 +29,31 @@ mock! {
   #[async_trait]
   impl TAppWallet for Wallet {
     fn action_main_invoke(&self, path: String, to_address: String, amount_in_satoshi: u64, extended: BTreeMap<String, String>);
+  }
+}
+
+mock! {
+  Canister {}
+
+  #[async_trait]
+  impl TEgoCanister for Canister {
+    fn ego_owner_set(&self, target_canister_id: Principal, principals: Vec<Principal>);
+    fn ego_owner_add(&self, target_canister_id: Principal, principal: Principal);
+    fn ego_owner_remove(&self, target_canister_id: Principal, principal: Principal);
+
+    fn ego_user_set(&self, target_canister_id: Principal, user_ids: Vec<Principal>);
+    fn ego_user_add(&self, target_canister_id: Principal, principal: Principal);
+    fn ego_user_remove(&self, target_canister_id: Principal, principal: Principal);
+
+    fn ego_op_add(&self, target_canister_id: Principal, user_id: Principal);
+
+    fn ego_canister_add(&self, target_canister_id: Principal, name: String, principal: Principal);
+
+    fn ego_controller_set(&self, target_canister_id: Principal, principals: Vec<Principal>);
+    fn ego_controller_add(&self, target_canister_id: Principal, principal: Principal);
+    fn ego_controller_remove(&self, target_canister_id: Principal, principal: Principal);
+
+    async fn balance_get(&self, target_canister_id: Principal) -> Result<u128, String>;
   }
 }
 
@@ -61,8 +87,11 @@ pub fn set_up() {
 #[tokio::test]
 async fn app_main_create() {
   let btc_wallet_principal = Principal::from_text(BTC_WALLET_ID.to_string()).unwrap();
+  let user1_principal = Principal::from_text(USER1_ID.to_string()).unwrap();
 
   let mut ego_store = MockStore::new();
+  let mut ego_canister = MockCanister::new();
+
   ego_store.expect_wallet_app_install().returning(|app_id| {
     assert_eq!(APP_NAME.to_string(), app_id);
     let user_app = UserApp {
@@ -81,7 +110,10 @@ async fn app_main_create() {
     Ok(user_app)
   });
 
-  Service::app_main_create(ego_store, APP_NAME.to_string()).await.expect("btc_wallet created failed");
+  ego_canister.expect_ego_user_add().returning(|_, _| ());
+  ego_canister.expect_ego_user_remove().returning(|_, _| ());
+
+  Service::app_main_create(ego_store, ego_canister,user1_principal, APP_NAME.to_string()).await.expect("btc_wallet created failed");
 
   CONTROLLER.with(|controller| {
     assert_eq!(btc_wallet_principal, controller.borrow().app.unwrap());

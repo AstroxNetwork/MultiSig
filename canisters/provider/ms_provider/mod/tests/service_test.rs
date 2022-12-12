@@ -27,7 +27,7 @@ mock! {
 
   #[async_trait]
   impl TMsController for Controller {
-    fn controller_init(&self, total_user_amount: u16, threshold_user_amount: u16);
+    fn controller_init(&self, target_canister_id: Principal, total_user_amount: u16, threshold_user_amount: u16);
   }
 }
 
@@ -115,6 +115,8 @@ async fn controller_main_create(){
   let provider2_principal = Principal::from_text(PROVIDER2_ID).unwrap();
 
   let mut store = MockStore::new();
+  let mut ms_controller = MockController::new();
+
 
   store.expect_wallet_main_new().returning(move |_| {
     let user_app = WalletApp{
@@ -134,7 +136,9 @@ async fn controller_main_create(){
     Ok(user_app)
   });
 
-  let result = Service::controller_main_create(store, &user2, PROVIDER2_NAME.to_string(), 5, 2).await;
+  ms_controller.expect_controller_init().returning(|_, _, _| ());
+
+  let result = Service::controller_main_create(store, ms_controller,&user2, PROVIDER2_NAME.to_string(), 5, 2).await;
   assert!(result.is_ok());
   let controller = result.unwrap();
   assert_eq!(provider2_principal, controller.id);

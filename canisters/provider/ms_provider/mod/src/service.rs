@@ -1,6 +1,5 @@
 use ego_lib::ego_store::TEgoStore;
 use ic_cdk::export::Principal;
-use ic_cdk::id;
 use crate::model::Controller;
 use crate::ms_controller::TMsController;
 use crate::state::PROVIDER;
@@ -39,16 +38,8 @@ impl Service {
       Some(canister) => {
         let controller = PROVIDER.with(|provider| provider.borrow_mut().controller_main_create(&canister.canister_id, user_id, name, total_user_amount, threshold_user_amount));
 
-        let provider_id = id();
-
         ic_cdk::println!("2. init controller");
         ms_controller.controller_init(controller.id,  total_user_amount, threshold_user_amount);
-
-        ic_cdk::println!("3. remove provider as controller");
-        ms_controller.canister_controller_remove(controller.id, provider_id);
-
-        ic_cdk::println!("3. remove provider as owner");
-        ms_controller.role_owner_remove(controller.id, provider_id);
 
         Ok(controller)
       }

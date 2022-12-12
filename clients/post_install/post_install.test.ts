@@ -23,18 +23,23 @@ describe('ms_provider', () => {
 
     let storeOperator = await getOperator<EgoStoreService>('ego_store');
 
-    await storeOperator.admin_wallet_provider_add({
-      wallet_app_id: 'astrox_ms_controller',
-      wallet_provider: ms_provider_id,
-    });
+    const ego_store_id = Principal.fromText(getCanisterId('ego_store')!);
 
     console.log(`add ego_store to ms_provider\n`);
     let msProviderOperator = await getOperator<MsProviderService>(
       'ms_provider',
     );
 
-    const ego_store_id = Principal.fromText(getCanisterId('ego_store')!);
-    await msProviderOperator.canister_add('ego_store', ego_store_id);
+    await msProviderOperator.ego_canister_add('ego_store', ego_store_id);
+
+    await storeOperator.admin_wallet_provider_add({
+      wallet_app_id: 'astrox_ms_controller',
+      wallet_provider: ms_provider_id,
+    });
+
+
+
+
   });
 });
 
@@ -50,7 +55,7 @@ describe('ms_controller', () => {
     const ms_controller_version = {
       major: 1,
       minor: 0,
-      patch: 1,
+      patch: 2,
     };
 
     console.log(`release multisig controller\n`);
@@ -76,7 +81,7 @@ describe('btc_wallet', () => {
     const btc_wallet_controller_version = {
       major: 1,
       minor: 0,
-      patch: 1,
+      patch: 2,
     };
 
     console.log(`release btc wallet\n`);

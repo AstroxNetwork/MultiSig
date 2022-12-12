@@ -1,4 +1,5 @@
 use std::collections::{BTreeMap};
+use ego_lib::ego_canister::TEgoCanister;
 use ego_lib::ego_store::TEgoStore;
 use ego_lib::ego_types::AppId;
 use ic_cdk::export::Principal;
@@ -11,10 +12,13 @@ pub struct Service {}
 
 impl Service {
 
-  pub async fn app_main_create<S: TEgoStore>(
+  pub async fn app_main_create<S: TEgoStore, EC: TEgoCanister>(
     ego_store: S,
+    ego_canister: EC,
+    user_id: Principal,
     app_id: AppId
-  ) -> Result<(), SystemErr> {
+  ) -> Result<Principal, SystemErr> {
+    ic_cdk::println!("1. create wallet");
     let user_app = match ego_store.wallet_app_install(app_id).await {
       Ok(user_app) => Ok(user_app),
       Err(e) => {Err(SystemErr::from(e))}
@@ -23,7 +27,13 @@ impl Service {
     match user_app.backend {
       Some(canister) => {
         CONTROLLER.with(|controller| controller.borrow_mut().app = Some(canister.canister_id));
-        Ok(())
+
+        ic_cdk::println!("2. add self as user");
+        ego_canister.ego_user_add(canister.canister_id, user_id);
+
+        ic_cdk::println!("3. remove self from owner");
+        ego_canister.ego_owner_remove(canister.canister_id, user_id);
+        Ok(canister.canister_id)
       }
       _ => Err(SystemErr::from(Errors::SystemError))
     }

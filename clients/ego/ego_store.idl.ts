@@ -21,12 +21,7 @@ export const idlFactory = ({ IDL }) => {
     'wallet_provider' : IDL.Principal,
     'wallet_app_id' : IDL.Text,
   });
-  const AdminWalletProviderAddResponse = IDL.Record({ 'ret' : IDL.Bool });
-  const Result_2 = IDL.Variant({
-    'Ok' : AdminWalletProviderAddResponse,
-    'Err' : EgoError,
-  });
-  const AppMainGetRequest = IDL.Record({ 'app_id' : IDL.Text });
+  const Result_2 = IDL.Variant({ 'Ok' : IDL.Null, 'Err' : EgoError });
   const Category = IDL.Variant({ 'System' : IDL.Null, 'Vault' : IDL.Null });
   const Version = IDL.Record({
     'major' : IDL.Nat32,
@@ -42,8 +37,7 @@ export const idlFactory = ({ IDL }) => {
     'current_version' : Version,
     'price' : IDL.Float32,
   });
-  const AppMainGetResponse = IDL.Record({ 'app' : App });
-  const Result_3 = IDL.Variant({ 'Ok' : AppMainGetResponse, 'Err' : EgoError });
+  const Result_3 = IDL.Variant({ 'Ok' : App, 'Err' : EgoError });
   const QueryParam = IDL.Variant({
     'ByCategory' : IDL.Record({ 'category' : Category }),
   });
@@ -94,7 +88,7 @@ export const idlFactory = ({ IDL }) => {
     'canister_id' : IDL.Principal,
     'canister_type' : CanisterType,
   });
-  const AppInstalled = IDL.Record({
+  const UserApp = IDL.Record({
     'logo' : IDL.Text,
     'name' : IDL.Text,
     'frontend' : IDL.Opt(Canister),
@@ -104,18 +98,13 @@ export const idlFactory = ({ IDL }) => {
     'current_version' : Version,
     'backend' : IDL.Opt(Canister),
   });
-  const WalletAppInstallResponse = IDL.Record({ 'user_app' : AppInstalled });
-  const Result_8 = IDL.Variant({
-    'Ok' : WalletAppInstallResponse,
-    'Err' : EgoError,
-  });
-  const WalletAppListResponse = IDL.Record({ 'apps' : IDL.Vec(AppInstalled) });
+  const Result_8 = IDL.Variant({ 'Ok' : UserApp, 'Err' : EgoError });
+  const WalletAppListResponse = IDL.Record({ 'apps' : IDL.Vec(UserApp) });
   const Result_9 = IDL.Variant({
     'Ok' : WalletAppListResponse,
     'Err' : EgoError,
   });
-  const Result_10 = IDL.Variant({ 'Ok' : IDL.Record({}), 'Err' : EgoError });
-  const Result_11 = IDL.Variant({ 'Ok' : IDL.Null, 'Err' : EgoError });
+  const WalletCanisterTrackRequest = IDL.Record({ 'app_id' : IDL.Text });
   const WalletCycleChargeRequest = IDL.Record({
     'cycle' : IDL.Nat,
     'comment' : IDL.Text,
@@ -136,42 +125,38 @@ export const idlFactory = ({ IDL }) => {
   const WalletCycleListResponse = IDL.Record({
     'cash_flows' : IDL.Vec(CashFlow),
   });
-  const Result_12 = IDL.Variant({
+  const Result_10 = IDL.Variant({
     'Ok' : WalletCycleListResponse,
     'Err' : EgoError,
   });
-  const WalletMainNewRequest = IDL.Record({ 'user_id' : IDL.Principal });
-  const UserApp = IDL.Record({
+  const WalletApp = IDL.Record({
     'frontend' : IDL.Opt(Canister),
     'app_id' : IDL.Text,
     'current_version' : Version,
     'backend' : IDL.Opt(Canister),
   });
-  const WalletMainNewResponse = IDL.Record({ 'user_app' : UserApp });
-  const Result_13 = IDL.Variant({
-    'Ok' : WalletMainNewResponse,
-    'Err' : EgoError,
-  });
+  const Result_11 = IDL.Variant({ 'Ok' : WalletApp, 'Err' : EgoError });
+  const WalletMainRegisterRequest = IDL.Record({ 'user_id' : IDL.Principal });
   const WalletMainRegisterResponse = IDL.Record({
     'tenant_id' : IDL.Principal,
   });
-  const Result_14 = IDL.Variant({
+  const Result_12 = IDL.Variant({
     'Ok' : WalletMainRegisterResponse,
     'Err' : EgoError,
   });
   const WalletOrderListResponse = IDL.Record({ 'orders' : IDL.Vec(Order) });
-  const Result_15 = IDL.Variant({
+  const Result_13 = IDL.Variant({
     'Ok' : WalletOrderListResponse,
     'Err' : EgoError,
   });
   const WalletOrderNewRequest = IDL.Record({ 'amount' : IDL.Float32 });
   const WalletOrderNewResponse = IDL.Record({ 'memo' : IDL.Nat64 });
-  const Result_16 = IDL.Variant({
+  const Result_14 = IDL.Variant({
     'Ok' : WalletOrderNewResponse,
     'Err' : EgoError,
   });
   const WalletTenantGetResponse = IDL.Record({ 'tenant_id' : IDL.Principal });
-  const Result_17 = IDL.Variant({
+  const Result_15 = IDL.Variant({
     'Ok' : WalletTenantGetResponse,
     'Err' : EgoError,
   });
@@ -187,33 +172,44 @@ export const idlFactory = ({ IDL }) => {
         [Result_2],
         [],
       ),
-    'app_main_get' : IDL.Func([AppMainGetRequest], [Result_3], ['query']),
+    'app_main_get' : IDL.Func([IDL.Text], [Result_3], ['query']),
     'app_main_list' : IDL.Func([AppMainListRequest], [Result_4], ['query']),
     'app_main_release' : IDL.Func([AppMainReleaseRequest], [Result_5], []),
     'balance_get' : IDL.Func([], [IDL.Nat], []),
-    'canister_add' : IDL.Func([IDL.Text, IDL.Principal], [Result_6], []),
-    'canister_list' : IDL.Func([], [Result_7], []),
-    'canister_remove' : IDL.Func([IDL.Text, IDL.Principal], [Result_6], []),
+    'ego_canister_add' : IDL.Func([IDL.Text, IDL.Principal], [Result_6], []),
+    'ego_canister_list' : IDL.Func([], [Result_7], []),
     'ego_owner_add' : IDL.Func([IDL.Principal], [Result_6], []),
     'ego_user_add' : IDL.Func([IDL.Principal], [Result_6], []),
-    'wallet_app_install' : IDL.Func([AppMainGetRequest], [Result_8], []),
+    'wallet_app_install' : IDL.Func([IDL.Text], [Result_8], []),
     'wallet_app_list' : IDL.Func([], [Result_9], ['query']),
-    'wallet_app_remove' : IDL.Func([AppMainGetRequest], [Result_10], []),
-    'wallet_app_upgrade' : IDL.Func([AppMainGetRequest], [Result_8], []),
-    'wallet_canister_track' : IDL.Func([AppMainGetRequest], [Result_11], []),
-    'wallet_canister_untrack' : IDL.Func([AppMainGetRequest], [Result_11], []),
+    'wallet_app_remove' : IDL.Func([IDL.Text], [Result_2], []),
+    'wallet_app_upgrade' : IDL.Func([IDL.Text], [Result_8], []),
+    'wallet_canister_track' : IDL.Func(
+        [WalletCanisterTrackRequest],
+        [Result_2],
+        [],
+      ),
+    'wallet_canister_untrack' : IDL.Func(
+        [WalletCanisterTrackRequest],
+        [Result_2],
+        [],
+      ),
     'wallet_cycle_charge' : IDL.Func(
         [WalletCycleChargeRequest],
         [Result_5],
         [],
       ),
-    'wallet_cycle_list' : IDL.Func([], [Result_12], []),
-    'wallet_main_new' : IDL.Func([WalletMainNewRequest], [Result_13], []),
-    'wallet_main_register' : IDL.Func([WalletMainNewRequest], [Result_14], []),
-    'wallet_order_list' : IDL.Func([], [Result_15], []),
-    'wallet_order_new' : IDL.Func([WalletOrderNewRequest], [Result_16], []),
+    'wallet_cycle_list' : IDL.Func([], [Result_10], []),
+    'wallet_main_new' : IDL.Func([IDL.Principal], [Result_11], []),
+    'wallet_main_register' : IDL.Func(
+        [WalletMainRegisterRequest],
+        [Result_12],
+        [],
+      ),
+    'wallet_order_list' : IDL.Func([], [Result_13], []),
+    'wallet_order_new' : IDL.Func([WalletOrderNewRequest], [Result_14], []),
     'wallet_order_notify' : IDL.Func([WalletOrderNewResponse], [Result_5], []),
-    'wallet_tenant_get' : IDL.Func([], [Result_17], ['query']),
+    'wallet_tenant_get' : IDL.Func([], [Result_15], ['query']),
   });
 };
 export const init = ({ IDL }) => {

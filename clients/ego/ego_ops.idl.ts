@@ -52,11 +52,10 @@ export const idlFactory = ({ IDL }) => {
         [],
       ),
     'balance_get' : IDL.Func([], [IDL.Nat], []),
-    'canister_add' : IDL.Func([IDL.Text, IDL.Principal], [Result_1], []),
-    'canister_list' : IDL.Func([], [Result_2], []),
     'canister_main_track' : IDL.Func([], [], []),
     'canister_relation_update' : IDL.Func([IDL.Text], [], []),
-    'canister_remove' : IDL.Func([IDL.Text, IDL.Principal], [Result_1], []),
+    'ego_canister_add' : IDL.Func([IDL.Text, IDL.Principal], [Result_1], []),
+    'ego_canister_list' : IDL.Func([], [Result_2], []),
     'ego_owner_add' : IDL.Func([IDL.Principal], [Result_1], []),
     'ego_user_add' : IDL.Func([IDL.Principal], [Result_1], []),
   });

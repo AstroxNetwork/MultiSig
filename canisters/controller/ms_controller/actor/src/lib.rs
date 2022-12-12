@@ -6,8 +6,9 @@ use serde::Serialize;
 
 use astrox_macros::inject_canister_registry;
 use astrox_macros::inject_canister_users;
+use ms_controller_mod::ego_lib::ego_canister::EgoCanister;
 use ic_cdk::api::time;
-use ms_controller_mod::app_wallet::AppWallet;
+use ms_controller_mod::app_wallet::{AppWallet};
 use ms_controller_mod::ego_lib::ego_store::EgoStore;
 use ms_controller_mod::model::{Action, Controller, Sign};
 use ms_controller_mod::service::Service;
@@ -67,7 +68,7 @@ fn post_upgrade() {
 }
 
 
-#[update(name = "controller_init")]
+#[update(name = "controller_init", guard = "owner_guard")]
 #[candid_method(update, rename = "controller_init")]
 fn controller_init(total_user_amount: u16, threshold_user_amount: u16) {
   ic_cdk::println!("controller: controller_init");
@@ -126,16 +127,27 @@ fn role_user_list() -> Result<BTreeMap<Principal, String>, SystemErr> {
 /* ===== end user relative method ===== */
 
 
-#[update(name = "app_main_create", guard = "user_guard")]
+#[update(name = "app_main_create", guard = "owner_guard")]
 #[candid_method(update, rename = "app_main_create")]
 async fn app_main_create() -> Result<(), SystemErr> {
-  ic_cdk::println!("controller: install_app");
+  ic_cdk::println!("controller: app_main_create");
+
+  let user_id = caller();
 
   let canister_id = REGISTRY.with(|registry| registry.borrow().canister_get_one("ego_store")).unwrap();
 
   let ego_store = EgoStore::new(canister_id);
 
-  Service::app_main_create(ego_store, "ms_btc_wallet".to_string()).await
+  let ego_canister = EgoCanister::new();
+
+  match Service::app_main_create(ego_store, ego_canister, user_id, "ms_btc_wallet".to_string()).await {
+    Ok(_) => {
+      Ok(())
+    }
+    Err(e) => {
+      Err(e)
+    }
+  }
 }
 
 #[query(name = "app_main_get", guard = "user_guard")]
@@ -148,7 +160,7 @@ async fn app_main_get() -> Result<Option<Principal>, SystemErr> {
   })
 }
 
-#[update(name = "app_action_create", guard = "user_guard")]
+#[update(name = "app_action_create", guard = "owner_guard")]
 #[candid_method(update, rename = "app_action_create")]
 fn app_action_create(req: AppActionCreateRequest) -> Result<Action, SystemErr> {
   ic_cdk::println!("controller: app_action_create");

@@ -10,18 +10,27 @@ type ControllerMainCreateRequest = record {
   name : text;
   threshold_user_amount : nat16;
 };
-type Result = variant { Ok; Err : text };
-type Result_1 = variant { Ok : vec record { text; vec principal }; Err : text };
-type Result_2 = variant { Ok : Controller; Err : SystemErr };
-type Result_3 = variant { Ok : vec Controller; Err : SystemErr };
+type Result = variant { Ok : nat; Err : text };
+type Result_1 = variant { Ok : Controller; Err : SystemErr };
+type Result_2 = variant { Ok : vec Controller; Err : SystemErr };
+type Result_3 = variant { Ok; Err : text };
 type SystemErr = record { msg : text; code : nat16 };
 service : () -> {
-  canister_add : (text, principal) -> (Result);
-  canister_list : () -> (Result_1);
-  canister_remove : (text, principal) -> (Result);
-  controller_main_create : (ControllerMainCreateRequest) -> (Result_2);
-  controller_main_get : (principal) -> (Result_2) query;
-  controller_main_list : () -> (Result_3) query;
+  balance_get : () -> (Result) query;
+  controller_main_create : (ControllerMainCreateRequest) -> (Result_1);
+  controller_main_get : (principal) -> (Result_1) query;
+  controller_main_list : () -> (Result_2) query;
   controller_user_add : (principal) -> ();
   controller_user_remove : (principal) -> ();
+  ego_canister_add : (text, principal) -> (Result_3);
+  ego_controller_add : (principal) -> (Result_3);
+  ego_controller_remove : (principal) -> (Result_3);
+  ego_controller_set : (vec principal) -> (Result_3);
+  ego_op_add : (principal) -> (Result_3);
+  ego_owner_add : (principal) -> (Result_3);
+  ego_owner_remove : (principal) -> (Result_3);
+  ego_owner_set : (vec principal) -> (Result_3);
+  ego_user_add : (principal) -> (Result_3);
+  ego_user_remove : (principal) -> (Result_3);
+  ego_user_set : (vec principal) -> (Result_3);
 }

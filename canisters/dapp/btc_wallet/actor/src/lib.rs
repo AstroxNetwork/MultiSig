@@ -3,9 +3,9 @@ use candid::Principal as CanPrincipal;
 use ic_cdk::export::candid::{CandidType, Deserialize};
 use ic_cdk_macros::*;
 use serde::Serialize;
-use std::collections::BTreeMap;
 
 use astrox_macros::inject_canister_users;
+use astrox_macros::inject_canister_registry;
 use btc_wallet_mod::service::BtcStore;
 use btc_wallet_mod::tecdsa_signer::types::TSignerManager;
 use btc_wallet_mod::types::{
@@ -19,7 +19,13 @@ use ic_btc_types::{
 use ic_cdk::storage;
 
 inject_canister_users!();
+inject_canister_registry!();
 inject_ego_macros!();
+
+/********************  methods for canister_registry_macro   ********************/
+fn on_canister_added(name: &str, canister_id: Principal) {
+    ic_cdk::println!("on_canister_added name: {}, canister_id: {}", name, canister_id);
+}
 
 #[init]
 #[candid_method(init)]

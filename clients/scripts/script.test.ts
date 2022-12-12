@@ -6,6 +6,9 @@ import { idlFactory as MsProviderIdlFactory } from '@/idls/ms_provider.idl';
 import { _SERVICE as MsControllerService } from '@/idls/ms_controller';
 import { idlFactory as MsControllerIdlFactory } from '@/idls/ms_controller.idl';
 
+import { _SERVICE as BtcWalletService } from '@/idls/btc_wallet';
+import { idlFactory as BtcWalletIdlFactory } from '@/idls/btc_wallet.idl';
+
 import { identity } from '@/settings/identity';
 import { getCanisterId } from '@/settings/utils';
 
@@ -55,10 +58,28 @@ describe('scripts', () => {
     let users = await controller.role_user_list();
     console.log(users);
 
-    let wallet = await controller.app_main_create();
+    await controller.app_main_create();
 
-    console.log('wallet', wallet);
-    // let resp = await controller.app_action_get()
-    // console.log(resp)
+    let resp2 = await controller.app_main_get()
+    let result = resp2.Ok
+    console.log(result[0])
+    let wallet_id = result[0];
+    console.log(wallet_id);
+
+    let wallet = await getActor<BtcWalletService>(
+      identity,
+      BtcWalletIdlFactory,
+      wallet_id,
+    );
+
+    console.log('call btc_tx_send');
+    // @ts-ignore
+    let resp3 = await wallet.btc_tx_send({
+      path: '',
+      to_address: '',
+      amount_in_satoshi: 0n,
+      extended: []
+    })
+    console.log(resp3)
   });
 });

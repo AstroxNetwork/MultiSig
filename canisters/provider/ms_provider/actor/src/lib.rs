@@ -7,6 +7,9 @@ use ms_provider_mod::types::{ControllerMainCreateRequest, Errors, SystemErr};
 
 use astrox_macros::inject_canister_registry;
 use astrox_macros::inject_canister_users;
+use ego_lib::ego_canister::{EgoCanister, TEgoCanister};
+use ego_lib::inject_ego_macros;
+use ms_provider_mod::ego_lib;
 use ms_provider_mod::ego_lib::ego_store::EgoStore;
 use ms_provider_mod::model::{Controller, Provider};
 use ms_provider_mod::ms_controller::{MsController};
@@ -15,6 +18,7 @@ use ms_provider_mod::service::Service;
 
 inject_canister_users!();
 inject_canister_registry!();
+inject_ego_macros!();
 
 /********************  methods for canister_registry_macro   ********************/
 fn on_canister_added(_name: &str, _canister_id: Principal) {
@@ -93,6 +97,19 @@ pub async fn controller_main_create(request: ControllerMainCreateRequest) -> Res
 
     match Service::controller_main_create(ego_store, ms_controller, &user, request.name, request.total_user_amount, request.threshold_user_amount).await {
         Ok(controller) => {
+            let provider_principal = id();
+            ic_cdk::println!("3. register provider");
+            let ego_canister = EgoCanister::new();
+            ego_canister.ego_canister_add(controller.id, "provider".to_string(), provider_principal);
+
+            ic_cdk::println!("4. remove provider as controller");
+            ego_canister.ego_controller_remove(controller.id, provider_principal);
+
+            ic_cdk::println!("5. remove provider as owner");
+            ego_canister.ego_owner_remove(controller.id, provider_principal);
+
+
+
             Ok(controller)
         },
         Err(e) => Err(e),

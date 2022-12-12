@@ -32,11 +32,8 @@ export const idlFactory = ({ IDL }) => {
     'Ok' : IDL.Opt(IDL.Principal),
     'Err' : SystemErr,
   });
-  const Result_5 = IDL.Variant({ 'Ok' : IDL.Null, 'Err' : IDL.Text });
-  const Result_6 = IDL.Variant({
-    'Ok' : IDL.Vec(IDL.Tuple(IDL.Text, IDL.Vec(IDL.Principal))),
-    'Err' : IDL.Text,
-  });
+  const Result_5 = IDL.Variant({ 'Ok' : IDL.Nat, 'Err' : IDL.Text });
+  const Result_6 = IDL.Variant({ 'Ok' : IDL.Null, 'Err' : IDL.Text });
   const Result_7 = IDL.Variant({
     'Ok' : IDL.Vec(IDL.Tuple(IDL.Principal, IDL.Text)),
     'Err' : SystemErr,
@@ -48,21 +45,24 @@ export const idlFactory = ({ IDL }) => {
     'app_action_list' : IDL.Func([], [Result_2], ['query']),
     'app_main_create' : IDL.Func([], [Result_3], []),
     'app_main_get' : IDL.Func([], [Result_4], ['query']),
+    'balance_get' : IDL.Func([], [Result_5], ['query']),
     'batch_user_add' : IDL.Func(
         [IDL.Vec(IDL.Tuple(IDL.Principal, IDL.Text))],
         [Result_3],
         [],
       ),
-    'canister_add' : IDL.Func([IDL.Text, IDL.Principal], [Result_5], []),
-    'canister_controller_add' : IDL.Func([IDL.Principal], [Result_5], []),
-    'canister_controller_remove' : IDL.Func([IDL.Principal], [Result_5], []),
-    'canister_list' : IDL.Func([], [Result_6], []),
-    'canister_remove' : IDL.Func([IDL.Text, IDL.Principal], [Result_5], []),
     'controller_init' : IDL.Func([IDL.Nat16, IDL.Nat16], [], []),
-    'role_op_add' : IDL.Func([IDL.Principal], [Result_5], []),
-    'role_owner_add' : IDL.Func([IDL.Principal], [Result_5], []),
-    'role_owner_remove' : IDL.Func([IDL.Principal], [Result_5], []),
-    'role_owner_set' : IDL.Func([IDL.Vec(IDL.Principal)], [Result_5], []),
+    'ego_canister_add' : IDL.Func([IDL.Text, IDL.Principal], [Result_6], []),
+    'ego_controller_add' : IDL.Func([IDL.Principal], [Result_6], []),
+    'ego_controller_remove' : IDL.Func([IDL.Principal], [Result_6], []),
+    'ego_controller_set' : IDL.Func([IDL.Vec(IDL.Principal)], [Result_6], []),
+    'ego_op_add' : IDL.Func([IDL.Principal], [Result_6], []),
+    'ego_owner_add' : IDL.Func([IDL.Principal], [Result_6], []),
+    'ego_owner_remove' : IDL.Func([IDL.Principal], [Result_6], []),
+    'ego_owner_set' : IDL.Func([IDL.Vec(IDL.Principal)], [Result_6], []),
+    'ego_user_add' : IDL.Func([IDL.Principal], [Result_6], []),
+    'ego_user_remove' : IDL.Func([IDL.Principal], [Result_6], []),
+    'ego_user_set' : IDL.Func([IDL.Vec(IDL.Principal)], [Result_6], []),
     'role_user_list' : IDL.Func([], [Result_7], ['query']),
     'role_user_remove' : IDL.Func([IDL.Principal], [Result_3], []),
   });
