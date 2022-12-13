@@ -3,7 +3,11 @@ import { UserApp } from '@/canisters/ego_wallet';
 import { createModel } from '@rematch/core';
 import { Controller, Result_3 } from '../../../idls/ms_provider';
 import type { RootModel } from '../store/models';
-import { Utxo, _SERVICE as btcWalletService } from '@/../../idls/btc_wallet';
+import {
+  Network,
+  Utxo,
+  _SERVICE as btcWalletService,
+} from '@/../../idls/btc_wallet';
 import { idlFactory as btcWalletIdl } from '@/../../idls/btc_wallet.idl';
 import { ActorSubclass } from '@dfinity/agent';
 import { getActor, hasOwnProperty } from '@/utils';
@@ -19,6 +23,7 @@ type BtcProps = {
   balance: string;
   allAddress: string[];
   fee: bigint[];
+  isBtcUser: boolean;
   txHistory: Utxo[];
 };
 
@@ -29,6 +34,7 @@ export const btc = createModel<RootModel>()({
     allAddress: [],
     balance: '',
     fee: [],
+    isBtcUser: false,
     txHistory: [],
   } as BtcProps,
   reducers: {
@@ -41,7 +47,7 @@ export const btc = createModel<RootModel>()({
   },
   effects: dispatch => ({
     async initBTCWallet(
-      payload: { provider: IConnector; setting?: boolean },
+      payload: { provider: IConnector; setting?: boolean; network?: Network },
       rootState,
     ) {
       try {
@@ -66,9 +72,17 @@ export const btc = createModel<RootModel>()({
           //设置网络和使用地址
           try {
             const result = await activeBtcWalletActor?.btc_is_user();
+            dispatch.btc.save({ isBtcUser: result });
+            const localNetwork = localStorage.getItem('network');
+            // @ts-ignore
+            const network = localNetwork ? btc_network[localNetwork] : null;
             if (payload.setting && result) {
               await activeBtcWalletActor?.btc_network_set(
-                process.env.NODE_ENV === 'development'
+                payload.network
+                  ? payload.network
+                  : network
+                  ? network
+                  : process.env.NODE_ENV === 'development'
                   ? btc_network.regtest
                   : btc_network.testnet,
               );
@@ -79,8 +93,15 @@ export const btc = createModel<RootModel>()({
               await dispatch.btc.getBalance({});
               await dispatch.btc.getTxHistory({});
             } catch (err) {
+              const localNetwork = localStorage.getItem('network');
+              // @ts-ignore
+              const network = localNetwork ? btc_network[localNetwork] : null;
               await activeBtcWalletActor?.btc_network_set(
-                process.env.NODE_ENV === 'development'
+                payload.network
+                  ? payload.network
+                  : network
+                  ? network
+                  : process.env.NODE_ENV === 'development'
                   ? btc_network.regtest
                   : btc_network.testnet,
               );
