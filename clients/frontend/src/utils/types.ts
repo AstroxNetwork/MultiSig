@@ -1,5 +1,3 @@
-
-
 export type CanisterIdString = string;
 export type NeuronId = bigint;
 export type AccountIdentifier = string;
@@ -20,14 +18,8 @@ export interface Balance {
   value: string;
   decimals: number;
 }
-
-
-
-  export const enum AppVersionStatusEnum {
-    REJECTED = 'REJECTED',
-    NEW = 'NEW',
-    SUBMITTED = 'SUBMITTED',
-    REVOKED = 'REVOKED',
-    RELEASED = 'RELEASED',
-    APPROVED = 'APPROVED',
-  }
+export const btc_network = {
+  regtest: { Regtest: null },
+  mainnet: { Mainnet: null },
+  testnet: { Testnet: null },
+};

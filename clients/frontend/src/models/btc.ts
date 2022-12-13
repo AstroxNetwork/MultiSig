@@ -11,6 +11,7 @@ import { BTC_PATH } from '@/utils/constants';
 import { balanceToString } from '@/utils/converter';
 import { Principal } from '@dfinity/principal';
 import { IConnector } from '@connect2ic/core';
+import { btc_network } from '@/utils/types';
 
 type BtcProps = {
   activeBtcWalletActor: ActorSubclass<btcWalletService> | null;
@@ -66,12 +67,25 @@ export const btc = createModel<RootModel>()({
           try {
             const result = await activeBtcWalletActor?.btc_is_user();
             if (payload.setting && result) {
-              await activeBtcWalletActor?.btc_network_set({ Regtest: null });
+              await activeBtcWalletActor?.btc_network_set(
+                process.env.NODE_ENV === 'development'
+                  ? btc_network.regtest
+                  : btc_network.testnet,
+              );
               await activeBtcWalletActor?.btc_address_set(BTC_PATH);
             }
-            await dispatch.btc.getAddress({});
-            await dispatch.btc.getBalance({});
-            await dispatch.btc.getTxHistory({});
+            try {
+              await dispatch.btc.getAddress({});
+              await dispatch.btc.getBalance({});
+              await dispatch.btc.getTxHistory({});
+            } catch (err) {
+              await activeBtcWalletActor?.btc_network_set(
+                process.env.NODE_ENV === 'development'
+                  ? btc_network.regtest
+                  : btc_network.testnet,
+              );
+              await activeBtcWalletActor?.btc_address_set(BTC_PATH);
+            }
           } catch (err) {
             console.log('err', err);
           }
