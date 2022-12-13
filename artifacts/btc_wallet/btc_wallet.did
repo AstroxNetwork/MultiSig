@@ -28,8 +28,8 @@ service : () -> {
   btc_balance_get : (text) -> (nat64);
   btc_balance_path_get : (text) -> (Result_2);
   btc_fee_get : () -> (vec nat64);
-  btc_is_owner : () -> (bool);
-  btc_is_user : () -> (bool);
+  btc_is_owner : () -> (bool) query;
+  btc_is_user : () -> (bool) query;
   btc_key_get : () -> (text) query;
   btc_network_get : () -> (Network) query;
   btc_network_set : (Network) -> (Network);
