@@ -128,7 +128,7 @@ pub fn role_user_remove(user_id: Principal) -> Result<(), SystemErr> {
     }
 }
 
-#[query(name = "role_user_list", guard = "owner_guard")]
+#[query(name = "role_user_list", guard = "user_guard")]
 #[candid_method(query, rename = "role_user_list")]
 fn role_user_list() -> Result<BTreeMap<Principal, String>, SystemErr> {
     ic_cdk::println!("controller: role_user_list");
