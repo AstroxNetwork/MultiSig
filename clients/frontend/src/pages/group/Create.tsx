@@ -42,7 +42,7 @@ const GroupCreate: React.FC = () => {
             provider: activeProvider,
           });
           dispatch.app.queryGroups({});
-          // const activeControllerActor = await getActor()
+          dispatch.btc.initBTCWallet({ provider: activeProvider });
           setTimeout(() => {
             history.replace('/group/setting?create=true');
           }, 100);
