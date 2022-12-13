@@ -286,7 +286,7 @@ fn sha256(data: &[u8]) -> Vec<u8> {
 }
 
 // Converts a public key to a P2PKH address.
-fn public_key_to_p2pkh_address(network: Network, public_key: &[u8]) -> String {
+pub fn public_key_to_p2pkh_address(network: Network, public_key: &[u8]) -> String {
     // sha256 + ripmd160
     let mut hasher = ripemd::Ripemd160::new();
     hasher.update(sha256(public_key));

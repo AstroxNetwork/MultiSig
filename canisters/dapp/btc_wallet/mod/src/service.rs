@@ -4,9 +4,12 @@ use serde::Serialize;
 use std::cell::RefCell;
 use std::collections::HashMap;
 
+use crate::bitcoin_wallet::public_key_to_p2pkh_address;
 use crate::types::{EgoBtcError, GetAddressResponse, SendResponse, UserBalanceResponse};
 use crate::{bitcoin_api, bitcoin_wallet};
 use ic_cdk::caller;
+use tecdsa_signer::service::SignerService;
+use tecdsa_signer::types::ECDSAPublicKeyPayload;
 
 thread_local! {
     pub static BTCSTORE: RefCell<BtcStore> = RefCell::new(BtcStore::default());
@@ -48,24 +51,38 @@ impl BtcService {
     pub async fn set_address(path: String) -> String {
         let network = BtcService::get_network();
         let key = BtcService::get_key();
-        let address = bitcoin_wallet::get_p2pkh_address(network, key.clone(), path.clone()).await;
-        BTCSTORE.with(|s| {
-            s.borrow_mut()
-                .user_address
-                .insert(path.clone(), address.clone())
-        });
-        address
+        let pubkey = SignerService::get_public_key(path.clone(), Some(key.clone())).await;
+        match pubkey {
+            Ok(r) => {
+                BTCSTORE.with(|s| {
+                    s.borrow_mut()
+                        .user_address
+                        .insert(path.clone(), r.public_key.clone())
+                });
+                public_key_to_p2pkh_address(network, &r.public_key.clone())
+            }
+            Err(e) => ic_cdk::trap(e.as_str()),
+        }
     }
 
     pub fn get_address(path: String) -> Result<GetAddressResponse, EgoBtcError> {
         match BTCSTORE.with(|s| s.borrow().user_address.get(&path).cloned()) {
-            Some(address) => Ok(GetAddressResponse { address }),
+            Some(address) => Ok(GetAddressResponse {
+                address: BtcService::get_address_from_vec(address),
+            }),
             None => Err(EgoBtcError::AddressNotFound),
         }
     }
 
     pub fn get_all_addresses() -> Vec<String> {
-        BTCSTORE.with(|s| s.borrow().user_address.values().cloned().collect())
+        BTCSTORE.with(|s| {
+            s.borrow()
+                .user_address
+                .values()
+                .map(|&e| BtcService::get_address_from_vec(e))
+                .cloned()
+                .collect()
+        })
     }
 
     pub async fn get_user_balance(path: String) -> Result<UserBalanceResponse, EgoBtcError> {
@@ -73,7 +90,9 @@ impl BtcService {
         let opt = BTCSTORE.with(|s| s.borrow().user_address.get(&path).cloned());
         match opt {
             Some(address) => {
-                let balance = bitcoin_api::get_balance(network, address).await;
+                let balance =
+                    bitcoin_api::get_balance(network, BtcService::get_address_from_vec(address))
+                        .await;
                 Ok(UserBalanceResponse { balance })
             }
             None => Err(EgoBtcError::AddressNotFound),
@@ -96,6 +115,11 @@ impl BtcService {
         bitcoin_api::get_current_fee_percentiles(network).await
     }
 
+    pub fn get_address_from_vec(key: Vec<u8>) -> String {
+        let network = BtcService::get_network();
+        public_key_to_p2pkh_address(network, &key)
+    }
+
     pub async fn send(
         path: String,
         to_address: String,
@@ -109,7 +133,7 @@ impl BtcService {
                 let tx =
                     bitcoin_wallet::send(network, path, key_name, to_address, amount.clone()).await;
                 Ok(SendResponse {
-                    from_address,
+                    from_address: BtcService::get_address_from_vec(from_address),
                     tx_id: tx.to_string(),
                     amount_in_satoshi: amount,
                 })
@@ -121,7 +145,7 @@ impl BtcService {
 
 #[derive(CandidType, Serialize, Deserialize, Clone, Debug)]
 pub struct BtcStore {
-    pub user_address: HashMap<String, String>,
+    pub user_address: HashMap<String, Vec<u8>>,
     pub network: Network,
     pub ecdsa_key: String,
 }
