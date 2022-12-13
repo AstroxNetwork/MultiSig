@@ -227,20 +227,33 @@ const GroupSetting = () => {
         >
           <ProFormSelect
             name="network"
-            options={[
-              {
-                label: 'Regtest',
-                value: 'regtest',
-              },
-              {
-                label: 'Testnet',
-                value: 'testnet',
-              },
-              {
-                label: 'Mainnet',
-                value: 'mainnet',
-              },
-            ]}
+            options={
+              process.env.NODE_ENV === 'development'
+                ? [
+                    {
+                      label: 'Regtest',
+                      value: 'regtest',
+                    },
+                    {
+                      label: 'Testnet',
+                      value: 'testnet',
+                    },
+                    {
+                      label: 'Mainnet',
+                      value: 'mainnet',
+                    },
+                  ]
+                : [
+                    {
+                      label: 'Testnet',
+                      value: 'testnet',
+                    },
+                    {
+                      label: 'Mainnet',
+                      value: 'mainnet',
+                    },
+                  ]
+            }
           />
         </ProForm>
       </>
