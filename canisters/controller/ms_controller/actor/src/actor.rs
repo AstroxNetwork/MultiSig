@@ -95,16 +95,13 @@ fn batch_user_add(pusers: BTreeMap<Principal, String>) -> Result<(), SystemErr> 
     CONTROLLER.with(|controller| {
         let user_count = users().unwrap().len();
         if controller.borrow().total_user_amount >= (user_count as u16 + pusers.len() as u16) {
-            /// temp fix: provider -> ms_btc_wallet
             let provider_id = REGISTRY
-                .with(|registry| registry.borrow().canister_get_one("ms_btc_wallet"))
+                .with(|registry| registry.borrow().canister_get_one("provider"))
                 .unwrap();
 
             pusers.iter().for_each(|(user_id, name)| {
                 user_add_with_name(name.clone(), user_id.clone());
-                /// temp fix: controller_user_add -> user_add_with_name
-                let _result =
-                    api::call::notify(provider_id, "user_add", ((user_id.clone(), name.clone()),));
+                let _result = api::call::notify(provider_id, "controller_user_add", (user_id,));
             });
 
             Ok(())
