@@ -37,10 +37,8 @@ import { BTC_PATH } from '@/utils/constants';
 const loginPath = '/home';
 
 export interface InitialStateType {
-  // currentUser: IConnector | null;
+  currentUser: IConnector | null;
   providerActor: ActorSubclass<providerService> | null;
-  controllerActor: ActorSubclass<controllerService> | null;
-  btcActor: ActorSubclass<btcService> | null;
 }
 
 // // 过滤出需要显示的路由, 这里的filterFn 指 不希望显示的层级
@@ -91,7 +89,7 @@ const mapRoutes = (routes: IRoute[]) => {
 
 export default (props: any) => {
   const location = useLocation();
-  const { isConnected, activeProvider } = useConnect();
+  const { isConnected, activeProvider, principal } = useConnect();
   const [walletProvider] = useWallet();
   const { activeController } = useSelector(
     (state: RootState) => state.controller,
@@ -121,7 +119,7 @@ export default (props: any) => {
     if (isConnected) {
       handleInitialState();
     }
-  }, [isConnected]);
+  }, [isConnected, principal]);
 
   const handleInitialState = async () => {
     console.log(
@@ -137,6 +135,7 @@ export default (props: any) => {
     await dispatch.global.save({
       initialState: {
         providerActor,
+        currentUser: activeProvider,
       },
     });
     try {

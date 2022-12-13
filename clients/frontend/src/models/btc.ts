@@ -39,9 +39,14 @@ export const btc = createModel<RootModel>()({
     },
   },
   effects: dispatch => ({
-    async initBTCWallet(payload: { provider: IConnector }, rootState) {
+    async initBTCWallet(
+      payload: { provider: IConnector; setting?: boolean },
+      rootState,
+    ) {
       try {
-        const { activeControllerActor } = rootState.controller;
+        const { activeControllerActor, activeController } =
+          rootState.controller;
+        const { currentUser } = rootState.global.initialState;
         const walletResult = await activeControllerActor?.app_main_get();
         console.log(walletResult);
         if (
@@ -56,10 +61,14 @@ export const btc = createModel<RootModel>()({
             btcWalletIdl,
           );
           dispatch.btc.save({ activeBtcWalletActor });
+
           //设置网络和使用地址
           try {
-            await activeBtcWalletActor?.btc_network_set({ Regtest: null });
-            await activeBtcWalletActor?.btc_address_set(BTC_PATH);
+            const result = await activeBtcWalletActor?.btc_is_user();
+            if (payload.setting && result) {
+              await activeBtcWalletActor?.btc_network_set({ Regtest: null });
+              await activeBtcWalletActor?.btc_address_set(BTC_PATH);
+            }
             await dispatch.btc.getAddress({});
             await dispatch.btc.getBalance({});
             await dispatch.btc.getTxHistory({});
@@ -69,12 +78,17 @@ export const btc = createModel<RootModel>()({
         } else {
           console.log();
           await activeControllerActor?.app_main_create();
-          dispatch.btc.initBTCWallet({ provider: payload.provider });
+
+          dispatch.btc.initBTCWallet({
+            provider: payload.provider,
+            setting: true,
+          });
         }
       } catch (err) {
         console.log('err', err);
       }
     },
+    async set(payload, rootState) {},
     async getBalance(payload, rootState) {
       try {
         console.log('getBalance start', payload);

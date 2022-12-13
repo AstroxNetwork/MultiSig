@@ -48,9 +48,6 @@ const GroupSetting = () => {
   useEffect(() => {
     if (activeControllerActor) {
       getUsers();
-      if (urlParams.get('create')) {
-        createApp();
-      }
     }
   }, [activeControllerActor]);
 
@@ -66,23 +63,23 @@ const GroupSetting = () => {
     }
   };
 
-  const createApp = async () => {
-    try {
-      // console.log('createApp start');
-      // console.log('activeProvider', activeProvider);
-      // console.log('activeProvider', activeProvider);
-      // const activeControllerActor = await getActor<controllerService>(
-      //   activeProvider!,
-      //   activeController?.id.toText()!,
-      //   controllerIdl,
-      // );
-      // console.log(activeControllerActor);
-      const result = await activeControllerActor?.app_main_create();
-      console.log('createApp result', result);
-    } catch (err) {
-      console.log('err', err);
-    }
-  };
+  // const createApp = async () => {
+  //   try {
+  //     // console.log('createApp start');
+  //     // console.log('activeProvider', activeProvider);
+  //     // console.log('activeProvider', activeProvider);
+  //     // const activeControllerActor = await getActor<controllerService>(
+  //     //   activeProvider!,
+  //     //   activeController?.id.toText()!,
+  //     //   controllerIdl,
+  //     // );
+  //     // console.log(activeControllerActor);
+  //     const result = await activeControllerActor?.app_main_create();
+  //     console.log('createApp result', result);
+  //   } catch (err) {
+  //     console.log('err', err);
+  //   }
+  // };
 
   return (
     <PageContainer ghost>
