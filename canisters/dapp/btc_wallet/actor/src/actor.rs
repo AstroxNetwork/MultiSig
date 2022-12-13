@@ -1,5 +1,4 @@
 use candid::candid_method;
-use candid::Principal as CanPrincipal;
 use ic_cdk::export::candid::{CandidType, Deserialize};
 use ic_cdk_macros::*;
 use serde::Serialize;
@@ -12,10 +11,7 @@ use btc_wallet_mod::types::{
     EgoBtcError, GetAddressResponse, SendRequest, SendResponse, UserBalanceResponse,
 };
 use ego_lib::inject_ego_macros;
-use ic_btc_types::{
-    GetBalanceRequest, GetCurrentFeePercentilesRequest, GetUtxosRequest, GetUtxosResponse,
-    MillisatoshiPerByte, Network, Satoshi, SendTransactionRequest, Utxo,
-};
+use ic_btc_types::{MillisatoshiPerByte, Network, Utxo};
 use ic_cdk::storage;
 
 inject_canister_users!();

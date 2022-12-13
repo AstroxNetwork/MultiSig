@@ -1,4 +1,4 @@
-mod lib;
+mod actor;
 
 #[allow(dead_code)]
 #[cfg(any(target_arch = "wasm32", test))]
