@@ -8,6 +8,7 @@ use crate::bitcoin_wallet::public_key_to_p2pkh_address;
 use crate::types::{EgoBtcError, GetAddressResponse, SendResponse, UserBalanceResponse};
 use crate::{bitcoin_api, bitcoin_wallet};
 use ic_cdk::caller;
+use itertools::Itertools;
 use tecdsa_signer::service::SignerService;
 use tecdsa_signer::types::ECDSAPublicKeyPayload;
 
@@ -79,9 +80,8 @@ impl BtcService {
             s.borrow()
                 .user_address
                 .values()
-                .map(|&e| BtcService::get_address_from_vec(e))
-                .cloned()
-                .collect()
+                .map(|e| BtcService::get_address_from_vec(e.clone()))
+                .collect_vec()
         })
     }
 

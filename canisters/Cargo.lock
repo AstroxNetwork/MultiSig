@@ -212,6 +212,7 @@ dependencies = [
  "ic-cdk",
  "ic-cdk-macros",
  "ic-stable-structures",
+ "itertools",
  "lazy_static",
  "ripemd",
  "serde",

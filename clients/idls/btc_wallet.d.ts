@@ -43,6 +43,8 @@ export interface _SERVICE {
   'btc_balance_get' : ActorMethod<[string], bigint>,
   'btc_balance_path_get' : ActorMethod<[string], Result_2>,
   'btc_fee_get' : ActorMethod<[], Array<bigint>>,
+  'btc_is_owner' : ActorMethod<[], boolean>,
+  'btc_is_user' : ActorMethod<[], boolean>,
   'btc_key_get' : ActorMethod<[], string>,
   'btc_network_get' : ActorMethod<[], Network>,
   'btc_network_set' : ActorMethod<[Network], Network>,

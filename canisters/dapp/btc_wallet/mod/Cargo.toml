@@ -27,6 +27,7 @@ bs58 = "0.4.0"
 serde_json = "1.0"
 ego_lib = "0.2.10"
 tecdsa_signer = { path= "../../../helpers/tecdsa_signer" }
+itertools="0.10.5"
 
 
 [features]

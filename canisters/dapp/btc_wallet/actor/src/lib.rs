@@ -140,6 +140,18 @@ async fn btc_get_fee() -> Vec<MillisatoshiPerByte> {
     btc_wallet_mod::service::BtcService::get_fees().await
 }
 
+#[update(name = "btc_is_user")]
+#[candid_method(update, rename = "btc_is_user")]
+fn btc_is_user() -> bool {
+    is_user(caller())
+}
+
+#[update(name = "btc_is_owner")]
+#[candid_method(update, rename = "btc_is_owner")]
+fn btc_is_owner() -> bool {
+    is_owner(caller())
+}
+
 #[inline(always)]
 pub fn owner_or_user_guard() -> Result<(), String> {
     let caller = ic_cdk::api::caller();
