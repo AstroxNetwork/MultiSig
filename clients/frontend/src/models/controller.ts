@@ -107,10 +107,14 @@ export const controller = createModel<RootModel>()({
             const actions = result['Ok'] as ActionExtend[];
             for (let i = 0; i < actions.length; i++) {
               if (hasOwnProperty(actions[i].status, 'SUCCESS')) {
-                const tx_id = await (activeBtcWalletActor &&
-                  activeBtcWalletActor.btc_get_txid(actions[i].id));
-                if (tx_id && tx_id[0]) {
-                  actions[i].tx_id = tx_id[0];
+                try {
+                  const tx_id = await (activeBtcWalletActor &&
+                    activeBtcWalletActor.btc_get_txid(actions[i].id));
+                  if (tx_id && tx_id[0]) {
+                    actions[i].tx_id = tx_id[0];
+                  }
+                } catch (err) {
+                  console.log('err', err);
                 }
               }
             }
