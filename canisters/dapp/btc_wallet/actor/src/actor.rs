@@ -123,6 +123,7 @@ async fn btc_utxos_get(address: String) -> Vec<Utxo> {
 #[candid_method(update, rename = "btc_tx_send")]
 async fn btc_tx_send(request: SendRequest) -> Result<SendResponse, EgoBtcError> {
     btc_wallet_mod::service::BtcService::send(
+        request.request_id,
         request.path,
         request.to_address,
         request.amount_in_satoshi,
@@ -134,6 +135,12 @@ async fn btc_tx_send(request: SendRequest) -> Result<SendResponse, EgoBtcError> 
 #[candid_method(update, rename = "btc_fee_get")]
 async fn btc_get_fee() -> Vec<MillisatoshiPerByte> {
     btc_wallet_mod::service::BtcService::get_fees().await
+}
+
+#[query(name = "btc_get_txid")]
+#[candid_method(query, rename = "btc_get_txid")]
+fn btc_get_txid(request_id: u64) -> Option<String> {
+    btc_wallet_mod::service::BtcService::get_tx_id(request_id)
 }
 
 #[query(name = "btc_is_user")]

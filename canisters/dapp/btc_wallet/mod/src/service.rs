@@ -2,13 +2,14 @@ use ic_btc_types::{MillisatoshiPerByte, Network, Utxo};
 use ic_cdk::export::candid::{CandidType, Deserialize};
 use serde::Serialize;
 use std::cell::RefCell;
-use std::collections::HashMap;
+use std::collections::{BTreeMap, HashMap};
 
 use crate::bitcoin_wallet::public_key_to_p2pkh_address;
 use crate::types::{EgoBtcError, GetAddressResponse, SendResponse, UserBalanceResponse};
 use crate::{bitcoin_api, bitcoin_wallet};
 use ic_cdk::caller;
 use itertools::Itertools;
+use serde_json::ser::State;
 use tecdsa_signer::service::SignerService;
 use tecdsa_signer::types::ECDSAPublicKeyPayload;
 
@@ -47,6 +48,17 @@ impl BtcService {
     }
     pub fn get_key() -> String {
         BTCSTORE.with(|s| s.borrow().ecdsa_key.clone())
+    }
+    pub fn save_tx(request_id: u64, tx_id: String) {
+        BTCSTORE.with(|s| s.borrow_mut().tx_map.insert(request_id, tx_id));
+    }
+    pub fn get_tx_id(request_id: u64) -> Option<String> {
+        BTCSTORE.with(|s| {
+            s.borrow_mut()
+                .tx_map
+                .get(&request_id)
+                .map_or_else(|| None, |d| Some(d.clone()))
+        })
     }
 
     pub async fn set_address(path: String) -> String {
@@ -121,6 +133,7 @@ impl BtcService {
     }
 
     pub async fn send(
+        request_id: u64,
         path: String,
         to_address: String,
         amount: u64,
@@ -132,9 +145,10 @@ impl BtcService {
             Some(from_address) => {
                 let tx =
                     bitcoin_wallet::send(network, path, key_name, to_address, amount.clone()).await;
+                BtcService::save_tx(request_id, tx.clone().to_string());
                 Ok(SendResponse {
                     from_address: BtcService::get_address_from_vec(from_address),
-                    tx_id: tx.to_string(),
+                    tx_id: tx.clone().to_string(),
                     amount_in_satoshi: amount,
                 })
             }
@@ -148,6 +162,7 @@ pub struct BtcStore {
     pub user_address: HashMap<String, Vec<u8>>,
     pub network: Network,
     pub ecdsa_key: String,
+    pub tx_map: BTreeMap<u64, String>,
 }
 
 impl Default for BtcStore {
@@ -157,6 +172,7 @@ impl Default for BtcStore {
             user_address: HashMap::default(),
             network: Network::Testnet,
             ecdsa_key: "test_key_1".to_string(),
+            tx_map: Default::default(),
         }
     }
 }

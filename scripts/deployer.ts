@@ -99,7 +99,7 @@ const argv = yargs
     type: 'boolean',
   })
   .option('postPatch', {
-    alias: 'u',
+    alias: 'post',
     description: 'postPatch only',
     type: 'boolean',
   })
