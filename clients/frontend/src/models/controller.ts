@@ -46,6 +46,7 @@ export const controller = createModel<RootModel>()({
         };
         console.log('params', params);
         const resp = await providerActor?.controller_main_create(params);
+        console.log('resp', resp);
         if (resp && hasOwnProperty(resp, 'Ok')) {
           console.log(resp);
           const controller = resp['Ok'] as Controller;
@@ -60,6 +61,8 @@ export const controller = createModel<RootModel>()({
             activeControllerActor: controllerActor,
             // activeBtcWalletActor:
           });
+          dispatch.app.queryGroups({});
+          dispatch.btc.initBTCWallet({ provider: payload.provider! });
           return true;
         } else {
           message.success('error');

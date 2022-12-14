@@ -41,8 +41,7 @@ const GroupCreate: React.FC = () => {
             ...values,
             provider: activeProvider,
           });
-          dispatch.app.queryGroups({});
-          dispatch.btc.initBTCWallet({ provider: activeProvider! });
+
           history.replace('/group/setting');
         }}
         // submitter={{
