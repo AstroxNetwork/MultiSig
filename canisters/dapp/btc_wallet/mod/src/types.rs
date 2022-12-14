@@ -103,6 +103,7 @@ pub struct GetFeesResponse {
 
 #[derive(CandidType, Deserialize, Clone, Debug)]
 pub struct SendRequest {
+    pub request_id: u64,
     pub path: String,
     pub to_address: String,
     pub amount_in_satoshi: u64,

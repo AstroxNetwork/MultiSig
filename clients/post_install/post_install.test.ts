@@ -53,7 +53,7 @@ describe('ms_controller', () => {
     const ms_controller_version = {
       major: 1,
       minor: 0,
-      patch: 2,
+      patch: 3,
     };
 
     console.log(`release multisig controller\n`);
@@ -79,7 +79,7 @@ describe('btc_wallet', () => {
     const btc_wallet_controller_version = {
       major: 1,
       minor: 0,
-      patch: 2,
+      patch: 3,
     };
 
     console.log(`release btc wallet\n`);

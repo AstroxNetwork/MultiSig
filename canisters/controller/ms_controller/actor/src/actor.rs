@@ -173,7 +173,7 @@ async fn app_main_get() -> Result<Option<Principal>, SystemErr> {
     CONTROLLER.with(|controller| Ok(controller.borrow().app.clone()))
 }
 
-#[update(name = "app_action_create", guard = "owner_guard")]
+#[update(name = "app_action_create", guard = "user_guard")]
 #[candid_method(update, rename = "app_action_create")]
 fn app_action_create(req: AppActionCreateRequest) -> Result<Action, SystemErr> {
     ic_cdk::println!("controller: app_action_create");
