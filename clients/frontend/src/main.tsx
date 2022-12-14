@@ -28,7 +28,7 @@ const client = createClient({
       ? new ICX({})
       : new AstroX({
           // providerUrl: "https://ccmhe-vqaaa-aaaai-acmoq-cai.raw.ic0.app/",
-          providerUrl: 'http://localhost:8080/',
+          providerUrl: 'https://63k2f-nyaaa-aaaah-aakla-cai.raw.ic0.app/',
           delegationModes: ['global'],
         }),
     //  new PlugWallet(),

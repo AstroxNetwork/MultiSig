@@ -11,7 +11,7 @@ let canisterIds: CanisterIds = {};
 let folder: string[];
 const canisterIdsFilePath = '../../configs';
 
-const isDev = true;
+const isDev = false;
 
 try {
   folder = fs.readdirSync(canisterIdsFilePath);
@@ -22,8 +22,9 @@ try {
       const fileJSON = JSON.parse(
         fs.readFileSync(`${canisterIdsFilePath}/${folder[i]}`, 'utf-8'),
       );
-      canisterIds[`process.env.${key.toUpperCase()}_CANISTERID`] =
-        JSON.stringify(fileJSON['LOCAL_CANISTERID']);
+      canisterIds[`process.env.${key.toUpperCase()}_CANISTERID`] = isDev
+        ? JSON.stringify(fileJSON['LOCAL_CANISTERID'])
+        : JSON.stringify(fileJSON['PRODUCTION_CANISTERID']);
     }
   }
   console.log(canisterIds);
