@@ -91,7 +91,7 @@ export const btc = createModel<RootModel>()({
             try {
               await dispatch.btc.getAddress({});
               await dispatch.btc.getBalance({});
-              await dispatch.btc.getTxHistory({});
+              // await dispatch.btc.getTxHistory({});
             } catch (err) {
               const localNetwork = localStorage.getItem('network');
               // @ts-ignore

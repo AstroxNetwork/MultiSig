@@ -29,13 +29,14 @@ const client = createClient({
       : new AstroX({
           // providerUrl: "https://ccmhe-vqaaa-aaaai-acmoq-cai.raw.ic0.app/",
           // providerUrl: 'https://63k2f-nyaaa-aaaah-aakla-cai.raw.ic0.app/',
-          delegationModes: ['global', 'domain'],
+          // delegationModes: ['global', 'domain'],
         }),
     //  new PlugWallet(),
     //  new InternetIdentity()
   ],
   globalProviderConfig: {
     // dev: true,
+
     whitelist: ['4qt4p-gaaaa-aaaah-abx2q-cai'],
   },
 });
