@@ -117,6 +117,13 @@ export default (props: any) => {
   useEffect(() => {
     // userLayout   getInitialState
     if (isConnected) {
+      dispatch.app.save({ groups: [] });
+      dispatch.controller.save({ actions: [] });
+      dispatch.btc.save({
+        address: '',
+        balance: '',
+        fee: [],
+      });
       handleInitialState();
     }
   }, [isConnected, principal]);

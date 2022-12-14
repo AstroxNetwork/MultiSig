@@ -12,14 +12,11 @@ import { hasOwnProperty } from '@/utils';
 
 type AppProps = {
   groups: Controller[];
-  wallets: Action[];
 };
 
 export const app = createModel<RootModel>()({
   state: {
     groups: [],
-    wallets: [],
-    slideMode: 'home',
   } as AppProps,
   reducers: {
     save(state, payload) {

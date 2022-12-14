@@ -37,7 +37,7 @@ console.log(path.resolve(__dirname, './src'));
 console.log(fs.readdirSync(path.resolve(__dirname, './src/components')));
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: './',
+  base: '/',
   plugins: [
     react(),
     // usePluginImport({

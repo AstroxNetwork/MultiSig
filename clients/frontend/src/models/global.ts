@@ -10,7 +10,7 @@ type GlobalProps = {
 export const global = createModel<RootModel>()({
   state: {
     initialState: {
-      // currentUser: null,
+      currentUser: null,
       providerActor: null,
       controllerActor: null,
       btcActor: null,
