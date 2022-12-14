@@ -8,6 +8,7 @@ type Result_2 = variant { Ok : UserBalanceResponse; Err : EgoBtcError };
 type Result_3 = variant { Ok : SendResponse; Err : EgoBtcError };
 type Result_4 = variant { Ok; Err : text };
 type SendRequest = record {
+  request_id : nat64;
   path : text;
   to_address : text;
   amount_in_satoshi : nat64;
@@ -28,6 +29,7 @@ service : () -> {
   btc_balance_get : (text) -> (nat64);
   btc_balance_path_get : (text) -> (Result_2);
   btc_fee_get : () -> (vec nat64);
+  btc_get_txid : (nat64) -> (opt text) query;
   btc_is_owner : () -> (bool) query;
   btc_is_user : () -> (bool) query;
   btc_key_get : () -> (text) query;

@@ -20,6 +20,7 @@ export const idlFactory = ({ IDL }) => {
     'Testnet' : IDL.Null,
   });
   const SendRequest = IDL.Record({
+    'request_id' : IDL.Nat64,
     'path' : IDL.Text,
     'to_address' : IDL.Text,
     'amount_in_satoshi' : IDL.Nat64,
@@ -49,6 +50,7 @@ export const idlFactory = ({ IDL }) => {
     'btc_balance_get' : IDL.Func([IDL.Text], [IDL.Nat64], []),
     'btc_balance_path_get' : IDL.Func([IDL.Text], [Result_2], []),
     'btc_fee_get' : IDL.Func([], [IDL.Vec(IDL.Nat64)], []),
+    'btc_get_txid' : IDL.Func([IDL.Nat64], [IDL.Opt(IDL.Text)], ['query']),
     'btc_is_owner' : IDL.Func([], [IDL.Bool], ['query']),
     'btc_is_user' : IDL.Func([], [IDL.Bool], ['query']),
     'btc_key_get' : IDL.Func([], [IDL.Text], ['query']),

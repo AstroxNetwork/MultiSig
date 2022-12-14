@@ -19,6 +19,7 @@ export type Result_3 = { 'Ok' : SendResponse } |
 export type Result_4 = { 'Ok' : null } |
   { 'Err' : string };
 export interface SendRequest {
+  'request_id' : bigint,
   'path' : string,
   'to_address' : string,
   'amount_in_satoshi' : bigint,
@@ -43,6 +44,7 @@ export interface _SERVICE {
   'btc_balance_get' : ActorMethod<[string], bigint>,
   'btc_balance_path_get' : ActorMethod<[string], Result_2>,
   'btc_fee_get' : ActorMethod<[], Array<bigint>>,
+  'btc_get_txid' : ActorMethod<[bigint], [] | [string]>,
   'btc_is_owner' : ActorMethod<[], boolean>,
   'btc_is_user' : ActorMethod<[], boolean>,
   'btc_key_get' : ActorMethod<[], string>,
