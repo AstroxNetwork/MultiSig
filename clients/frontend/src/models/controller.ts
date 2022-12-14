@@ -14,11 +14,13 @@ import { message } from 'antd';
 import { ActorSubclass } from '@dfinity/agent';
 import { Principal } from '@dfinity/principal';
 
+export type ActionExtend = Action & { tx_id?: string };
+
 type ControllerProps = {
   activeController: Controller | null;
   activeControllerActor: ActorSubclass<controllerService> | null;
 
-  actions: Action[];
+  actions: ActionExtend[];
 };
 
 export const controller = createModel<RootModel>()({
@@ -97,11 +99,22 @@ export const controller = createModel<RootModel>()({
       try {
         console.log('queryActions start');
         const ctrl = rootState.controller.activeControllerActor;
+        const { activeBtcWalletActor } = rootState.btc;
         if (ctrl) {
           const result = await ctrl.app_action_list();
           console.log('result', result);
           if (hasOwnProperty(result, 'Ok')) {
-            dispatch.controller.save({ actions: result['Ok'] });
+            const actions = result['Ok'] as ActionExtend[];
+            for (let i = 0; i < actions.length; i++) {
+              if (hasOwnProperty(actions[i].status, 'SUCCESS')) {
+                const tx_id = await (activeBtcWalletActor &&
+                  activeBtcWalletActor.btc_get_txid(actions[i].id));
+                if (tx_id && tx_id[0]) {
+                  actions[i].tx_id = tx_id[0];
+                }
+              }
+            }
+            dispatch.controller.save({ actions });
           } else {
             console.log('result err', result);
           }

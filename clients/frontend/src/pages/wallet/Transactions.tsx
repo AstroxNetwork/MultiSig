@@ -18,6 +18,7 @@ import { useDispatch } from 'react-redux';
 import { Action } from '../../../../idls/ms_controller';
 import { TeamOutlined } from '@ant-design/icons';
 import { balanceToString } from '@/utils/converter';
+import { ActionExtend } from '@/models/controller';
 
 const WalletTransactions = () => {
   const dispatch = useDispatch<RootDispatch>();
@@ -33,7 +34,7 @@ const WalletTransactions = () => {
     dispatch.controller.queryActions({});
   }, []);
 
-  const actionSign = async (action: Action) => {
+  const actionSign = async (action: ActionExtend) => {
     setSignLoading(true);
     try {
       const result = await activeControllerActor?.action_sign_create(action.id);
@@ -50,7 +51,7 @@ const WalletTransactions = () => {
 
   console.log('actions', actions);
 
-  const actionRender = (actions: Action[]) => {
+  const actionRender = (actions: ActionExtend[]) => {
     if (actions.length === 0) return null;
     return (
       <Collapse defaultActiveKey={[]}>
@@ -97,15 +98,20 @@ const WalletTransactions = () => {
           >
             <div className="flex">
               <Descriptions column={1}>
-                <Descriptions.Item label={'Path'}>
+                {/* <Descriptions.Item label={'Path'}>
                   {action.path}
-                </Descriptions.Item>
+                </Descriptions.Item> */}
                 <Descriptions.Item label={'toAddress'}>
                   {action.to_address}
                 </Descriptions.Item>
                 <Descriptions.Item label={'Amount'}>
                   {balanceToString(action.amount_in_satoshi, 8).formatTotal}
                 </Descriptions.Item>
+                {action.tx_id ? (
+                  <Descriptions.Item label={'Tx_id'}>
+                    {action.tx_id}
+                  </Descriptions.Item>
+                ) : null}
               </Descriptions>
               <List
                 style={{ minWidth: 400 }}
