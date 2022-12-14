@@ -6,9 +6,12 @@ const RouterContainer = () => {
   return (
     <Router>
       <Switch>
-        {renderRoutes({
+        {/* <Route exact path="/"  /> */}
+        <Route path="*">
+          {renderRoutes({
             routes: routes,
           })}
+        </Route>
       </Switch>
     </Router>
   );

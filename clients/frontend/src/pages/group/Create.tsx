@@ -42,10 +42,8 @@ const GroupCreate: React.FC = () => {
             provider: activeProvider,
           });
           dispatch.app.queryGroups({});
-          dispatch.btc.initBTCWallet({ provider: activeProvider });
-          setTimeout(() => {
-            history.replace('/group/setting?create=true');
-          }, 100);
+          dispatch.btc.initBTCWallet({ provider: activeProvider! });
+          history.replace('/group/setting');
         }}
         // submitter={{
         //   submitButtonProps: (

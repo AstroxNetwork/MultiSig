@@ -66,7 +66,7 @@ export const controller = createModel<RootModel>()({
           return false;
         }
       } catch (err) {
-        console.log('queryGroups catch', err);
+        console.log('groupCreate catch', err);
         return false;
       }
     },

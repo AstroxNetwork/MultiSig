@@ -122,13 +122,9 @@ export default (props: any) => {
   }, [isConnected, principal]);
 
   const handleInitialState = async () => {
-    console.log(
-      'process.env.MS_PROVIDER_CANISTERID!',
-      process.env.MS_PROVIDER_CANISTERID!,
-    );
     const providerActor = await getActor(
       activeProvider!,
-      process.env.MS_PROVIDER_CANISTERID!,
+      '4qt4p-gaaaa-aaaah-abx2q-cai',
       providerIdl,
     );
 
@@ -166,6 +162,7 @@ export default (props: any) => {
       }
     } catch (err) {
       console.log('err', err);
+      history.replace('/group/home');
     }
   };
 

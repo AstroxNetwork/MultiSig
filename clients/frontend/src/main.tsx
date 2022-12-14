@@ -20,7 +20,7 @@ BigInt.prototype.toJSON = function () {
 
 const container = document.getElementById('root') as HTMLElement;
 const root = createRoot(container); // createRoot(container!) if you use TypeScript
-
+(window as any).process = {};
 const client = createClient({
   // providers: defaultProviders,
   providers: [
@@ -28,15 +28,15 @@ const client = createClient({
       ? new ICX({})
       : new AstroX({
           // providerUrl: "https://ccmhe-vqaaa-aaaai-acmoq-cai.raw.ic0.app/",
-          providerUrl: 'https://63k2f-nyaaa-aaaah-aakla-cai.raw.ic0.app/',
-          delegationModes: ['global'],
+          // providerUrl: 'https://63k2f-nyaaa-aaaah-aakla-cai.raw.ic0.app/',
+          delegationModes: ['global', 'domain'],
         }),
     //  new PlugWallet(),
     //  new InternetIdentity()
   ],
   globalProviderConfig: {
-    dev: true,
-    whitelist: [process.env.MS_PROVIDER_CANISTERID!],
+    // dev: true,
+    whitelist: ['4qt4p-gaaaa-aaaah-abx2q-cai'],
   },
 });
 

@@ -8,6 +8,7 @@ import {
   _SERVICE as controllerService,
 } from '@/../../idls/ms_controller';
 import { idlFactory as controllerIdl } from '@/../../idls/ms_controller.idl';
+import { hasOwnProperty } from '@/utils';
 
 type AppProps = {
   groups: Controller[];
@@ -38,11 +39,14 @@ export const app = createModel<RootModel>()({
         const providerActor = rootState.global.initialState?.providerActor;
         console.log(providerActor);
         let result: any = await providerActor?.controller_main_list();
-        dispatch.app.save({
-          groups: result['Ok'],
-        });
+        console.log(result);
+        if (result && hasOwnProperty(result, 'Ok')) {
+          dispatch.app.save({
+            groups: result['Ok'],
+          });
+          return result['Ok'];
+        }
         console.log('controllers ===', result['Ok']);
-        return result['Ok'];
       } catch (err) {
         console.log('queryGroups catch', err);
       }
