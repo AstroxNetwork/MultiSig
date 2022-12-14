@@ -31,7 +31,8 @@
     "ms:script:live": "cross-env NODE_ENV=production NODE_OPTIONS=--experimental-vm-modules jest --verbose --testPathIgnorePatterns=/post_install/ --testPathPattern=/scripts/ -t",
     "ms:post_install:project:live": "cross-env NODE_ENV=production NODE_OPTIONS=--experimental-vm-modules jest --verbose -t",
     "ms:deploy": "pnpm ms:pre && pnpm ms:bootstrap && pnpm ms:build && pnpm ms:install && pnpm ms:post_install:project ego_ops",
-    "ms:deploy:live": "pnpm ms:create:live && pnpm ms:install:live && pnpm ms:post_install:project:live ego_ops"
+    "ms:deploy:live": "pnpm ms:create:live && pnpm ms:install:live && pnpm ms:post_install:project:live ego_ops",
+    "publish:ego:live": "pnpm post_install:project:live ms_provider && pnpm post_install:project:live ms_controller && pnpm post_install:project:live btc_wallet"
   },
   "author": "devs@astrox",
   "license": "ISC",
