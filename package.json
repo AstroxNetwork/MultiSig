@@ -14,6 +14,7 @@
     "install": "node ./dist/deployer.js --install",
     "reinstall": "node ./dist/deployer.js --reinstall",
     "upgrade": "node ./dist/deployer.js --upgrade",
+    "postPatch": "node ./dist/deployer.js --postPatch",
     "post_install": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --verbose --testPathIgnorePatterns=/scripts/ --testPathPattern=/post_install/ -t",
     "ms:frontend": "cd ./clients/ego_dev_frontend && pnpm install && pnpm dev",
     "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --testPathIgnorePatterns=/post_install/ --testPathPattern=/ego_dev/",
@@ -28,11 +29,12 @@
     "ms:install:live": "cross-env NODE_ENV=production node ./dist/deployer.js --install",
     "ms:reinstall:live": "cross-env NODE_ENV=production node ./dist/deployer.js --reinstall",
     "ms:upgrade:live": "cross-env NODE_ENV=production node ./dist/deployer.js --upgrade",
+    "ms:postPatch:live": "cross-env NODE_ENV=production node ./dist/deployer.js --postPatch",
     "ms:script:live": "cross-env NODE_ENV=production NODE_OPTIONS=--experimental-vm-modules jest --verbose --testPathIgnorePatterns=/post_install/ --testPathPattern=/scripts/ -t",
     "ms:post_install:project:live": "cross-env NODE_ENV=production NODE_OPTIONS=--experimental-vm-modules jest --verbose -t",
     "ms:deploy": "pnpm ms:pre && pnpm ms:bootstrap && pnpm ms:build && pnpm ms:install && pnpm ms:post_install:project ego_ops",
     "ms:deploy:live": "pnpm ms:create:live && pnpm ms:install:live && pnpm ms:post_install:project:live ego_ops",
-    "publish:ego:live": "pnpm post_install:project:live ms_provider && pnpm post_install:project:live ms_controller && pnpm post_install:project:live btc_wallet"
+    "publish:ego:live": "pnpm ms:post_install:project:live ms_provider && pnpm ms:post_install:project:live ms_controller && pnpm ms:post_install:project:live btc_wallet"
   },
   "author": "devs@astrox",
   "license": "ISC",

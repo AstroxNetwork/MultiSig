@@ -25,6 +25,8 @@ describe('ms_provider', () => {
 
     const ego_store_id = Principal.fromText(getCanisterId('ego_store')!);
 
+    console.log(`ego_store_id: ${ego_store_id}`);
+
     console.log(`add ego_store to ms_provider\n`);
     let msProviderOperator = await getOperator<MsProviderService>(
       'ms_provider',
@@ -36,10 +38,6 @@ describe('ms_provider', () => {
       wallet_app_id: 'astrox_ms_controller',
       wallet_provider: ms_provider_id,
     });
-
-
-
-
   });
 });
 

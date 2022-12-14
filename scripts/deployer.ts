@@ -67,6 +67,7 @@ interface ThisArgv {
   upgrade: boolean | undefined;
   project: string | undefined;
   remove: string | undefined;
+  postPatch: boolean | undefined;
   _: (string | number)[];
   $0: string;
 }
@@ -97,6 +98,11 @@ const argv = yargs
     description: 'upgrade only',
     type: 'boolean',
   })
+  .option('postPatch', {
+    alias: 'u',
+    description: 'postPatch only',
+    type: 'boolean',
+  })
   .option('project', {
     alias: 'p',
     description: 'upgrade only',
@@ -122,7 +128,8 @@ function getEgos(): Configs {
       if (
         (argv as ThisArgv).install ||
         (argv as ThisArgv).reinstall ||
-        (argv as ThisArgv).upgrade
+        (argv as ThisArgv).upgrade ||
+        (argv as ThisArgv).postPatch
       ) {
         egos = [{ ...ego, no_deploy: false }];
       } else {
@@ -623,103 +630,57 @@ async function runUpgrade() {
   }
 }
 
-// async function runRemove() {
-//   const { actor } = await managementActor();
-//   const walletActor = (await cycleWalletActor()).actor;
-//   for (const f of getEgos()) {
-//     const dfx_folder = process.cwd() + '/' + 'artifacts' + '/' + f.package;
-//     // const dfx_sh = dfx_folder + '/dfx.sh';
-//     if (!f.no_deploy) {
-//       if (f.custom_deploy) {
-//         if (typeof f.custom_deploy === 'string') {
-//           shell.exec(`cd ${dfx_folder} && ${f.custom_deploy}`);
-//         } else {
-//           (f.custom_deploy as () => void)();
-//         }
-//       } else {
-//         const pkg = readEgoDfxJson(dfx_folder, f.package);
-//         const wasm = readWasm(dfx_folder + '/' + pkg.wasm);
-//         const config = readConfig(
-//           process.cwd() + '/configs/' + f.package + '.json',
-//         );
-//         if (!isProduction) {
-//           try {
-//             console.log(
-//               `upgrading ${f.package} to ${config.LOCAL_CANISTERID!}`,
-//             );
-//             await actor.stop_canister({
-//               canister_id: Principal.fromText(config.LOCAL_CANISTERID!),
-//             });
-//             await actor.delete_canister({
-//               canister_id: Principal.fromText(config.LOCAL_CANISTERID!),
-//             });
-//             console.log(`Success with wasm bytes length: ${wasm.length}`);
-//           } catch (error) {
-//             console.log((error as Error).message);
-//           }
-//         } else {
-//           try {
-//             console.log(
-//               `upgrading ${f.package} to ${config.PRODUCTION_CANISTERID!}`,
-//             );
-//             const wasm_module = IDL.Vec(IDL.Nat8);
-//             const idl = IDL.Record({
-//               arg: IDL.Vec(IDL.Nat8),
-//               wasm_module: wasm_module,
-//               mode: IDL.Variant({
-//                 reinstall: IDL.Null,
-//                 upgrade: IDL.Null,
-//                 install: IDL.Null,
-//               }),
-//               canister_id: IDL.Principal,
-//             });
+async function runPostPatch() {
+  const { actor } = await managementActor();
+  const walletActor = (await cycleWalletActor()).actor;
+  for (const f of getEgos()) {
+    const dfx_folder = process.cwd() + '/' + 'artifacts' + '/' + f.package;
+    // const dfx_sh = dfx_folder + '/dfx.sh';
+    if (!f.no_deploy) {
+      if (f.custom_deploy) {
+        if (typeof f.custom_deploy === 'string') {
+          shell.exec(`cd ${dfx_folder} && ${f.custom_deploy}`);
+        } else {
+          (f.custom_deploy as () => void)();
+        }
+      } else {
+        const pkg = readEgoDfxJson(dfx_folder, f.package);
+        const wasm = readWasm(dfx_folder + '/' + pkg.wasm);
+        const config = readConfig(
+          process.cwd() + '/configs/' + f.package + '.json',
+        );
+        if (!isProduction) {
+        } else {
+          try {
+            console.log(
+              `postPatching ${f.package} to ${config.PRODUCTION_CANISTERID!}`,
+            );
+            const idl = IDL.Principal;
+            console.log(`identity: ${identity.getPrincipal().toText()}`);
+            const buf = IDL.encode([idl], [identity.getPrincipal()]);
+            const args = Array.from(new Uint8Array(buf));
 
-//             // IDL.Tuple()
-//             const initArgs = Array.from(
-//               new Uint8Array(
-//                 IDL.encode(
-//                   [IDL.Opt(IDL.Principal)],
-//                   [[identity.getPrincipal()]],
-//                 ),
-//               ),
-//             );
+            const result = await walletActor.wallet_call({
+              canister: Principal.fromText(config.PRODUCTION_CANISTERID!),
+              cycles: BigInt(0),
+              method_name: 'ego_owner_add',
+              args,
+            });
 
-//             const buf = IDL.encode(
-//               [idl],
-//               [
-//                 {
-//                   arg: initArgs,
-//                   wasm_module: wasm,
-//                   mode: { upgrade: null },
-//                   canister_id: Principal.fromText(
-//                     config.PRODUCTION_CANISTERID!,
-//                   ),
-//                 },
-//               ],
-//             );
-//             const args = Array.from(new Uint8Array(buf));
-
-//             const result = await walletActor.wallet_call({
-//               canister: Principal.fromHex(''),
-//               cycles: BigInt(0),
-//               method_name: 'install_code',
-//               args,
-//             });
-
-//             if (hasOwnProperty(result, 'Ok')) {
-//               console.log(result.Ok.return);
-//             } else {
-//               throw new Error(result.Err);
-//             }
-//             console.log(`Success with wasm bytes length: ${wasm.length}`);
-//           } catch (error) {
-//             console.log((error as Error).message);
-//           }
-//         }
-//       }
-//     }
-//   }
-// }
+            if (hasOwnProperty(result, 'Ok')) {
+              console.log(result.Ok.return);
+            } else {
+              throw new Error(result.Err);
+            }
+            console.log(`Success with wasm bytes length: ${wasm.length}`);
+          } catch (error) {
+            console.log((error as Error).message);
+          }
+        }
+      }
+    }
+  }
+}
 
 checkAndArtifacts();
 generateDFXJson();
@@ -747,4 +708,9 @@ if ((argv as ThisArgv).reinstall) {
 if ((argv as ThisArgv).upgrade) {
   // console.log('upgrade');
   runUpgrade();
+}
+
+if ((argv as ThisArgv).postPatch) {
+  // console.log('upgrade');
+  runPostPatch();
 }
