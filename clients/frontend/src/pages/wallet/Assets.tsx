@@ -16,7 +16,7 @@ import { useDispatch } from 'react-redux';
 import Modal from 'antd/es/modal/Modal';
 import { BTC_PATH } from '@/utils/constants';
 import { balanceFromString, balanceToString } from '@/utils/converter';
-import BTC_ICON from '@/assets/bitcoin.svg';
+import BTC_ICON from '@/assets/b.svg';
 import {
   CopyOutlined,
   Loading3QuartersOutlined,
