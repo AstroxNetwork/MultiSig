@@ -174,15 +174,25 @@ const WalletAssets = () => {
           onCancel: () => setSendVisable(false),
         }}
       >
-        <p className="mb-3">Send Form: {address}</p>
-        <ProFormText required label="To" name="to_address" />
-        <ProFormText required label="Amount" name="amount_in_satoshi" />
+        <p className="mb-3">Form: {address}</p>
+        <ProFormText
+          required
+          label="To"
+          name="to_address"
+          placeholder={'Wallet Address'}
+        />
+        <ProFormText
+          required
+          label="Amount"
+          name="amount_in_satoshi"
+          placeholder={'eg: 0.12345678'}
+        />
         <p>Balance: {balance}</p>
         <p>
-          Fee:
-          {fee.map(val => (
+          Fee:(Unavailable yet)
+          {/* {fee.map(val => (
             <span>{val.toString()}</span>
-          ))}
+          ))} */}
         </p>
       </ModalForm>
     </PageContainer>

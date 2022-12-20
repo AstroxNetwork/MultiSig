@@ -44,6 +44,9 @@ const GroupCreate: React.FC = () => {
 
           history.replace('/group/setting');
         }}
+        submitter={{
+          resetButtonProps: false,
+        }}
         // submitter={{
         //   submitButtonProps: (
         //     <Button
@@ -56,21 +59,27 @@ const GroupCreate: React.FC = () => {
         //   ),
         // }}
       >
-        <ProFormText required width="sm" name="name" label="Groupname" />
+        <ProFormText
+          required
+          width="sm"
+          name="name"
+          label="Group Name"
+          placeholder={'6-20 characters'}
+        />
         <ProForm.Group>
           <ProFormText
             required
             width="md"
             name="total_user_amount"
-            label="Total"
-            placeholder="Please enter"
+            label="Numbers of Members"
+            placeholder="eg: 3"
           />
           <ProFormText
             required
             width="md"
             name="threshold_user_amount"
-            label="Threshold"
-            placeholder="Please enter"
+            label="Threshold of Multi-Sig"
+            placeholder="eg: 2"
           />
         </ProForm.Group>
       </ProForm>

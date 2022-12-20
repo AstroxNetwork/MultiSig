@@ -64,7 +64,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
     <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick}>
       <Menu.Item key="logout">
         <LogoutOutlined />
-        Logout
+        Log Out
       </Menu.Item>
       <Menu.Item key="copy">
         <CopyOutlined />

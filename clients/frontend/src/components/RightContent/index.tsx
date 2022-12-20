@@ -4,13 +4,14 @@ import { Modal, Space } from 'antd';
 // import { QuestionCircleOutlined } from '@ant-design/icons';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useConnect } from '@connect2ic/react';
+import { ConnectButton, ConnectDialog, useConnect } from '@connect2ic/react';
 // import { useModel, SelectLang } from 'umi';
 import Avatar from './AvatarDropdown';
 import styles from './index.module.less';
 import { initiateICPSnap } from '@/services/metamask';
 import { SnapIdentity } from '@astrox/icsnap-adapter';
 import { useDispatch } from 'react-redux';
+import '@connect2ic/core/style.css';
 
 export type SiderTheme = 'light' | 'dark';
 
@@ -44,7 +45,7 @@ const GlobalHeaderRight: React.FC = () => {
     // Modal.info({
     //   title: ''
     // })
-    const result = connect((window as any).icx ? 'icx' : 'astrox');
+    // const result = connect((window as any).icx ? 'icx' : 'astrox');
     // installSnap()
   };
 
@@ -52,8 +53,10 @@ const GlobalHeaderRight: React.FC = () => {
     return (
       <div className="flex" onClick={loginModal}>
         <div className="leading-5">
-          <p>Not connected</p>
-          <p className="text-rose-500">Connect wallet</p>
+          <ConnectButton />
+
+          {/* <p>Not connected</p>
+          <p className="text-rose-500">Connect wallet</p> */}
         </div>
         <DownOutlined className="ml-2" />
       </div>

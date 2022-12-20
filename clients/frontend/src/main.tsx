@@ -9,9 +9,14 @@ import enUS from 'antd/locale/en_US';
 import RouterContainer from './routes/Router';
 import { AccessProvider } from './components/Access/runtime';
 import { createRoot } from 'react-dom/client';
-import { Connect2ICProvider } from '@connect2ic/react';
+import { Connect2ICProvider, ConnectDialog } from '@connect2ic/react';
 import { createClient } from '@connect2ic/core';
-import { AstroX, ICX, defaultProviders } from '@connect2ic/core/providers';
+import {
+  AstroX,
+  ICX,
+  defaultProviders,
+  InternetIdentity,
+} from '@connect2ic/core/providers';
 import { ConfigProvider, theme } from 'antd';
 // @ts-ignore
 BigInt.prototype.toJSON = function () {
@@ -28,15 +33,15 @@ const client = createClient({
       ? new ICX({})
       : new AstroX({
           // providerUrl: "https://ccmhe-vqaaa-aaaai-acmoq-cai.raw.ic0.app/",
-          // providerUrl: 'https://63k2f-nyaaa-aaaah-aakla-cai.raw.ic0.app/',
+          // providerUrl: 'http://localhost:8080',
           // delegationModes: ['global', 'domain'],
         }),
     //  new PlugWallet(),
-    //  new InternetIdentity()
+    new InternetIdentity(),
   ],
   globalProviderConfig: {
     // dev: true,
-
+    // whitelist: ['4qt4p-gaaaa-aaaah-abx2q-cai'],
     whitelist: ['4qt4p-gaaaa-aaaah-abx2q-cai'],
   },
 });
@@ -55,6 +60,7 @@ root.render(
       <AccessProvider>
         <Connect2ICProvider client={client}>
           <RouterContainer />
+          <ConnectDialog />
         </Connect2ICProvider>
       </AccessProvider>
     </Provider>

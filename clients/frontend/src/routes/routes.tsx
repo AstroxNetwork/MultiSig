@@ -24,7 +24,7 @@ const routes: IRoute[] = [
     component: UserLayout,
     routes: [
       {
-        name: 'Home',
+        name: 'Groups',
         icon: <HomeOutlined />,
         path: '/group/home',
         component: HomePage,
@@ -37,7 +37,7 @@ const routes: IRoute[] = [
         component: GroupList,
       },
       {
-        name: 'Group create',
+        name: 'Create a new group',
         hideInMenu: true,
         path: '/group/create',
         component: GroupCreate,
@@ -68,7 +68,7 @@ const routes: IRoute[] = [
         component: WalletCreate,
       },
       {
-        name: 'Group setting',
+        name: 'Group Settings',
         // hideInMenu: true,
         icon: <SettingOutlined />,
         path: '/group/setting',

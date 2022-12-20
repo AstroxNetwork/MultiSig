@@ -65,7 +65,7 @@ const WalletTransactions = () => {
                     : hasOwnProperty(action.status, 'SINGING')
                     ? 'Singing'
                     : hasOwnProperty(action.status, 'INIT')
-                    ? 'init'
+                    ? 'Waiting for signing'
                     : 'timeout'}
                   <p className="ml-3">
                     {dayjs(
@@ -77,21 +77,24 @@ const WalletTransactions = () => {
                     {`${action.signs.length} out of ${activeController?.threshold_user_amount}`}
                   </p>
                 </div>
-                <Button
-                  type="primary"
-                  loading={signLoading}
-                  disabled={
-                    !!action.signs.find(
-                      o => o.user_id.toText() === activeProvider?.principal,
-                    )
-                  }
-                  onClick={e => {
-                    e.stopPropagation();
-                    actionSign(action);
-                  }}
-                >
-                  Sign
-                </Button>
+                {hasOwnProperty(action.status, 'INIT') ||
+                hasOwnProperty(action.status, 'SINGING') ? (
+                  <Button
+                    type="primary"
+                    loading={signLoading}
+                    disabled={
+                      !!action.signs.find(
+                        o => o.user_id.toText() === activeProvider?.principal,
+                      )
+                    }
+                    onClick={e => {
+                      e.stopPropagation();
+                      actionSign(action);
+                    }}
+                  >
+                    Sign
+                  </Button>
+                ) : null}
               </div>
             }
             key={action.id.toString()}

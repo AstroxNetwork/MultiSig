@@ -125,6 +125,8 @@ export default (props: any) => {
         fee: [],
       });
       handleInitialState();
+    } else {
+      history.replace('/group/home');
     }
   }, [isConnected, principal]);
 
@@ -197,7 +199,7 @@ export default (props: any) => {
   console.log('menuRoute', menuRoute);
   return (
     <ProLayout
-      route={menuRoute}
+      route={isConnected ? menuRoute : {}}
       title={'Multi-sig'}
       navTheme="light"
       siderWidth={256}
