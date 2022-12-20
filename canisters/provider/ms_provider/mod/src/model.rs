@@ -1,4 +1,4 @@
-use std::collections::{BTreeMap};
+use std::collections::BTreeMap;
 
 use ic_cdk::export::candid::{CandidType, Deserialize};
 use ic_cdk::export::Principal;
@@ -11,24 +11,24 @@ pub struct Provider {
 }
 
 #[derive(CandidType, Deserialize, Serialize, Debug, Clone)]
-pub struct Controller{
+pub struct Controller {
   pub id: Principal,
   pub name: String,
   pub users: BTreeMap<Principal, u16>,
   pub total_user_amount: u16,
-  pub threshold_user_amount: u16
+  pub threshold_user_amount: u16,
 }
 
 impl Provider {
   pub fn new() -> Self {
     Provider {
       controllers: BTreeMap::new(),
-      user_controllers: BTreeMap::new()
+      user_controllers: BTreeMap::new(),
     }
   }
 
   pub fn controller_main_list(&self, user_id: &Principal) -> Vec<Controller> {
-    match self.user_controllers.get(user_id){
+    match self.user_controllers.get(user_id) {
       None => {
         vec![]
       }
@@ -39,7 +39,7 @@ impl Provider {
   }
 
   pub fn controller_main_get(&self, user_id: &Principal, controller_id: &Principal) -> Option<Controller> {
-    match self.user_controllers.get(user_id){
+    match self.user_controllers.get(user_id) {
       None => {
         None
       }
@@ -56,16 +56,16 @@ impl Provider {
     }
   }
 
-  pub fn controller_main_create(&mut self, id: &Principal, user_id: &Principal, name: String, total_user_amount: u16, threshold_user_amount: u16) -> Controller{
+  pub fn controller_main_create(&mut self, id: &Principal, user_id: &Principal, name: String, total_user_amount: u16, threshold_user_amount: u16) -> Controller {
     let mut users = BTreeMap::default();
     users.insert(user_id.clone(), 1);
 
-    let controller = Controller{
+    let controller = Controller {
       id: id.clone(),
       name,
       users,
       total_user_amount,
-      threshold_user_amount
+      threshold_user_amount,
     };
 
     self.controllers.entry(id.clone()).or_insert(controller.clone());

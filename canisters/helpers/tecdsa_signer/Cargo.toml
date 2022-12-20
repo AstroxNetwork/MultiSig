@@ -13,7 +13,7 @@ ic-cdk = "0.6.8"
 ic-cdk-macros = "0.6.8"
 ic-certified-map = "0.3.0"
 bitcoin = "0.29.1"
-hdpath =  { version = "0.6.1", features = ["with-bitcoin"] }
+hdpath = { version = "0.6.1", features = ["with-bitcoin"] }
 candid = "0.8.1"
 hex = "0.4.3"
 hex-literal = "0.3.4"
@@ -25,5 +25,5 @@ serde_cbor = "0.11.2"
 serde_with = "1.12.0"
 sha2 = "0.10.2"
 multibase = "0.9"
-k256 = { version = "0.11.4", default-features = false, features = [ "ecdsa", "sha256","pem","keccak256" ] }
+k256 = { version = "0.11.4", default-features = false, features = ["ecdsa", "sha256", "pem", "keccak256"] }
 

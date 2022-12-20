@@ -1,4 +1,5 @@
 use std::collections::BTreeMap;
+
 use ego_lib::ego_types::EgoError;
 use ic_cdk::export::candid::{CandidType, Deserialize};
 use serde::Serialize;
@@ -8,13 +9,13 @@ pub struct AppActionCreateRequest {
   pub path: String,
   pub to_address: String,
   pub amount_in_satoshi: u64,
-  pub extended: BTreeMap<String, String>
+  pub extended: BTreeMap<String, String>,
 }
 
 #[derive(Clone, Debug, CandidType, Deserialize, Serialize)]
 pub struct SystemErr {
   pub code: u16,
-  pub msg: String
+  pub msg: String,
 }
 
 impl SystemErr {
@@ -32,23 +33,23 @@ pub enum Errors {
   Signed,
   WrongStatus,
   TooManyUser,
-  AppNotInstalled
+  AppNotInstalled,
 }
 
 impl From<EgoError> for SystemErr {
   fn from(e: EgoError) -> Self {
-    SystemErr{
+    SystemErr {
       code: e.code,
-      msg: e.msg
+      msg: e.msg,
     }
   }
 }
 
 impl From<std::string::String> for SystemErr {
   fn from(msg: String) -> Self {
-    SystemErr{
+    SystemErr {
       code: 500,
-      msg
+      msg,
     }
   }
 }
@@ -59,8 +60,8 @@ impl From<Errors> for SystemErr {
       Errors::NotFound => SystemErr::new(404, "Not Found"),
       Errors::SystemError => SystemErr::new(500, "System Error"),
       Errors::Signed => SystemErr::new(404, "Already Signed"),
-      Errors::WrongStatus  => SystemErr::new(404, "Wrong Status"),
-      Errors::TooManyUser  => SystemErr::new(404, "Too Many Users"),
+      Errors::WrongStatus => SystemErr::new(404, "Wrong Status"),
+      Errors::TooManyUser => SystemErr::new(404, "Too Many Users"),
       Errors::AppNotInstalled => SystemErr::new(404, "Wallet App Not Installed"),
     }
   }

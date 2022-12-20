@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import type { Principal } from '@dfinity/principal';
 import type { ActorMethod } from '@dfinity/agent';
 
@@ -64,3 +65,5 @@ export interface _SERVICE {
   'ego_user_remove' : ActorMethod<[Principal], Result_4>,
   'ego_user_set' : ActorMethod<[Array<Principal>], Result_4>,
 }
+=======
+>>>>>>> 10dd85c (code refactor)

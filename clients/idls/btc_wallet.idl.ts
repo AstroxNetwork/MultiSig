@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 export const idlFactory = ({ IDL }) => {
   const Result = IDL.Variant({ 'Ok' : IDL.Nat, 'Err' : IDL.Text });
   const GetAddressResponse = IDL.Record({ 'address' : IDL.Text });
@@ -72,3 +73,5 @@ export const idlFactory = ({ IDL }) => {
   });
 };
 export const init = ({ IDL }) => { return []; };
+=======
+>>>>>>> 10dd85c (code refactor)

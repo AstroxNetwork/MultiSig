@@ -1,16 +1,18 @@
+
+use std::collections::BTreeMap;
+
 use async_trait::async_trait;
 use ego_lib::ego_canister::TEgoCanister;
 use ego_lib::ego_store::TEgoStore;
-use ego_lib::ego_types::{
-    App, AppId, Canister, CanisterType, Category, EgoError, QueryParam, UserApp, WalletApp,
-};
+use ego_lib::ego_types::{App, AppId, Canister, CanisterType, Category, EgoError, QueryParam, UserApp, WalletApp};
 use ic_cdk::export::Principal;
 use mockall::mock;
+
+
 use ms_controller_mod::app_wallet::TAppWallet;
 use ms_controller_mod::model::{Action, ActionStatus};
 use ms_controller_mod::service::Service;
 use ms_controller_mod::state::CONTROLLER;
-use std::collections::BTreeMap;
 
 mock! {
   Store {}
@@ -66,6 +68,7 @@ static USER1_ID: &str = "o2ivq-5dsz3-nba5d-pwbk2-hdd3i-vybeq-qfz35-rqg27-lyesf-x
 static USER2_ID: &str = "3zjeh-xtbtx-mwebn-37a43-7nbck-qgquk-xtrny-42ujn-gzaxw-ncbzw-kqe";
 
 pub fn set_up() {
+
     CONTROLLER.with(|controller| {
         controller.borrow_mut().actions.push(Action {
             id: 1,
@@ -82,6 +85,7 @@ pub fn set_up() {
         controller.borrow_mut().next_action_id = 2;
         controller.borrow_mut().total_user_amount = 5;
         controller.borrow_mut().threshold_user_amount = 2;
+
     });
 }
 
@@ -92,6 +96,7 @@ async fn app_main_create() {
 
     let mut ego_store = MockStore::new();
     let mut ego_canister = MockCanister::new();
+
 
     ego_store.expect_wallet_app_install().returning(|app_id| {
         assert_eq!(APP_NAME.to_string(), app_id);
@@ -111,8 +116,10 @@ async fn app_main_create() {
         Ok(user_app)
     });
 
+
     ego_canister.expect_ego_user_add().returning(|_, _| ());
     ego_canister.expect_ego_user_remove().returning(|_, _| ());
+
 
     Service::app_main_create(
         ego_store,
@@ -123,6 +130,7 @@ async fn app_main_create() {
     .await
     .expect("btc_wallet created failed");
 
+
     CONTROLLER.with(|controller| {
         assert_eq!(btc_wallet_principal, controller.borrow().app.unwrap());
     })
@@ -130,6 +138,7 @@ async fn app_main_create() {
 
 #[test]
 fn app_action_list() {
+
     set_up();
 
     let actions = Service::app_action_list();
@@ -139,6 +148,7 @@ fn app_action_list() {
 
 #[test]
 fn app_action_create() {
+
     let create_at: u64 = 123;
     let extended = BTreeMap::default();
     let action = Service::app_action_create(
@@ -157,6 +167,7 @@ fn app_action_create() {
 // actions list is ordered descent
 #[test]
 fn app_action_create_ordering() {
+
     set_up();
 
     let create_at: u64 = 123;
@@ -180,6 +191,7 @@ fn app_action_create_ordering() {
 
 #[test]
 fn action_sign_create() {
+
     set_up();
 
     let wallet = MockWallet::new();
@@ -200,6 +212,7 @@ fn action_sign_create() {
 
 #[test]
 fn action_sign_create_multi_time() {
+
     set_up();
 
     let mut action = Service::app_action_get(1).unwrap();
@@ -221,6 +234,7 @@ fn action_sign_create_multi_time() {
 
 #[test]
 fn action_sign_create_success() {
+
     set_up();
 
     let mut action = Service::app_action_get(1).unwrap();
@@ -239,6 +253,7 @@ fn action_sign_create_success() {
     assert_eq!(1, action.signs.len());
     assert_eq!(ActionStatus::SINGING, action.status);
 
+
     let mut wallet2 = MockWallet::new();
     wallet2.expect_action_main_invoke().returning(
         |request_id, path, to_address, amount_in_satoshi, _extended| {
@@ -248,6 +263,7 @@ fn action_sign_create_success() {
             ()
         },
     );
+
 
     let sign2 = Service::action_sign_create(wallet2, 1, &user2_principal, user2_signat).unwrap();
     assert_eq!(user2_signat, sign2.sign_at);

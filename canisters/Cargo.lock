@@ -34,9 +34,9 @@ dependencies = [
 
 [[package]]
 name = "astrox_macros"
-version = "0.2.4"
+version = "0.2.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f81ce56f75c1043d6fc051da3bb69ca7518683fefae24fd4e3e3ebf68d2e94ad"
+checksum = "afdd5e959a33b696abd12289c6356541c985709d4b3092e3a062cf4332d814fe"
 dependencies = [
  "candid",
  "ic-cdk",
@@ -185,7 +185,6 @@ checksum = "771fe0050b883fcc3ea2359b1a96bcfbc090b7116eae7c3c512c7a083fdf23d3"
 name = "btc_wallet"
 version = "0.1.0"
 dependencies = [
- "astrox_macros",
  "btc_wallet_mod",
  "candid",
  "ego_lib",
@@ -202,6 +201,7 @@ dependencies = [
 name = "btc_wallet_mod"
 version = "0.1.0"
 dependencies = [
+ "astrox_macros",
  "bitcoin",
  "bs58",
  "byteorder",
@@ -486,9 +486,9 @@ dependencies = [
 
 [[package]]
 name = "ego_lib"
-version = "0.2.10"
+version = "0.2.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "094f11e268e4e6cb2d1ecdea93ea16fd4a6e13a1b739cb595be7d5c8ed733aa3"
+checksum = "3914c9b424b8f84ece0cd63d00cd20f82c1e7b3d86f149b5e106e2f8d6695093"
 dependencies = [
  "async-trait",
  "candid",
@@ -911,7 +911,6 @@ dependencies = [
 name = "ms_controller"
 version = "0.1.0"
 dependencies = [
- "astrox_macros",
  "candid",
  "ego_lib",
  "ic-cdk",
@@ -926,6 +925,7 @@ dependencies = [
 name = "ms_controller_mod"
 version = "0.1.0"
 dependencies = [
+ "astrox_macros",
  "async-trait",
  "candid",
  "ego_lib",
@@ -942,9 +942,7 @@ dependencies = [
 name = "ms_provider"
 version = "0.1.0"
 dependencies = [
- "astrox_macros",
  "candid",
- "ego_lib",
  "ic-cdk",
  "ic-cdk-macros",
  "ms_provider_mod",
@@ -957,6 +955,7 @@ dependencies = [
 name = "ms_provider_mod"
 version = "0.1.0"
 dependencies = [
+ "astrox_macros",
  "async-trait",
  "candid",
  "ego_lib",

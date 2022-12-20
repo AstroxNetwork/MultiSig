@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 type EgoBtcError = variant { UnknownError : text; AddressNotFound };
 type GetAddressResponse = record { address : text };
 type Network = variant { Mainnet; Regtest; Testnet };
@@ -49,3 +50,5 @@ service : () -> {
   ego_user_remove : (principal) -> (Result_4);
   ego_user_set : (vec principal) -> (Result_4);
 }
+=======
+>>>>>>> 10dd85c (code refactor)

@@ -1,9 +1,19 @@
+use astrox_macros::{inject_canister_log, inject_canister_registry, inject_canister_users};
 use ego_lib::ego_store::TEgoStore;
-use ic_cdk::export::Principal;
+use ego_lib::inject_log;
+
 use crate::model::Controller;
 use crate::ms_controller::TMsController;
 use crate::state::PROVIDER;
 use crate::types::SystemErr;
+
+inject_canister_users!();
+inject_canister_registry!();
+inject_canister_log!();
+inject_log!();
+
+/********************  methods for canister_registry_macro   ********************/
+fn on_canister_added(_name: &str, _canister_id: Principal) {}
 
 pub struct Service {}
 
@@ -22,13 +32,13 @@ impl Service {
     user_id: &Principal,
     name: String,
     total_user_amount: u16,
-    threshold_user_amount: u16
+    threshold_user_amount: u16,
   ) -> Result<Controller, SystemErr> {
-    ic_cdk::println!("1. create controller");
+    ego_log("1. create controller");
     let user_app = match ego_store.wallet_main_new(user_id.clone()).await {
       Ok(user_app) => {
         Ok(user_app)
-      },
+      }
       Err(e) => {
         Err(SystemErr::from(e))
       }
@@ -38,12 +48,12 @@ impl Service {
       Some(canister) => {
         let controller = PROVIDER.with(|provider| provider.borrow_mut().controller_main_create(&canister.canister_id, user_id, name, total_user_amount, threshold_user_amount));
 
-        ic_cdk::println!("2. init controller");
-        ms_controller.controller_init(controller.id,  total_user_amount, threshold_user_amount);
+        ego_log("2. init controller");
+        ms_controller.controller_init(controller.id, total_user_amount, threshold_user_amount);
 
         Ok(controller)
       }
-      _ => Err(SystemErr{code: 500, msg: "System Error".to_string()})
+      _ => Err(SystemErr { code: 500, msg: "System Error".to_string() })
     }
   }
 

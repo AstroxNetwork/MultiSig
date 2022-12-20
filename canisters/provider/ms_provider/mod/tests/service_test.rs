@@ -1,13 +1,15 @@
 use std::collections::BTreeMap;
+
 use async_trait::async_trait;
-use ego_lib::ego_types::{AppId, UserApp, EgoError, QueryParam, App, Version, Canister, CanisterType, WalletApp};
 use ego_lib::ego_store::TEgoStore;
+use ego_lib::ego_types::{App, AppId, Canister, CanisterType, EgoError, QueryParam, UserApp, Version, WalletApp};
 use ic_cdk::export::Principal;
 use mockall::mock;
+
+use ms_provider_mod::model::Controller;
+use ms_provider_mod::ms_controller::TMsController;
 use ms_provider_mod::service::Service;
 use ms_provider_mod::state::PROVIDER;
-use ms_provider_mod::ms_controller::TMsController;
-use ms_provider_mod::model::Controller;
 
 mock! {
   Store {}
@@ -51,12 +53,12 @@ pub fn set_up() {
   let users = BTreeMap::from([(user1, 1), (user2, 1)]);
 
   PROVIDER.with(|provider| {
-    let controller = Controller{
+    let controller = Controller {
       id: provider1_principal,
       name: PROVIDER1_NAME.to_string(),
       users,
       total_user_amount: 5,
-      threshold_user_amount: 2
+      threshold_user_amount: 2,
     };
 
     provider.borrow_mut().controllers.insert(provider1_principal, controller);
@@ -85,7 +87,7 @@ fn controller_main_list() {
 }
 
 #[test]
-fn controller_main_get(){
+fn controller_main_get() {
   set_up();
 
   let user1 = Principal::from_text(USER1_ID).unwrap();
@@ -99,7 +101,7 @@ fn controller_main_get(){
 }
 
 #[test]
-fn controller_main_get_not_exists(){
+fn controller_main_get_not_exists() {
   set_up();
 
   let user1 = Principal::from_text(USER1_ID).unwrap();
@@ -110,7 +112,7 @@ fn controller_main_get_not_exists(){
 }
 
 #[tokio::test]
-async fn controller_main_create(){
+async fn controller_main_create() {
   let user2 = Principal::from_text(USER2_ID).unwrap();
   let provider2_principal = Principal::from_text(PROVIDER2_ID).unwrap();
 
@@ -119,18 +121,18 @@ async fn controller_main_create(){
 
 
   store.expect_wallet_main_new().returning(move |_| {
-    let user_app = WalletApp{
+    let user_app = WalletApp {
       app_id: APP_NAME.to_string(),
-      current_version: Version{
+      current_version: Version {
         major: 1,
         minor: 0,
-        patch: 0
+        patch: 0,
       },
       frontend: None,
-      backend: Some(Canister{
+      backend: Some(Canister {
         canister_id: provider2_principal,
-        canister_type: CanisterType::BACKEND
-      })
+        canister_type: CanisterType::BACKEND,
+      }),
     };
 
     Ok(user_app)
@@ -138,7 +140,7 @@ async fn controller_main_create(){
 
   ms_controller.expect_controller_init().returning(|_, _, _| ());
 
-  let result = Service::controller_main_create(store, ms_controller,&user2, PROVIDER2_NAME.to_string(), 5, 2).await;
+  let result = Service::controller_main_create(store, ms_controller, &user2, PROVIDER2_NAME.to_string(), 5, 2).await;
   assert!(result.is_ok());
   let controller = result.unwrap();
   assert_eq!(provider2_principal, controller.id);
@@ -148,7 +150,7 @@ async fn controller_main_create(){
 }
 
 #[test]
-fn controller_user_operation(){
+fn controller_user_operation() {
   set_up();
 
   let user1 = Principal::from_text(USER1_ID).unwrap();
