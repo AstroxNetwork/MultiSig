@@ -14,6 +14,7 @@ import { getCanisterId } from '@/settings/utils';
 
 import { Ed25519KeyIdentity } from '@dfinity/identity';
 import { endUsers } from '@/fixtures/identities';
+import {BigNumber} from "ethers";
 
 export const msProviderActor = getActor<MsProviderService>(
   identity,
@@ -75,9 +76,10 @@ describe('scripts', () => {
     console.log('call btc_tx_send');
     // @ts-ignore
     let resp3 = await wallet.btc_tx_send({
+      request_id: BigInt(1),
       path: '',
       to_address: '',
-      amount_in_satoshi: 0n,
+      amount_in_satoshi: BigInt(0),
       extended: []
     })
     console.log(resp3)

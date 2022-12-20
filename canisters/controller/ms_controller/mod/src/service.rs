@@ -15,7 +15,9 @@ inject_canister_log!();
 inject_log!();
 
 /********************  methods for canister_registry_macro   ********************/
-fn on_canister_added(_name: &str, _canister_id: Principal) {}
+fn on_canister_added(name: &str, canister_id: Principal) {
+  ego_log(format!("on_canister_added name: {}, canister_id: {}", name, canister_id).as_str());
+}
 
 
 pub struct Service {}

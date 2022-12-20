@@ -1,13 +1,13 @@
-<<<<<<< HEAD
 type EgoBtcError = variant { UnknownError : text; AddressNotFound };
 type GetAddressResponse = record { address : text };
+type LogEntry = record { log : text; created_at : nat64 };
 type Network = variant { Mainnet; Regtest; Testnet };
 type OutPoint = record { txid : vec nat8; vout : nat32 };
-type Result = variant { Ok : nat; Err : text };
-type Result_1 = variant { Ok : GetAddressResponse; Err : EgoBtcError };
-type Result_2 = variant { Ok : UserBalanceResponse; Err : EgoBtcError };
-type Result_3 = variant { Ok : SendResponse; Err : EgoBtcError };
-type Result_4 = variant { Ok; Err : text };
+type Result = variant { Ok : GetAddressResponse; Err : EgoBtcError };
+type Result_1 = variant { Ok : UserBalanceResponse; Err : EgoBtcError };
+type Result_2 = variant { Ok : SendResponse; Err : EgoBtcError };
+type Result_3 = variant { Ok; Err : text };
+type Result_4 = variant { Ok : vec LogEntry; Err : text };
 type SendRequest = record {
   request_id : nat64;
   path : text;
@@ -23,12 +23,12 @@ type SendResponse = record {
 type UserBalanceResponse = record { balance : nat64 };
 type Utxo = record { height : nat32; value : nat64; outpoint : OutPoint };
 service : () -> {
-  balance_get : () -> (Result) query;
-  btc_address_get : (text) -> (Result_1) query;
+  balance_get : () -> (nat) query;
+  btc_address_get : (text) -> (Result) query;
   btc_address_get_all : () -> (vec text) query;
   btc_address_set : (text) -> (text);
   btc_balance_get : (text) -> (nat64);
-  btc_balance_path_get : (text) -> (Result_2);
+  btc_balance_path_get : (text) -> (Result_1);
   btc_fee_get : () -> (vec nat64);
   btc_get_txid : (nat64) -> (opt text) query;
   btc_is_owner : () -> (bool) query;
@@ -36,19 +36,18 @@ service : () -> {
   btc_key_get : () -> (text) query;
   btc_network_get : () -> (Network) query;
   btc_network_set : (Network) -> (Network);
-  btc_tx_send : (SendRequest) -> (Result_3);
+  btc_tx_send : (SendRequest) -> (Result_2);
   btc_utxos_get : (text) -> (vec Utxo);
-  ego_canister_add : (text, principal) -> (Result_4);
-  ego_controller_add : (principal) -> (Result_4);
-  ego_controller_remove : (principal) -> (Result_4);
-  ego_controller_set : (vec principal) -> (Result_4);
-  ego_op_add : (principal) -> (Result_4);
-  ego_owner_add : (principal) -> (Result_4);
-  ego_owner_remove : (principal) -> (Result_4);
-  ego_owner_set : (vec principal) -> (Result_4);
-  ego_user_add : (principal) -> (Result_4);
-  ego_user_remove : (principal) -> (Result_4);
-  ego_user_set : (vec principal) -> (Result_4);
+  ego_canister_add : (text, principal) -> (Result_3);
+  ego_controller_add : (principal) -> (Result_3);
+  ego_controller_remove : (principal) -> (Result_3);
+  ego_controller_set : (vec principal) -> (Result_3);
+  ego_log_list : (nat64) -> (Result_4) query;
+  ego_op_add : (principal) -> (Result_3);
+  ego_owner_add : (principal) -> (Result_3);
+  ego_owner_remove : (principal) -> (Result_3);
+  ego_owner_set : (vec principal) -> (Result_3);
+  ego_user_add : (principal) -> (Result_3);
+  ego_user_remove : (principal) -> (Result_3);
+  ego_user_set : (vec principal) -> (Result_3);
 }
-=======
->>>>>>> 10dd85c (code refactor)

@@ -17,7 +17,7 @@ ic-cdk-macros = "0.6.8"
 serde = "1.0"
 serde_json = "1.0"
 serde_bytes = "0.11"
-ego_lib = "0.2.12"
+ego_lib = "0.2.13"
 astrox_macros = "0.2.10"
 async-trait = "0.1.57"
 

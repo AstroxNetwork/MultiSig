@@ -486,9 +486,9 @@ dependencies = [
 
 [[package]]
 name = "ego_lib"
-version = "0.2.12"
+version = "0.2.13"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3914c9b424b8f84ece0cd63d00cd20f82c1e7b3d86f149b5e106e2f8d6695093"
+checksum = "75e88d060e40b781534c1d0662befcc2284320f755cda8a9aa4218c18623b34f"
 dependencies = [
  "async-trait",
  "candid",
