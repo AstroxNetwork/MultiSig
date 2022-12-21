@@ -10,7 +10,6 @@ fn main() {
   use ic_cdk::export::Principal;
   use ms_provider_mod::model::*;
   use ms_provider_mod::types::*;
-  use ms_provider_mod::service::LogEntry;
 
   candid::export_service!();
   std::print!("{}", __export_service());

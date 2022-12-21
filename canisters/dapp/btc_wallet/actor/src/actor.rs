@@ -10,7 +10,7 @@ use serde::Serialize;
 
 use btc_wallet_mod::ego_lib::inject_ego_macros;
 use btc_wallet_mod::service::{BtcStore, is_user};
-use btc_wallet_mod::service::{canister_add, ego_log, is_owner, log_list_after, LogEntry, op_add, owner_add, owner_remove, owners_set, User, USER, user_add, user_remove, users_post_upgrade, users_pre_upgrade, users_set};
+use btc_wallet_mod::service::{canister_add, ego_log, is_owner, log_list, op_add, owner_add, owner_remove, owners_set, User, USER, user_add, user_remove, users_post_upgrade, users_pre_upgrade, users_set};
 use btc_wallet_mod::tecdsa_signer::types::TSignerManager;
 use btc_wallet_mod::types::{
   EgoBtcError, GetAddressResponse, SendRequest, SendResponse, UserBalanceResponse,

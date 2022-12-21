@@ -10,7 +10,6 @@ fn main() {
   use btc_wallet_mod::types::*;
   use ic_btc_types::*;
   use ic_cdk::export::Principal;
-  use btc_wallet_mod::service::LogEntry;
 
   candid::export_service!();
   std::print!("{}", __export_service());

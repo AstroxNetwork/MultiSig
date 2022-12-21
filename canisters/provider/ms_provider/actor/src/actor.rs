@@ -13,7 +13,7 @@ use ms_provider_mod::ego_lib::ego_store::EgoStore;
 use ms_provider_mod::ego_lib::inject_ego_macros;
 use ms_provider_mod::model::{Controller, Provider};
 use ms_provider_mod::ms_controller::MsController;
-use ms_provider_mod::service::{canister_add, canister_get_one, ego_log, is_owner, log_list_after, LogEntry, op_add, owner_add, owner_remove, owners_set, Registry, registry_post_upgrade, registry_pre_upgrade, Service, User, USER, user_add, user_remove, users_post_upgrade, users_pre_upgrade, users_set};
+use ms_provider_mod::service::{canister_add, canister_get_one, ego_log, is_owner, log_list, op_add, owner_add, owner_remove, owners_set, Registry, registry_post_upgrade, registry_pre_upgrade, Service, User, USER, user_add, user_remove, users_post_upgrade, users_pre_upgrade, users_set};
 use ms_provider_mod::state::PROVIDER;
 use ms_provider_mod::types::{ControllerMainCreateRequest, Errors, SystemErr};
 

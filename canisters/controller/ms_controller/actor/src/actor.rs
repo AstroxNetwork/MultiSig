@@ -14,7 +14,7 @@ use ms_controller_mod::ego_lib::ego_store::EgoStore;
 use ms_controller_mod::ego_lib::inject_ego_macros;
 use ms_controller_mod::model::{Action, Controller, Sign};
 use ms_controller_mod::service::{Service, user_add_with_name, users};
-use ms_controller_mod::service::{canister_add, canister_get_one, ego_log, is_owner, log_list_after, LogEntry, op_add, owner_add, owner_remove, owners_set, Registry, registry_post_upgrade, registry_pre_upgrade, User, USER, user_add, user_remove, users_post_upgrade, users_pre_upgrade, users_set};
+use ms_controller_mod::service::{canister_add, canister_get_one, ego_log, is_owner, log_list, op_add, owner_add, owner_remove, owners_set, Registry, registry_post_upgrade, registry_pre_upgrade, User, USER, user_add, user_remove, users_post_upgrade, users_pre_upgrade, users_set};
 use ms_controller_mod::state::CONTROLLER;
 use ms_controller_mod::types::{AppActionCreateRequest, Errors, SystemErr};
 use ms_controller_mod::types::Errors::TooManyUser;
