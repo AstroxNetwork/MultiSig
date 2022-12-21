@@ -13,7 +13,7 @@ ic-cdk-macros = "0.6.8"
 serde = "1.0"
 serde_json = "1.0"
 async-trait = "0.1.57"
-ego_lib = "0.2.14"
+ego_lib = "0.2.15"
 astrox_macros = "0.2.11"
 
 [dev-dependencies]
