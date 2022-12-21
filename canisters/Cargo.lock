@@ -933,7 +933,6 @@ dependencies = [
  "ic-cdk-macros",
  "mockall",
  "serde",
- "serde_bytes",
  "serde_json",
  "tokio",
 ]
@@ -965,7 +964,6 @@ dependencies = [
  "serde",
  "serde_json",
  "tokio",
- "tracing",
 ]
 
 [[package]]
