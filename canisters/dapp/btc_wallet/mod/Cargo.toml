@@ -25,8 +25,8 @@ sha2 = "0.10.6"
 ripemd = "0.1.1"
 bs58 = "0.4.0"
 serde_json = "1.0"
-astrox_macros = "0.2.11"
-ego_lib = "0.2.15"
+ego_lib = "0.2.19"
+astrox_macros = "0.2.13"
 tecdsa_signer = { path = "../../../helpers/tecdsa_signer" }
 itertools = "0.10.5"
 

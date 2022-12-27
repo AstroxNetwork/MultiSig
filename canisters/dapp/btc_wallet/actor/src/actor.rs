@@ -8,23 +8,28 @@ use ic_cdk::export::Principal;
 use ic_cdk_macros::*;
 use serde::Serialize;
 
-use btc_wallet_mod::ego_lib::inject_ego_macros;
-use btc_wallet_mod::service::{BtcStore, is_user};
-use btc_wallet_mod::service::{canister_add, ego_log, is_owner, log_list, op_add, owner_add, owner_remove, owners_set, User, USER, user_add, user_remove, users_post_upgrade, users_pre_upgrade, users_set};
+use btc_wallet_mod::service::{BtcStore};
 use btc_wallet_mod::tecdsa_signer::types::TSignerManager;
 use btc_wallet_mod::types::{
   EgoBtcError, GetAddressResponse, SendRequest, SendResponse, UserBalanceResponse,
 };
 
-inject_ego_macros!();
+use ego_lib::{inject_ego_all};
+
+use btc_wallet_mod::service::{canister_add, canister_get_one, log_add, is_owner, log_list, op_add, owner_add, owner_remove, owners_set, registry_post_upgrade, registry_pre_upgrade, user_add, user_remove, is_user, is_op, users_post_upgrade, users_pre_upgrade, users_set, app_info_pre_upgrade, app_info_post_upgrade};
+use astrox_macros::user::User;
+use astrox_macros::registry::Registry;
+use astrox_macros::ego_types::{App};
+
+inject_ego_all!();
 
 
 #[init]
 #[candid_method(init)]
 pub fn init() {
   let caller = ic_cdk::api::caller();
-  ego_log(format!("btc_wallet: init, caller is {}", caller.clone()).as_str());
-  ego_log("==> add caller as the owner");
+  log_add(format!("btc_wallet: init, caller is {}", caller.clone()).as_str());
+  log_add("==> add caller as the owner");
   owner_add(caller.clone());
   // TODO: Set btc_init
 }
@@ -33,30 +38,55 @@ pub fn init() {
 struct PersistState {
   pub btc_store: BtcStore,
   pub signer: TSignerManager,
-  pub user: User,
+  users: Option<User>,
+  registry: Option<Registry>,
+  app_info: Option<AppInfo>,
 }
 
 #[pre_upgrade]
 fn pre_upgrade() {
-  ego_log("btc wallet: pre_upgrade");
+  log_add("btc wallet: pre_upgrade");
   let state = PersistState {
     btc_store: btc_wallet_mod::service::pre_upgrade(),
     signer: btc_wallet_mod::tecdsa_signer::state::pre_upgrade(),
-    user: users_pre_upgrade(),
+    users: Some(users_pre_upgrade()),
+    registry: Some(registry_pre_upgrade()),
+    app_info: Some(app_info_pre_upgrade()),
   };
   storage::stable_save((state, )).unwrap();
 }
 
 #[post_upgrade]
 fn post_upgrade() {
-  ego_log("btc wallet: post_upgrade");
+  log_add("btc wallet: post_upgrade");
   let (state, ): (PersistState, ) = storage::stable_restore().unwrap();
-  users_post_upgrade(state.user);
+
   btc_wallet_mod::service::post_upgrade(state.btc_store);
   btc_wallet_mod::tecdsa_signer::state::post_upgrade(state.signer);
+
+  match state.users {
+    None => {}
+    Some(users) => {
+      users_post_upgrade(users);
+    }
+  }
+
+  match state.registry {
+    None => {}
+    Some(registry) => {
+      registry_post_upgrade(registry);
+    }
+  }
+
+  match state.app_info {
+    None => {}
+    Some(app_info) => {
+      app_info_post_upgrade(app_info);
+    }
+  }
 }
 
-#[update(name = "btc_network_set", guard = "owner_or_user_guard")]
+#[update(name = "btc_network_set", guard = "user_guard")]
 #[candid_method(update, rename = "btc_network_set")]
 fn btc_network_set(network: Network) -> Network {
   btc_wallet_mod::service::BtcService::set_network(network)
@@ -68,13 +98,13 @@ fn btc_network_get() -> Network {
   btc_wallet_mod::service::BtcService::get_network()
 }
 
-#[query(name = "btc_key_get", guard = "owner_or_user_guard")]
+#[query(name = "btc_key_get", guard = "user_guard")]
 #[candid_method(query, rename = "btc_key_get")]
 fn btc_key_get() -> String {
   btc_wallet_mod::service::BtcService::get_key()
 }
 
-#[update(name = "btc_address_set", guard = "owner_or_user_guard")]
+#[update(name = "btc_address_set", guard = "user_guard")]
 #[candid_method(update, rename = "btc_address_set")]
 async fn btc_address_set(path: String) -> String {
   btc_wallet_mod::service::BtcService::set_address(path).await
@@ -86,7 +116,7 @@ fn btc_address_get(path: String) -> Result<GetAddressResponse, EgoBtcError> {
   btc_wallet_mod::service::BtcService::get_address(path)
 }
 
-#[query(name = "btc_address_get_all", guard = "owner_or_user_guard")]
+#[query(name = "btc_address_get_all", guard = "user_guard")]
 #[candid_method(query, rename = "btc_address_get_all")]
 fn btc_address_get_all() -> Vec<String> {
   btc_wallet_mod::service::BtcService::get_all_addresses()
@@ -98,7 +128,7 @@ async fn btc_balance_get(address: String) -> u64 {
   btc_wallet_mod::service::BtcService::get_balance(address).await
 }
 
-#[update(name = "btc_balance_path_get", guard = "owner_or_user_guard")]
+#[update(name = "btc_balance_path_get", guard = "user_guard")]
 #[candid_method(update, rename = "btc_balance_path_get")]
 async fn btc_balance_path_get(path: String) -> Result<UserBalanceResponse, EgoBtcError> {
   btc_wallet_mod::service::BtcService::get_user_balance(path).await
@@ -146,12 +176,3 @@ fn btc_is_owner() -> bool {
   is_owner(caller())
 }
 
-#[inline(always)]
-pub fn owner_or_user_guard() -> Result<(), String> {
-  let caller = ic_cdk::api::caller();
-  if is_owner(caller.clone()) || is_user(caller.clone()) {
-    Ok(())
-  } else {
-    trap(&format!("{} unauthorized", caller));
-  }
-}

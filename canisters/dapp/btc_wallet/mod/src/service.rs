@@ -1,7 +1,5 @@
 use std::collections::HashMap;
 
-use astrox_macros::{inject_canister_log, inject_canister_registry, inject_canister_users};
-use ego_lib::inject_log;
 use ic_btc_types::{MillisatoshiPerByte, Network, Utxo};
 use ic_cdk::export::candid::{CandidType, Deserialize};
 use itertools::Itertools;
@@ -13,14 +11,14 @@ use crate::{bitcoin_api, bitcoin_wallet};
 use crate::bitcoin_wallet::public_key_to_p2pkh_address;
 use crate::types::{EgoBtcError, GetAddressResponse, SendResponse, UserBalanceResponse};
 
-inject_canister_users!();
-inject_canister_registry!();
-inject_canister_log!();
-inject_log!();
+
+use astrox_macros::{inject_canister_all};
+
+inject_canister_all!();
 
 /********************  methods for canister_registry_macro   ********************/
 fn on_canister_added(name: &str, canister_id: Principal) {
-  ego_log(format!("on_canister_added name: {}, canister_id: {}", name, canister_id).as_str());
+  log_add(format!("on_canister_added name: {}, canister_id: {}", name, canister_id).as_str());
 }
 
 thread_local! {

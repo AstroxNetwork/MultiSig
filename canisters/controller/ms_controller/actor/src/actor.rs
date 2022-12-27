@@ -10,66 +10,91 @@ use serde::Serialize;
 
 use ms_controller_mod::app_wallet::AppWallet;
 use ms_controller_mod::ego_lib::ego_canister::EgoCanister;
-use ms_controller_mod::ego_lib::ego_store::EgoStore;
-use ms_controller_mod::ego_lib::inject_ego_macros;
+
 use ms_controller_mod::model::{Action, Controller, Sign};
 use ms_controller_mod::service::{Service, user_add_with_name, users};
-use ms_controller_mod::service::{canister_add, canister_get_one, ego_log, is_owner, log_list, op_add, owner_add, owner_remove, owners_set, Registry, registry_post_upgrade, registry_pre_upgrade, User, USER, user_add, user_remove, users_post_upgrade, users_pre_upgrade, users_set};
+
 use ms_controller_mod::state::CONTROLLER;
 use ms_controller_mod::types::{AppActionCreateRequest, Errors, SystemErr};
 use ms_controller_mod::types::Errors::TooManyUser;
 
-inject_ego_macros!();
+use ego_lib::{inject_ego_all};
+
+use ms_controller_mod::service::{canister_add, canister_get_one, log_add, is_owner, log_list, op_add, owner_add, owner_remove, owners_set, registry_post_upgrade, registry_pre_upgrade, user_add, user_remove, is_user, is_op, users_post_upgrade, users_pre_upgrade, users_set, app_info_pre_upgrade, app_info_post_upgrade};
+use astrox_macros::user::User;
+use astrox_macros::registry::Registry;
+use astrox_macros::ego_types::{App};
+
+inject_ego_all!();
 
 
 #[init]
 #[candid_method(init)]
 pub fn init() {
   let caller = caller();
-  ego_log(format!("controller: init, caller is {}", caller.clone()).as_str());
+  log_add(format!("controller: init, caller is {}", caller.clone()).as_str());
 
-  ego_log("==> add caller as the owner");
+  log_add("==> add caller as the owner");
   owner_add(caller.clone());
 }
 
 #[derive(CandidType, Deserialize, Serialize)]
 struct PersistState {
   pub controller: Controller,
-  pub user: User,
-  pub registry: Registry,
+  users: Option<User>,
+  registry: Option<Registry>,
+  app_info: Option<AppInfo>,
 }
 
 #[pre_upgrade]
 fn pre_upgrade() {
-  ego_log("controller: pre_upgrade");
+  log_add("controller: pre_upgrade");
 
   let controller = CONTROLLER.with(|controller| controller.borrow().clone());
-  let user = users_pre_upgrade();
-  let registry = registry_pre_upgrade();
 
   let state = PersistState {
     controller,
-    user,
-    registry,
+    users: Some(users_pre_upgrade()),
+    registry: Some(registry_pre_upgrade()),
+    app_info: Some(app_info_pre_upgrade()),
   };
+
   storage::stable_save((state, )).unwrap();
 }
 
 #[post_upgrade]
 fn post_upgrade() {
-  ego_log("controller: post_upgrade");
+  log_add("controller: post_upgrade");
 
   let (state, ): (PersistState, ) = storage::stable_restore().unwrap();
   CONTROLLER.with(|controller| *controller.borrow_mut() = state.controller);
 
-  users_post_upgrade(state.user);
-  registry_post_upgrade(state.registry)
+  match state.users {
+    None => {}
+    Some(users) => {
+      users_post_upgrade(users);
+    }
+  }
+
+  match state.registry {
+    None => {}
+    Some(registry) => {
+      registry_post_upgrade(registry);
+    }
+  }
+
+  match state.app_info {
+    None => {}
+    Some(app_info) => {
+      app_info_post_upgrade(app_info);
+    }
+  }
 }
 
 #[update(name = "controller_init", guard = "owner_guard")]
 #[candid_method(update, rename = "controller_init")]
 fn controller_init(total_user_amount: u16, threshold_user_amount: u16) {
-  ego_log("controller: controller_init");
+  log_add("controller: controller_init");
 
   CONTROLLER.with(|controller| {
     controller.borrow_mut().total_user_amount = total_user_amount;
@@ -81,7 +106,7 @@ fn controller_init(total_user_amount: u16, threshold_user_amount: u16) {
 #[update(name = "batch_user_add", guard = "owner_guard")]
 #[candid_method(update, rename = "batch_user_add")]
 fn batch_user_add(pusers: BTreeMap<Principal, String>) -> Result<(), SystemErr> {
-  ego_log("controller: batch_user_add");
+  log_add("controller: batch_user_add");
 
   CONTROLLER.with(|controller| {
     let user_count = users().unwrap().len();
@@ -118,7 +143,7 @@ pub fn role_user_remove(user_id: Principal) -> Result<(), SystemErr> {
 #[query(name = "role_user_list", guard = "user_guard")]
 #[candid_method(query, rename = "role_user_list")]
 fn role_user_list() -> Result<BTreeMap<Principal, String>, SystemErr> {
-  ego_log("controller: role_user_list");
+  log_add("controller: role_user_list");
 
   Ok(users().unwrap())
 }
@@ -127,7 +152,7 @@ fn role_user_list() -> Result<BTreeMap<Principal, String>, SystemErr> {
 #[update(name = "app_main_create", guard = "owner_guard")]
 #[candid_method(update, rename = "app_main_create")]
 async fn app_main_create() -> Result<(), SystemErr> {
-  ego_log("controller: app_main_create");
+  log_add("controller: app_main_create");
 
   let user_id = caller();
 
@@ -153,7 +178,7 @@ async fn app_main_create() -> Result<(), SystemErr> {
 #[query(name = "app_main_get", guard = "user_guard")]
 #[candid_method(query, rename = "app_main_get")]
 async fn app_main_get() -> Result<Option<Principal>, SystemErr> {
-  ego_log("controller: app_main_get");
+  log_add("controller: app_main_get");
 
   CONTROLLER.with(|controller| Ok(controller.borrow().app.clone()))
 }
@@ -161,7 +186,7 @@ async fn app_main_get() -> Result<Option<Principal>, SystemErr> {
 #[update(name = "app_action_create", guard = "user_guard")]
 #[candid_method(update, rename = "app_action_create")]
 fn app_action_create(req: AppActionCreateRequest) -> Result<Action, SystemErr> {
-  ego_log("controller: app_action_create");
+  log_add("controller: app_action_create");
 
   let action = Service::app_action_create(
     req.path,
@@ -176,7 +201,7 @@ fn app_action_create(req: AppActionCreateRequest) -> Result<Action, SystemErr> {
 #[query(name = "app_action_get", guard = "user_guard")]
 #[candid_method(query, rename = "app_action_get")]
 fn app_action_get(action_id: u64) -> Result<Action, SystemErr> {
-  ego_log("controller: app_action_get");
+  log_add("controller: app_action_get");
 
   Service::app_action_get(action_id)
 }
@@ -184,7 +209,7 @@ fn app_action_get(action_id: u64) -> Result<Action, SystemErr> {
 #[query(name = "app_action_list", guard = "user_guard")]
 #[candid_method(query, rename = "app_action_list")]
 fn app_action_list() -> Result<Vec<Action>, SystemErr> {
-  ego_log("controller: app_action_list");
+  log_add("controller: app_action_list");
 
   let actions = Service::app_action_list();
   Ok(actions)
@@ -193,7 +218,7 @@ fn app_action_list() -> Result<Vec<Action>, SystemErr> {
 #[update(name = "action_sign_create", guard = "user_guard")]
 #[candid_method(update, rename = "action_sign_create")]
 fn action_sign_create(action_id: u64) -> Result<Sign, SystemErr> {
-  ego_log("controller: action_sign_create");
+  log_add("controller: action_sign_create");
 
   let app = CONTROLLER.with(|controller| controller.borrow().app);
 

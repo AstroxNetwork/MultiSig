@@ -2,7 +2,7 @@ use std::collections::BTreeMap;
 
 use async_trait::async_trait;
 use ego_lib::ego_store::TEgoStore;
-use ego_lib::ego_types::{App, AppId, Canister, CanisterType, EgoError, QueryParam, UserApp, Version, WalletApp};
+use astrox_macros::ego_types::{App, AppId, Canister, CanisterType, EgoError, QueryParam, UserApp, Version, WalletApp};
 use ic_cdk::export::Principal;
 use mockall::mock;
 
@@ -17,10 +17,14 @@ mock! {
   #[async_trait]
   impl TEgoStore for Store {
     async fn wallet_main_new(&self, user_id: Principal) -> Result<WalletApp, EgoError>;
+
     async fn app_main_list(&self, query_param: QueryParam) -> Result<Vec<App>, EgoError>;
+    async fn app_main_get(&self, app_id: AppId) -> Result<App, EgoError>;
+
     async fn wallet_app_install(&self, app_id: AppId) -> Result<UserApp, EgoError>;
     async fn wallet_app_upgrade(&self, app_id: AppId) -> Result<UserApp, EgoError>;
     async fn wallet_app_remove(&self, app_id: AppId) -> Result<(), EgoError>;
+    async fn wallet_app_list(&self) -> Result<Vec<UserApp>, EgoError>;
   }
 }
 

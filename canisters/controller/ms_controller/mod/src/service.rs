@@ -1,24 +1,19 @@
-use astrox_macros::{inject_canister_log, inject_canister_registry, inject_canister_users};
 use ego_lib::ego_canister::TEgoCanister;
 use ego_lib::ego_store::TEgoStore;
-use ego_lib::ego_types::AppId;
-use ego_lib::inject_log;
 
 use crate::app_wallet::TAppWallet;
 use crate::model::{Action, Sign};
 use crate::state::CONTROLLER;
 use crate::types::{Errors, SystemErr};
 
-inject_canister_users!();
-inject_canister_registry!();
-inject_canister_log!();
-inject_log!();
+use astrox_macros::{inject_canister_all};
+
+inject_canister_all!();
 
 /********************  methods for canister_registry_macro   ********************/
 fn on_canister_added(name: &str, canister_id: Principal) {
-  ego_log(format!("on_canister_added name: {}, canister_id: {}", name, canister_id).as_str());
+  log_add(format!("on_canister_added name: {}, canister_id: {}", name, canister_id).as_str());
 }
-
 
 pub struct Service {}
 
@@ -29,7 +24,7 @@ impl Service {
     user_id: Principal,
     app_id: AppId,
   ) -> Result<Principal, SystemErr> {
-    ego_log("1. create wallet");
+    log_add("1. create wallet");
     let user_app = match ego_store.wallet_app_install(app_id).await {
       Ok(user_app) => Ok(user_app),
       Err(e) => { Err(SystemErr::from(e)) }
@@ -39,10 +34,10 @@ impl Service {
       Some(canister) => {
         CONTROLLER.with(|controller| controller.borrow_mut().app = Some(canister.canister_id));
 
-        ego_log("2. add self as user");
+        log_add("2. add self as user");
         ego_canister.ego_user_add(canister.canister_id, user_id);
 
-        ego_log("3. remove self from owner");
+        log_add("3. remove self from owner");
         ego_canister.ego_owner_remove(canister.canister_id, user_id);
         Ok(canister.canister_id)
       }
