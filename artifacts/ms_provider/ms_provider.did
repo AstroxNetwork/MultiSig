@@ -10,29 +10,13 @@ type ControllerMainCreateRequest = record {
   name : text;
   threshold_user_amount : nat16;
 };
-type LogEntry = record { log : text; created_at : nat64 };
 type Result = variant { Ok : Controller; Err : SystemErr };
 type Result_1 = variant { Ok : vec Controller; Err : SystemErr };
-type Result_2 = variant { Ok; Err : text };
-type Result_3 = variant { Ok : vec LogEntry; Err : text };
 type SystemErr = record { msg : text; code : nat16 };
 service : () -> {
-  balance_get : () -> (nat) query;
   controller_main_create : (ControllerMainCreateRequest) -> (Result);
   controller_main_get : (principal) -> (Result) query;
   controller_main_list : () -> (Result_1) query;
   controller_user_add : (principal) -> ();
   controller_user_remove : (principal) -> ();
-  ego_canister_add : (text, principal) -> (Result_2);
-  ego_controller_add : (principal) -> (Result_2);
-  ego_controller_remove : (principal) -> (Result_2);
-  ego_controller_set : (vec principal) -> (Result_2);
-  ego_log_list : (nat64) -> (Result_3) query;
-  ego_op_add : (principal) -> (Result_2);
-  ego_owner_add : (principal) -> (Result_2);
-  ego_owner_remove : (principal) -> (Result_2);
-  ego_owner_set : (vec principal) -> (Result_2);
-  ego_user_add : (principal) -> (Result_2);
-  ego_user_remove : (principal) -> (Result_2);
-  ego_user_set : (vec principal) -> (Result_2);
 }

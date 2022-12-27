@@ -7,13 +7,49 @@ import { getCanisterId, hasOwnProperty } from '@/settings/utils';
 
 import { _SERVICE as EgoOpsService, Category } from '@/ego/ego_ops';
 import { _SERVICE as EgoStoreService } from '@/ego/ego_store';
-import { _SERVICE as MsProviderService } from '@/idls/ms_provider';
+import { _SERVICE as ProviderService } from '@/idls/ms_provider';
+import { _SERVICE as ControllerService } from '@/idls/ms_controller';
+import { _SERVICE as DappService } from '@/idls/btc_wallet';
+import { _SERVICE as EcoLocalService } from '@/ego/ego_local';
+
 import { idlFactory } from '@/ego/ego_ops.idl';
 import { DeployMode } from '@/ego/ego_dev';
 
 import { identity } from '@/settings/identity';
 import { Principal } from '@dfinity/principal';
 import { ActorSubclass } from '@dfinity/agent';
+
+describe('ego_local', () => {
+  test('release to ego_local', async () => {
+    const provider_name = 'ms_provider'
+    const controller_name = 'ms_controller'
+    const dapp_name = 'btc_wallet'
+
+    console.log(`1. register provider\n`);
+
+    const ego_local_id = Principal.fromText(getCanisterId('ego_local')!);
+    const controller_id = Principal.fromText(getCanisterId(controller_name)!);
+    const dapp_id = Principal.fromText(getCanisterId(dapp_name)!);
+
+
+    let providerOperator = await getOperator<ProviderService>(provider_name);
+    await providerOperator.ego_canister_add('ego_store', ego_local_id);
+
+    console.log(`2. setup controller \n`);
+    let controllerOperator = await getOperator<ControllerService>(controller_name);
+    await controllerOperator.ego_canister_add('ego_store', ego_local_id);
+
+
+    console.log(`3. setup dapp \n`);
+    let dappOperator = await getOperator<DappService>(dapp_name);
+    await dappOperator.ego_canister_add('ego_store', ego_local_id);
+
+    console.log(`4. setup ego_local \n`);
+    let egoLocalOperator = await getOperator<EcoLocalService>('ego_local');
+    egoLocalOperator.ego_canister_add('controller', controller_id)
+    egoLocalOperator.ego_canister_add('dapp', dapp_id)
+  });
+});
 
 describe('ms_provider', () => {
   test('register ms_provider as a wallet provider to ego store', async () => {
@@ -93,6 +129,8 @@ describe('btc_wallet', () => {
     );
   });
 });
+
+
 
 async function getOperator<T>(canisterName: string): Promise<ActorSubclass<T>> {
   let operator = await getActor<T>(

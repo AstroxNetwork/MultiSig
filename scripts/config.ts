@@ -34,17 +34,15 @@ export const infraConfig: Configs = [
     package: 'ms_controller',
     bin_name: 'ms-controller',
     config: './configs/ms_controller.json',
-    post_install_sequence: 99,
-    no_deploy: true,
+    post_install_sequence: 99
   },
   {
     category: 'dapp',
     package: 'btc_wallet',
     bin_name: 'btc-wallet',
     config: './configs/btc_wallet.json',
-    post_install_sequence: 98,
-    no_deploy: true,
-  },
+    post_install_sequence: 98
+  }
 ];
 
 export const appsConfig: Configs = [];

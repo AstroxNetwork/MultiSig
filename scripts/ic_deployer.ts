@@ -30,7 +30,7 @@ const thirdPartyList = [
   {
     folder: 'nns-dapp',
     config: './configs/nns_config.json',
-  },
+  }
 ];
 
 // run deploy

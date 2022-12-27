@@ -40,11 +40,7 @@ export const idlFactory = ({ IDL }) => {
     'value' : IDL.Nat64,
     'outpoint' : OutPoint,
   });
-  const Result_3 = IDL.Variant({ 'Ok' : IDL.Null, 'Err' : IDL.Text });
-  const LogEntry = IDL.Record({ 'log' : IDL.Text, 'created_at' : IDL.Nat64 });
-  const Result_4 = IDL.Variant({ 'Ok' : IDL.Vec(LogEntry), 'Err' : IDL.Text });
   return IDL.Service({
-    'balance_get' : IDL.Func([], [IDL.Nat], ['query']),
     'btc_address_get' : IDL.Func([IDL.Text], [Result], ['query']),
     'btc_address_get_all' : IDL.Func([], [IDL.Vec(IDL.Text)], ['query']),
     'btc_address_set' : IDL.Func([IDL.Text], [IDL.Text], []),
@@ -59,18 +55,6 @@ export const idlFactory = ({ IDL }) => {
     'btc_network_set' : IDL.Func([Network], [Network], []),
     'btc_tx_send' : IDL.Func([SendRequest], [Result_2], []),
     'btc_utxos_get' : IDL.Func([IDL.Text], [IDL.Vec(Utxo)], []),
-    'ego_canister_add' : IDL.Func([IDL.Text, IDL.Principal], [Result_3], []),
-    'ego_controller_add' : IDL.Func([IDL.Principal], [Result_3], []),
-    'ego_controller_remove' : IDL.Func([IDL.Principal], [Result_3], []),
-    'ego_controller_set' : IDL.Func([IDL.Vec(IDL.Principal)], [Result_3], []),
-    'ego_log_list' : IDL.Func([IDL.Nat64], [Result_4], ['query']),
-    'ego_op_add' : IDL.Func([IDL.Principal], [Result_3], []),
-    'ego_owner_add' : IDL.Func([IDL.Principal], [Result_3], []),
-    'ego_owner_remove' : IDL.Func([IDL.Principal], [Result_3], []),
-    'ego_owner_set' : IDL.Func([IDL.Vec(IDL.Principal)], [Result_3], []),
-    'ego_user_add' : IDL.Func([IDL.Principal], [Result_3], []),
-    'ego_user_remove' : IDL.Func([IDL.Principal], [Result_3], []),
-    'ego_user_set' : IDL.Func([IDL.Vec(IDL.Principal)], [Result_3], []),
   });
 };
 export const init = ({ IDL }) => { return []; };
