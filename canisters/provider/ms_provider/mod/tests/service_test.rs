@@ -2,7 +2,7 @@ use std::collections::BTreeMap;
 
 use async_trait::async_trait;
 use ego_lib::ego_store::TEgoStore;
-use astrox_macros::ego_types::{App, AppId, Canister, CanisterType, EgoError, QueryParam, UserApp, Version, WalletApp};
+use ego_types::app::{App, AppId, Canister, CanisterType, EgoError, QueryParam, UserApp, Version, WalletApp};
 use ic_cdk::export::Principal;
 use mockall::mock;
 

@@ -10,6 +10,8 @@ fn main() {
   use btc_wallet_mod::types::*;
   use ic_btc_types::*;
   use ic_cdk::export::Principal;
+  use ego_types::app::{App, AppId, Version};
+  use ego_types::app_info::AppInfo;
 
   candid::export_service!();
   std::print!("{}", __export_service());

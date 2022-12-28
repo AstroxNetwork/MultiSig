@@ -33,17 +33,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "astrox_macros"
-version = "0.2.13"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "756a946629d78ab608c3f653661c4a7ff4ebe99d203d01f20be401f5c98e2f7a"
-dependencies = [
- "candid",
- "ic-cdk",
- "serde",
-]
-
-[[package]]
 name = "async-trait"
 version = "0.1.59"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -185,10 +174,11 @@ checksum = "771fe0050b883fcc3ea2359b1a96bcfbc090b7116eae7c3c512c7a083fdf23d3"
 name = "btc_wallet"
 version = "0.1.0"
 dependencies = [
- "astrox_macros",
  "btc_wallet_mod",
  "candid",
  "ego_lib",
+ "ego_macros",
+ "ego_types",
  "ic-btc-types",
  "ic-cdk",
  "ic-cdk-macros",
@@ -202,12 +192,13 @@ dependencies = [
 name = "btc_wallet_mod"
 version = "0.1.0"
 dependencies = [
- "astrox_macros",
  "bitcoin",
  "bs58",
  "byteorder",
  "candid",
  "ego_lib",
+ "ego_macros",
+ "ego_types",
  "hex",
  "ic-btc-types",
  "ic-cdk",
@@ -487,17 +478,41 @@ dependencies = [
 
 [[package]]
 name = "ego_lib"
-version = "0.2.19"
+version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "36e6f76f0e644f75817418bed71e58a84d7462d2843fd282240ea835ce1dfa5a"
+checksum = "8e05adbf437ee081d14c6819c2fc572bf3736761ec66556017a417595210f0fb"
 dependencies = [
- "astrox_macros",
  "async-trait",
  "candid",
+ "ego_types",
  "ic-cdk",
  "serde",
  "serde_bytes",
  "tracing",
+]
+
+[[package]]
+name = "ego_macros"
+version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2ef3f85c4e5c020723f146e52992746a86170fd638b8ee88deb61ab1529b3a4e"
+dependencies = [
+ "candid",
+ "ego_types",
+ "ic-cdk",
+ "serde",
+]
+
+[[package]]
+name = "ego_types"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "127042739d7c6575d9c079be9242391fbfbaa8c66367b92c51e13b294869d03f"
+dependencies = [
+ "candid",
+ "ic-cdk",
+ "md5",
+ "serde",
 ]
 
 [[package]]
@@ -864,6 +879,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "md5"
+version = "0.7.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "490cc448043f947bae3cbee9c203358d62dbee0db12107a74be5c30ccfd09771"
+
+[[package]]
 name = "memchr"
 version = "2.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -912,9 +933,10 @@ dependencies = [
 name = "ms_controller"
 version = "0.1.0"
 dependencies = [
- "astrox_macros",
  "candid",
  "ego_lib",
+ "ego_macros",
+ "ego_types",
  "ic-cdk",
  "ic-cdk-macros",
  "ms_controller_mod",
@@ -927,10 +949,11 @@ dependencies = [
 name = "ms_controller_mod"
 version = "0.1.0"
 dependencies = [
- "astrox_macros",
  "async-trait",
  "candid",
  "ego_lib",
+ "ego_macros",
+ "ego_types",
  "ic-cdk",
  "ic-cdk-macros",
  "mockall",
@@ -943,9 +966,10 @@ dependencies = [
 name = "ms_provider"
 version = "0.1.0"
 dependencies = [
- "astrox_macros",
  "candid",
  "ego_lib",
+ "ego_macros",
+ "ego_types",
  "ic-cdk",
  "ic-cdk-macros",
  "ms_provider_mod",
@@ -958,10 +982,11 @@ dependencies = [
 name = "ms_provider_mod"
 version = "0.1.0"
 dependencies = [
- "astrox_macros",
  "async-trait",
  "candid",
  "ego_lib",
+ "ego_macros",
+ "ego_types",
  "ic-cdk",
  "ic-cdk-macros",
  "mockall",

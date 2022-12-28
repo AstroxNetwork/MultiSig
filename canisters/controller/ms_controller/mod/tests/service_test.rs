@@ -3,8 +3,8 @@ use std::collections::BTreeMap;
 use async_trait::async_trait;
 use ego_lib::ego_canister::TEgoCanister;
 use ego_lib::ego_store::TEgoStore;
-use astrox_macros::ego_types::{App, AppId, Canister, CanisterType, Category, EgoError, QueryParam, UserApp, WalletApp, Version};
-use astrox_macros::app_info::AppInfo;
+use ego_types::app::{App, AppId, Canister, CanisterType, Category, EgoError, QueryParam, UserApp, WalletApp, Version};
+use ego_types::app_info::AppInfo;
 use ic_cdk::export::Principal;
 use mockall::mock;
 

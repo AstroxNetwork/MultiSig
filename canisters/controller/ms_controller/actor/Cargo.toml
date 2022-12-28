@@ -20,5 +20,6 @@ serde = "1.0"
 serde_json = "1.0"
 serde_bytes = "0.11"
 ms_controller_mod = { path = "../mod" }
-ego_lib = "0.2.19"
-astrox_macros = "0.2.13"
+ego_lib = "0.3.0"
+ego_macros = "0.1.2"
+ego_types = "0.1.1"

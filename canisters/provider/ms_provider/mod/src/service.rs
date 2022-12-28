@@ -2,18 +2,9 @@ use ego_lib::ego_store::TEgoStore;
 
 use crate::model::Controller;
 use crate::ms_controller::TMsController;
-use crate::state::PROVIDER;
+use crate::state::{log_add, PROVIDER};
 use crate::types::SystemErr;
-
-
-use astrox_macros::{inject_canister_all};
-
-inject_canister_all!();
-
-/********************  methods for canister_registry_macro   ********************/
-fn on_canister_added(name: &str, canister_id: Principal) {
-  log_add(format!("on_canister_added name: {}, canister_id: {}", name, canister_id).as_str());
-}
+use ic_cdk::export::Principal;
 
 pub struct Service {}
 

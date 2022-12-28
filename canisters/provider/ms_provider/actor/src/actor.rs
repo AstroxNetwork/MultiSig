@@ -7,21 +7,24 @@ use ic_cdk::export::Principal;
 use ic_cdk_macros::*;
 use serde::Serialize;
 
-use ms_provider_mod::ego_lib;
 use ego_lib::ego_canister::{EgoCanister, TEgoCanister};
 use ms_provider_mod::model::{Controller, Provider};
 use ms_provider_mod::ms_controller::MsController;
 use ms_provider_mod::state::PROVIDER;
 use ms_provider_mod::types::{ControllerMainCreateRequest, Errors, SystemErr};
 use ms_provider_mod::service::Service;
-use ego_lib::{inject_ego_all};
 
-use ms_provider_mod::service::{canister_add, canister_get_one, log_add, is_owner, log_list, op_add, owner_add, owner_remove, owners_set, registry_post_upgrade, registry_pre_upgrade, user_add, user_remove, is_user, is_op, users_post_upgrade, users_pre_upgrade, users_set, app_info_pre_upgrade, app_info_post_upgrade};
-use astrox_macros::user::User;
-use astrox_macros::registry::Registry;
-use astrox_macros::ego_types::{App};
+use ms_provider_mod::state::{canister_add, canister_get_one, log_add, is_owner, log_list, op_add, owner_add, owner_remove, owners_set, registry_post_upgrade, registry_pre_upgrade, user_add, user_remove, is_user, is_op, users_post_upgrade, users_pre_upgrade, users_set, app_info_pre_upgrade, app_info_post_upgrade};
+use ego_types::user::User;
+use ego_types::registry::Registry;
+use ego_types::app::{App};
 
-inject_ego_all!();
+use ego_macros::{inject_ego_user, inject_ego_registry, inject_ego_controller, inject_ego_log, inject_ego_app_info};
+inject_ego_user!();
+inject_ego_registry!();
+inject_ego_controller!();
+inject_ego_log!();
+inject_ego_app_info!();
 
 
 

@@ -12,20 +12,23 @@ use ms_controller_mod::app_wallet::AppWallet;
 use ms_controller_mod::ego_lib::ego_canister::EgoCanister;
 
 use ms_controller_mod::model::{Action, Controller, Sign};
-use ms_controller_mod::service::{Service, user_add_with_name, users};
+use ms_controller_mod::service::{Service};
 
 use ms_controller_mod::state::CONTROLLER;
 use ms_controller_mod::types::{AppActionCreateRequest, Errors, SystemErr};
 use ms_controller_mod::types::Errors::TooManyUser;
 
-use ego_lib::{inject_ego_all};
+use ms_controller_mod::state::{canister_add, canister_get_one, log_add, is_owner, log_list, op_add, owner_add, owner_remove, owners_set, registry_post_upgrade, registry_pre_upgrade, user_add, user_remove, is_user, is_op, users_post_upgrade, users_pre_upgrade, users_set, app_info_pre_upgrade, app_info_post_upgrade, user_add_with_name, users};
+use ego_types::user::User;
+use ego_types::registry::Registry;
+use ego_types::app::{App};
 
-use ms_controller_mod::service::{canister_add, canister_get_one, log_add, is_owner, log_list, op_add, owner_add, owner_remove, owners_set, registry_post_upgrade, registry_pre_upgrade, user_add, user_remove, is_user, is_op, users_post_upgrade, users_pre_upgrade, users_set, app_info_pre_upgrade, app_info_post_upgrade};
-use astrox_macros::user::User;
-use astrox_macros::registry::Registry;
-use astrox_macros::ego_types::{App};
-
-inject_ego_all!();
+use ego_macros::{inject_ego_user, inject_ego_registry, inject_ego_controller, inject_ego_log, inject_ego_app_info};
+inject_ego_user!();
+inject_ego_registry!();
+inject_ego_controller!();
+inject_ego_log!();
+inject_ego_app_info!();
 
 
 #[init]

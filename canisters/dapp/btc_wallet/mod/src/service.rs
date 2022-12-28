@@ -4,7 +4,7 @@ use ic_btc_types::{MillisatoshiPerByte, Network, Utxo};
 use ic_cdk::export::candid::{CandidType, Deserialize};
 use itertools::Itertools;
 use serde::Serialize;
-
+use std::cell::RefCell;
 use tecdsa_signer::service::SignerService;
 
 use crate::{bitcoin_api, bitcoin_wallet};
@@ -12,7 +12,7 @@ use crate::bitcoin_wallet::public_key_to_p2pkh_address;
 use crate::types::{EgoBtcError, GetAddressResponse, SendResponse, UserBalanceResponse};
 
 
-use astrox_macros::{inject_canister_all};
+use ego_macros::{inject_canister_all};
 
 inject_canister_all!();
 

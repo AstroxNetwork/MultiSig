@@ -1,5 +1,3 @@
-pub use ego_lib;
-
 pub mod types;
 pub mod model;
 pub mod service;

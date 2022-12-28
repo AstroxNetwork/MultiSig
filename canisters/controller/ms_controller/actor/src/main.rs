@@ -11,6 +11,8 @@ fn main() {
   use ms_controller_mod::model::*;
   use ms_controller_mod::types::*;
   use std::collections::BTreeMap;
+  use ego_types::app::{App, AppId, Version};
+  use ego_types::app_info::AppInfo;
 
   candid::export_service!();
   std::print!("{}", __export_service());

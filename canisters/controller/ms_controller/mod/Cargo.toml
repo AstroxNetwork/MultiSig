@@ -13,8 +13,9 @@ ic-cdk-macros = "0.6.8"
 serde = "1.0"
 serde_json = "1.0"
 async-trait = "0.1.57"
-ego_lib = "0.2.19"
-astrox_macros = "0.2.13"
+ego_lib = "0.3.0"
+ego_macros = "0.1.2"
+ego_types = "0.1.1"
 
 [dev-dependencies]
 mockall = "0.11.2"

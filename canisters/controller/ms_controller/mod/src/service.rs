@@ -1,19 +1,14 @@
+use std::collections::BTreeMap;
 use ego_lib::ego_canister::TEgoCanister;
 use ego_lib::ego_store::TEgoStore;
+use ego_types::app::AppId;
 
 use crate::app_wallet::TAppWallet;
 use crate::model::{Action, Sign};
-use crate::state::CONTROLLER;
+use crate::state::{CONTROLLER, log_add};
 use crate::types::{Errors, SystemErr};
+use ic_cdk::export::Principal;
 
-use astrox_macros::{inject_canister_all};
-
-inject_canister_all!();
-
-/********************  methods for canister_registry_macro   ********************/
-fn on_canister_added(name: &str, canister_id: Principal) {
-  log_add(format!("on_canister_added name: {}, canister_id: {}", name, canister_id).as_str());
-}
 
 pub struct Service {}
 

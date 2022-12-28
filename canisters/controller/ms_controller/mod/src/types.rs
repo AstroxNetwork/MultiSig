@@ -1,6 +1,6 @@
 use std::collections::BTreeMap;
 
-use astrox_macros::ego_types::EgoError;
+use ego_types::app::EgoError;
 use ic_cdk::export::candid::{CandidType, Deserialize};
 use serde::Serialize;
 
