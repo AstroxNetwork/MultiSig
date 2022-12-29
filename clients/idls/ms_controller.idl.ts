@@ -27,12 +27,36 @@ export const idlFactory = ({ IDL }) => {
   });
   const Result_1 = IDL.Variant({ 'Ok' : Action, 'Err' : SystemErr });
   const Result_2 = IDL.Variant({ 'Ok' : IDL.Vec(Action), 'Err' : SystemErr });
-  const Result_3 = IDL.Variant({ 'Ok' : IDL.Null, 'Err' : SystemErr });
-  const Result_4 = IDL.Variant({
+  const Version = IDL.Record({
+    'major' : IDL.Nat32,
+    'minor' : IDL.Nat32,
+    'patch' : IDL.Nat32,
+  });
+  const AppInfo = IDL.Record({
+    'app_id' : IDL.Text,
+    'current_version' : Version,
+  });
+  const Result_3 = IDL.Variant({ 'Ok' : AppInfo, 'Err' : IDL.Text });
+  const Result_4 = IDL.Variant({ 'Ok' : IDL.Null, 'Err' : IDL.Text });
+  const Result_5 = IDL.Variant({ 'Ok' : IDL.Null, 'Err' : SystemErr });
+  const Result_6 = IDL.Variant({
     'Ok' : IDL.Opt(IDL.Principal),
     'Err' : SystemErr,
   });
-  const Result_5 = IDL.Variant({
+  const Category = IDL.Variant({ 'System' : IDL.Null, 'Vault' : IDL.Null });
+  const App = IDL.Record({
+    'logo' : IDL.Text,
+    'name' : IDL.Text,
+    'description' : IDL.Text,
+    'app_id' : IDL.Text,
+    'category' : Category,
+    'current_version' : Version,
+    'price' : IDL.Float32,
+  });
+  const Result_7 = IDL.Variant({ 'Ok' : App, 'Err' : IDL.Text });
+  const Result_8 = IDL.Variant({ 'Ok' : IDL.Nat, 'Err' : IDL.Text });
+  const Result_9 = IDL.Variant({ 'Ok' : IDL.Vec(IDL.Text), 'Err' : IDL.Text });
+  const Result_10 = IDL.Variant({
     'Ok' : IDL.Vec(IDL.Tuple(IDL.Principal, IDL.Text)),
     'Err' : SystemErr,
   });
@@ -41,16 +65,32 @@ export const idlFactory = ({ IDL }) => {
     'app_action_create' : IDL.Func([AppActionCreateRequest], [Result_1], []),
     'app_action_get' : IDL.Func([IDL.Nat64], [Result_1], ['query']),
     'app_action_list' : IDL.Func([], [Result_2], ['query']),
-    'app_main_create' : IDL.Func([], [Result_3], []),
-    'app_main_get' : IDL.Func([], [Result_4], ['query']),
+    'app_info_get' : IDL.Func([], [Result_3], ['query']),
+    'app_info_update' : IDL.Func([IDL.Text, Version], [Result_4], []),
+    'app_main_create' : IDL.Func([], [Result_5], []),
+    'app_main_get' : IDL.Func([], [Result_6], ['query']),
+    'app_version_check' : IDL.Func([], [Result_7], ['query']),
+    'balance_get' : IDL.Func([], [Result_8], ['query']),
     'batch_user_add' : IDL.Func(
         [IDL.Vec(IDL.Tuple(IDL.Principal, IDL.Text))],
-        [Result_3],
+        [Result_5],
         [],
       ),
     'controller_init' : IDL.Func([IDL.Nat16, IDL.Nat16], [], []),
-    'role_user_list' : IDL.Func([], [Result_5], ['query']),
-    'role_user_remove' : IDL.Func([IDL.Principal], [Result_3], []),
+    'ego_canister_add' : IDL.Func([IDL.Text, IDL.Principal], [Result_4], []),
+    'ego_controller_add' : IDL.Func([IDL.Principal], [Result_4], []),
+    'ego_controller_remove' : IDL.Func([IDL.Principal], [Result_4], []),
+    'ego_controller_set' : IDL.Func([IDL.Vec(IDL.Principal)], [Result_4], []),
+    'ego_log_list' : IDL.Func([IDL.Nat64], [Result_9], ['query']),
+    'ego_op_add' : IDL.Func([IDL.Principal], [Result_4], []),
+    'ego_owner_add' : IDL.Func([IDL.Principal], [Result_4], []),
+    'ego_owner_remove' : IDL.Func([IDL.Principal], [Result_4], []),
+    'ego_owner_set' : IDL.Func([IDL.Vec(IDL.Principal)], [Result_4], []),
+    'ego_user_add' : IDL.Func([IDL.Principal], [Result_4], []),
+    'ego_user_remove' : IDL.Func([IDL.Principal], [Result_4], []),
+    'ego_user_set' : IDL.Func([IDL.Vec(IDL.Principal)], [Result_4], []),
+    'role_user_list' : IDL.Func([], [Result_10], ['query']),
+    'role_user_remove' : IDL.Func([IDL.Principal], [Result_5], []),
   });
 };
 export const init = ({ IDL }) => { return []; };

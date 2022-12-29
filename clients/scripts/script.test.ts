@@ -31,7 +31,7 @@ describe('scripts', () => {
       JSON.stringify(endUsers[1]?.identity),
     ).getPrincipal();
 
-    console.log('create controller');
+    console.log('1 create controller');
     const actor = await msProviderActor;
 
     let resp1 = await actor.controller_main_create({
@@ -51,18 +51,26 @@ describe('scripts', () => {
       controller_id,
     );
 
+    console.log("2 get controller app info")
+    let resp2 = await controller.app_info_get();
+    console.log(resp2)
+
+    console.log("3 batch add users")
     await controller.batch_user_add([
       [user1, 'user1'],
       [user2, 'user2'],
     ]);
 
+    console.log("4 get user list")
     let users = await controller.role_user_list();
     console.log(users);
 
+    console.log("5 create btc_wallet")
     await controller.app_main_create();
 
-    let resp2 = await controller.app_main_get()
-    let result = resp2.Ok
+    console.log("6 get btc_wallet")
+    let resp3 = await controller.app_main_get()
+    let result = resp3.Ok
     console.log(result[0])
     let wallet_id = result[0];
     console.log(wallet_id);
@@ -72,16 +80,5 @@ describe('scripts', () => {
       BtcWalletIdlFactory,
       wallet_id,
     );
-
-    console.log('call btc_tx_send');
-    // @ts-ignore
-    let resp3 = await wallet.btc_tx_send({
-      request_id: BigInt(1),
-      path: '',
-      to_address: '',
-      amount_in_satoshi: BigInt(0),
-      extended: []
-    })
-    console.log(resp3)
   });
 });

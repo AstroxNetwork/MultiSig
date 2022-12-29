@@ -24,7 +24,7 @@
     "deploy:local": "pnpm script:bootstrap && pnpm app:bootstrap && pnpm app:build && pnpm app:install",
     "publish:local": "pnpm post_install ego_local",
     "deploy:ego": "pnpm script:bootstrap && pnpm app:bootstrap && pnpm run app:build && pnpm run app:install",
-    "publish:ego": "pnpm post_install ms_provider && pnpm post_install ms_controller && pnpm post_install btc_wallet",
+    "publish:ego": "pnpm app:post_install ms_provider && pnpm app:post_install ms_controller && pnpm app:post_install btc_wallet",
     "ms:create:live": "cross-env NODE_ENV=production node ./dist/deployer.js --create",
     "ms:install:live": "cross-env NODE_ENV=production node ./dist/deployer.js --install",
     "ms:reinstall:live": "cross-env NODE_ENV=production node ./dist/deployer.js --reinstall",
