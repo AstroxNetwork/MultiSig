@@ -20,9 +20,9 @@ import { ActorSubclass } from '@dfinity/agent';
 
 describe('ego_local', () => {
   test('release to ego_local', async () => {
-    const provider_name = 'ms_provider'
-    const controller_name = 'ms_controller'
-    const dapp_name = 'btc_wallet'
+    const provider_name = 'ms_provider';
+    const controller_name = 'ms_controller';
+    const dapp_name = 'btc_wallet';
 
     console.log(`1. register provider\n`);
 
@@ -30,14 +30,14 @@ describe('ego_local', () => {
     const controller_id = Principal.fromText(getCanisterId(controller_name)!);
     const dapp_id = Principal.fromText(getCanisterId(dapp_name)!);
 
-
     let providerOperator = await getOperator<ProviderService>(provider_name);
     await providerOperator.ego_canister_add('ego_store', ego_local_id);
 
     console.log(`2. setup controller \n`);
-    let controllerOperator = await getOperator<ControllerService>(controller_name);
+    let controllerOperator = await getOperator<ControllerService>(
+      controller_name,
+    );
     await controllerOperator.ego_canister_add('ego_store', ego_local_id);
-
 
     console.log(`3. setup dapp \n`);
     let dappOperator = await getOperator<DappService>(dapp_name);
@@ -45,8 +45,8 @@ describe('ego_local', () => {
 
     console.log(`4. setup ego_local \n`);
     let egoLocalOperator = await getOperator<EcoLocalService>('ego_local');
-    egoLocalOperator.ego_canister_add('controller', controller_id)
-    egoLocalOperator.ego_canister_add('dapp', dapp_id)
+    egoLocalOperator.ego_canister_add('controller', controller_id);
+    egoLocalOperator.ego_canister_add('dapp', dapp_id);
   });
 });
 
@@ -63,9 +63,7 @@ describe('ms_provider', () => {
     console.log(`ego_store_id: ${ego_store_id}`);
 
     console.log(`add ego_store to ms_provider\n`);
-    let msProviderOperator = await getOperator<ProviderService>(
-      'ms_provider',
-    );
+    let msProviderOperator = await getOperator<ProviderService>('ms_provider');
 
     await msProviderOperator.ego_canister_add('ego_store', ego_store_id);
 
@@ -127,8 +125,6 @@ describe('btc_wallet', () => {
   });
 });
 
-
-
 async function getOperator<T>(canisterName: string): Promise<ActorSubclass<T>> {
   let operator = await getActor<T>(
     identity,
@@ -143,7 +139,7 @@ const admin_app_create = async (
   name: string,
   version: any,
   category: Category,
-  backend_data: ArrayLike<number>
+  backend_data: ArrayLike<number>,
 ) => {
   let opsOperator = await getOperator<EgoOpsService>('ego_ops');
 
@@ -160,7 +156,7 @@ const admin_app_create = async (
     description: '',
     category,
     backend_data: Array.from(new Uint8Array(backend_data)),
-    backend_data_hash
+    backend_data_hash,
   });
   console.log(resp1);
 };
