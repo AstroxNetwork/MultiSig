@@ -2,16 +2,14 @@ import type { Principal } from '@dfinity/principal';
 import type { ActorMethod } from '@dfinity/agent';
 
 export interface AdminAppCreateRequest {
-  'deploy_mode' : DeployMode,
   'logo' : string,
   'name' : string,
-  'frontend' : [] | [Principal],
   'description' : string,
   'version' : Version,
   'app_id' : string,
   'category' : Category,
+  'backend_data_hash' : string,
   'backend_data' : Array<number>,
-  'backend_hash' : string,
 }
 export interface AdminWalletCycleRechargeRequest {
   'cycle' : bigint,
@@ -24,15 +22,15 @@ export interface AdminWalletProviderAddRequest {
 }
 export type Category = { 'System' : null } |
   { 'Vault' : null };
-export type DeployMode = { 'DEDICATED' : null } |
-  { 'SHARED' : null };
 export interface EgoError { 'msg' : string, 'code' : number }
 export interface InitArg { 'init_caller' : [] | [Principal] }
 export type Result = { 'Ok' : null } |
   { 'Err' : EgoError };
-export type Result_1 = { 'Ok' : null } |
+export type Result_1 = { 'Ok' : bigint } |
   { 'Err' : string };
-export type Result_2 = { 'Ok' : Array<[string, Array<Principal>]> } |
+export type Result_2 = { 'Ok' : null } |
+  { 'Err' : string };
+export type Result_3 = { 'Ok' : Array<string> } |
   { 'Err' : string };
 export interface Version {
   'major' : number,
@@ -50,11 +48,19 @@ export interface _SERVICE {
     [AdminWalletProviderAddRequest],
     Result,
   >,
-  'balance_get' : ActorMethod<[], bigint>,
+  'balance_get' : ActorMethod<[], Result_1>,
   'canister_main_track' : ActorMethod<[], undefined>,
   'canister_relation_update' : ActorMethod<[string], undefined>,
-  'ego_canister_add' : ActorMethod<[string, Principal], Result_1>,
-  'ego_canister_list' : ActorMethod<[], Result_2>,
-  'ego_owner_add' : ActorMethod<[Principal], Result_1>,
-  'ego_user_add' : ActorMethod<[Principal], Result_1>,
+  'ego_canister_add' : ActorMethod<[string, Principal], Result_2>,
+  'ego_controller_add' : ActorMethod<[Principal], Result_2>,
+  'ego_controller_remove' : ActorMethod<[Principal], Result_2>,
+  'ego_controller_set' : ActorMethod<[Array<Principal>], Result_2>,
+  'ego_log_list' : ActorMethod<[bigint], Result_3>,
+  'ego_op_add' : ActorMethod<[Principal], Result_2>,
+  'ego_owner_add' : ActorMethod<[Principal], Result_2>,
+  'ego_owner_remove' : ActorMethod<[Principal], Result_2>,
+  'ego_owner_set' : ActorMethod<[Array<Principal>], Result_2>,
+  'ego_user_add' : ActorMethod<[Principal], Result_2>,
+  'ego_user_remove' : ActorMethod<[Principal], Result_2>,
+  'ego_user_set' : ActorMethod<[Array<Principal>], Result_2>,
 }
