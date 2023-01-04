@@ -1,77 +1,66 @@
-import type {Principal} from '@dfinity/principal';
-import type {ActorMethod} from '@dfinity/agent';
+import type { Principal } from '@dfinity/principal';
+import type { ActorMethod } from '@dfinity/agent';
 
 export interface AdminAppCreateRequest {
-  'logo': string,
-  'name': string,
-  'description': string,
-  'version': Version,
-  'app_id': string,
-  'category': Category,
-  'backend_data_hash': string,
-  'backend_data': Array<number>,
+  'logo' : string,
+  'name' : string,
+  'description' : string,
+  'version' : Version,
+  'app_id' : string,
+  'category' : Category,
+  'backend_data_hash' : string,
+  'backend_data' : Array<number>,
 }
-
 export interface AdminWalletCycleRechargeRequest {
-  'cycle': bigint,
-  'comment': string,
-  'wallet_id': Principal,
+  'cycle' : bigint,
+  'comment' : string,
+  'wallet_id' : Principal,
 }
-
 export interface AdminWalletProviderAddRequest {
-  'wallet_provider': Principal,
-  'wallet_app_id': string,
+  'wallet_provider' : Principal,
+  'wallet_app_id' : string,
 }
-
-export type Category = { 'System': null } |
-  { 'Vault': null };
-
-export interface EgoError {
-  'msg': string,
-  'code': number
-}
-
-export interface InitArg {
-  'init_caller': [] | [Principal]
-}
-
-export type Result = { 'Ok': null } |
-  { 'Err': EgoError };
-export type Result_1 = { 'Ok': bigint } |
-  { 'Err': string };
-export type Result_2 = { 'Ok': null } |
-  { 'Err': string };
-export type Result_3 = { 'Ok': Array<string> } |
-  { 'Err': string };
-
+export type Category = { 'System' : null } |
+  { 'Vault' : null };
+export interface EgoError { 'msg' : string, 'code' : number }
+export interface InitArg { 'init_caller' : [] | [Principal] }
+export type Result = { 'Ok' : null } |
+  { 'Err' : EgoError };
+export type Result_1 = { 'Ok' : bigint } |
+  { 'Err' : string };
+export type Result_2 = { 'Ok' : null } |
+  { 'Err' : string };
+export type Result_3 = { 'Ok' : Array<string> } |
+  { 'Err' : string };
 export interface Version {
-  'major': number,
-  'minor': number,
-  'patch': number,
+  'major' : number,
+  'minor' : number,
+  'patch' : number,
 }
-
 export interface _SERVICE {
-  'admin_app_create': ActorMethod<[AdminAppCreateRequest], Result>,
-  'admin_wallet_cycle_recharge': ActorMethod<[AdminWalletCycleRechargeRequest],
+  'admin_app_create' : ActorMethod<[AdminAppCreateRequest], Result>,
+  'admin_wallet_cycle_recharge' : ActorMethod<
+    [AdminWalletCycleRechargeRequest],
     Result,
-    >,
-  'admin_wallet_order_new': ActorMethod<[number], Result>,
-  'admin_wallet_provider_add': ActorMethod<[AdminWalletProviderAddRequest],
+  >,
+  'admin_wallet_order_new' : ActorMethod<[number], Result>,
+  'admin_wallet_provider_add' : ActorMethod<
+    [AdminWalletProviderAddRequest],
     Result,
-    >,
-  'balance_get': ActorMethod<[], Result_1>,
-  'canister_main_track': ActorMethod<[], undefined>,
-  'canister_relation_update': ActorMethod<[string], undefined>,
-  'ego_canister_add': ActorMethod<[string, Principal], Result_2>,
-  'ego_controller_add': ActorMethod<[Principal], Result_2>,
-  'ego_controller_remove': ActorMethod<[Principal], Result_2>,
-  'ego_controller_set': ActorMethod<[Array<Principal>], Result_2>,
-  'ego_log_list': ActorMethod<[bigint], Result_3>,
-  'ego_op_add': ActorMethod<[Principal], Result_2>,
-  'ego_owner_add': ActorMethod<[Principal], Result_2>,
-  'ego_owner_remove': ActorMethod<[Principal], Result_2>,
-  'ego_owner_set': ActorMethod<[Array<Principal>], Result_2>,
-  'ego_user_add': ActorMethod<[Principal], Result_2>,
-  'ego_user_remove': ActorMethod<[Principal], Result_2>,
-  'ego_user_set': ActorMethod<[Array<Principal>], Result_2>,
+  >,
+  'balance_get' : ActorMethod<[], Result_1>,
+  'canister_main_track' : ActorMethod<[], undefined>,
+  'canister_relation_update' : ActorMethod<[string], undefined>,
+  'ego_canister_add' : ActorMethod<[string, Principal], Result_2>,
+  'ego_controller_add' : ActorMethod<[Principal], Result_2>,
+  'ego_controller_remove' : ActorMethod<[Principal], Result_2>,
+  'ego_controller_set' : ActorMethod<[Array<Principal>], Result_2>,
+  'ego_log_list' : ActorMethod<[bigint], Result_3>,
+  'ego_op_add' : ActorMethod<[Principal], Result_2>,
+  'ego_owner_add' : ActorMethod<[Principal], Result_2>,
+  'ego_owner_remove' : ActorMethod<[Principal], Result_2>,
+  'ego_owner_set' : ActorMethod<[Array<Principal>], Result_2>,
+  'ego_user_add' : ActorMethod<[Principal], Result_2>,
+  'ego_user_remove' : ActorMethod<[Principal], Result_2>,
+  'ego_user_set' : ActorMethod<[Array<Principal>], Result_2>,
 }

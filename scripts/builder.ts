@@ -49,7 +49,7 @@ function generateDFXJson(ego: ProjectConfig) {
   packageItem[ego.package] = {
     type: 'custom',
     candid: `${ego.package}.did`,
-    wasm: `${ego.package}_opt.wasm`,
+    wasm: `${ego.package}_opt.wasm.gz`,
     build: [],
   };
   // dfxConfigTemplate.canisters
@@ -152,6 +152,8 @@ function runBuildRust(ego: ProjectConfig) {
                  ic-wasm \
                  "$PARENT_DIR/target/$TARGET/release/${ego.package}.wasm" \
                  -o "${shouldSaveName}" shrink
+
+                 gzip -c ${shouldSaveName} > ${shouldSaveName}.gz
           
              true
            else

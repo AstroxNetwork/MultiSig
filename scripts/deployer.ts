@@ -3,7 +3,7 @@ import shell from 'shelljs';
 import yargs from 'yargs';
 import fs from 'fs';
 import path from 'path';
-import { Secp256k1KeyIdentity } from '@dfinity/identity';
+// import { Secp256k1KeyIdentity } from '@dfinity/identity-secp256k1';
 import { appsConfig, infraConfig, dfxConfigTemplate, Configs } from './config';
 import {
   cycleWalletActor,
@@ -20,41 +20,6 @@ import { isProduction } from './env';
 import { identity } from './settings/identity';
 import { hasOwnProperty } from './settings/utils';
 import { IDL } from '@dfinity/candid';
-
-// const BIP32Factory = require('bip32');
-// const bip39 = require('bip39');
-// const ecc = require('tiny-secp256k1');
-
-// function getIdentityFromPhrase(phrase: string) {
-//   const seed = bip39.mnemonicToSeedSync(phrase);
-
-//   const ICP_PATH = "m/44'/223'/0'";
-//   const path = `${ICP_PATH}/0/0`;
-
-//   const bip32 = BIP32Factory.default(ecc);
-
-//   let node = bip32.fromSeed(seed);
-
-//   let child = node.derivePath(path);
-
-//   return Secp256k1KeyIdentity.fromSecretKey(child.privateKey);
-//   // return seed;
-// }
-
-// const seedPhrase = fs
-//   .readFileSync(
-//     path.join(
-//       process.cwd(),
-//       '/credentials',
-//       !isProduction ? '/internal.txt' : '/production.txt',
-//     ),
-//     {
-//       encoding: 'utf8',
-//     },
-//   )
-//   .toString();
-
-// export const identity = getIdentityFromPhrase(seedPhrase);
 
 interface ThisArgv {
   [x: string]: unknown;
@@ -168,6 +133,8 @@ function checkAndArtifacts() {
 
     if (!folder_exist) {
       shell.exec(`mkdir ${process.cwd()}/artifacts/${ego.package}`);
+      shell.exec(`mkdir ${process.cwd()}/artifacts/${ego.package}/.dfx`);
+      shell.exec(`mkdir ${process.cwd()}/artifacts/${ego.package}/.dfx/local`);
     }
   }
 }
@@ -181,7 +148,7 @@ function generateDFXJson() {
     packageItem[ego.package] = {
       type: 'custom',
       candid: `${ego.package}.did`,
-      wasm: `${ego.package}_opt.wasm`,
+      wasm: `${ego.package}_opt.wasm.gz`,
       build: [],
     };
     // dfxConfigTemplate.canisters
@@ -646,6 +613,7 @@ async function runPostPatch() {
       } else {
         const pkg = readEgoDfxJson(dfx_folder, f.package);
         const wasm = readWasm(dfx_folder + '/' + pkg.wasm);
+        console.log(pkg.wasm);
         const config = readConfig(
           process.cwd() + '/configs/' + f.package + '.json',
         );
@@ -655,15 +623,33 @@ async function runPostPatch() {
             console.log(
               `postPatching ${f.package} to ${config.PRODUCTION_CANISTERID!}`,
             );
-            const idl = IDL.Principal;
-            console.log(`identity: ${identity.getPrincipal().toText()}`);
-            const buf = IDL.encode([idl], [identity.getPrincipal()]);
+            // const idl = IDL.Principal;
+            // console.log(`identity: ${identity.getPrincipal().toText()}`);
+            // const buf = IDL.encode([idl], [identity.getPrincipal()]);
+            // const args = Array.from(new Uint8Array(buf));
+
+            // const result = await walletActor.wallet_call({
+            //   canister: Principal.fromText(config.PRODUCTION_CANISTERID!),
+            //   cycles: BigInt(0),
+            //   method_name: 'ego_owner_add',
+            //   args,
+            // });
+            const idl = IDL.Record({
+              principal: IDL.Principal,
+              name: IDL.Text,
+            });
+
+            const buf = IDL.encode(
+              [idl],
+              [{ principal: identity.getPrincipal(), name: 'local' }],
+            );
+
             const args = Array.from(new Uint8Array(buf));
 
             const result = await walletActor.wallet_call({
               canister: Principal.fromText(config.PRODUCTION_CANISTERID!),
               cycles: BigInt(0),
-              method_name: 'ego_owner_add',
+              method_name: 'addManager',
               args,
             });
 
