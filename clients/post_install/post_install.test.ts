@@ -13,7 +13,6 @@ import { _SERVICE as DappService } from '@/idls/btc_wallet';
 import { _SERVICE as EcoLocalService } from '@/ego/ego_local';
 
 import { idlFactory } from '@/ego/ego_ops.idl';
-import { DeployMode } from '@/ego/ego_dev';
 
 import { identity } from '@/settings/identity';
 import { Principal } from '@dfinity/principal';
@@ -64,7 +63,7 @@ describe('ms_provider', () => {
     console.log(`ego_store_id: ${ego_store_id}`);
 
     console.log(`add ego_store to ms_provider\n`);
-    let msProviderOperator = await getOperator<MsProviderService>(
+    let msProviderOperator = await getOperator<ProviderService>(
       'ms_provider',
     );
 
@@ -89,7 +88,7 @@ describe('ms_controller', () => {
     const ms_controller_version = {
       major: 1,
       minor: 0,
-      patch: 4,
+      patch: 0,
     };
 
     console.log(`release multisig controller\n`);
@@ -98,7 +97,6 @@ describe('ms_controller', () => {
       'astrox multisig controller',
       ms_controller_version,
       { Vault: null },
-      { DEDICATED: null },
       ms_controller_wasm,
     );
   });
@@ -115,7 +113,7 @@ describe('btc_wallet', () => {
     const btc_wallet_controller_version = {
       major: 1,
       minor: 0,
-      patch: 4,
+      patch: 0,
     };
 
     console.log(`release btc wallet\n`);
@@ -124,7 +122,6 @@ describe('btc_wallet', () => {
       'astrox btc wallet',
       btc_wallet_controller_version,
       { Vault: null },
-      { DEDICATED: null },
       btc_wallet_wasm,
     );
   });
@@ -146,13 +143,11 @@ const admin_app_create = async (
   name: string,
   version: any,
   category: Category,
-  deploy_mode: DeployMode,
-  backend_data: ArrayLike<number>,
-  frontend_canister_id?: Principal,
+  backend_data: ArrayLike<number>
 ) => {
   let opsOperator = await getOperator<EgoOpsService>('ego_ops');
 
-  const backend_hash = crypto
+  const backend_data_hash = crypto
     .createHash('md5')
     .update(backend_data as BinaryLike)
     .digest('hex');
@@ -165,9 +160,7 @@ const admin_app_create = async (
     description: '',
     category,
     backend_data: Array.from(new Uint8Array(backend_data)),
-    backend_hash,
-    frontend: frontend_canister_id ? [frontend_canister_id] : [],
-    deploy_mode,
+    backend_data_hash
   });
   console.log(resp1);
 };

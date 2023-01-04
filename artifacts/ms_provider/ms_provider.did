@@ -1,14 +1,9 @@
-type App = record {
-  logo : text;
-  name : text;
-  description : text;
+type AppInfo = record {
   app_id : text;
-  category : Category;
   current_version : Version;
-  price : float32;
+  latest_version : Version;
+  wallet_id : opt principal;
 };
-type AppInfo = record { app_id : text; current_version : Version };
-type Category = variant { System; Vault };
 type Controller = record {
   id : principal;
   total_user_amount : nat16;
@@ -23,28 +18,28 @@ type ControllerMainCreateRequest = record {
 };
 type Result = variant { Ok : AppInfo; Err : text };
 type Result_1 = variant { Ok; Err : text };
-type Result_2 = variant { Ok : App; Err : text };
-type Result_3 = variant { Ok : nat; Err : text };
-type Result_4 = variant { Ok : Controller; Err : SystemErr };
-type Result_5 = variant { Ok : vec Controller; Err : SystemErr };
-type Result_6 = variant { Ok : vec text; Err : text };
+type Result_2 = variant { Ok : nat; Err : text };
+type Result_3 = variant { Ok : Controller; Err : SystemErr };
+type Result_4 = variant { Ok : vec Controller; Err : SystemErr };
+type Result_5 = variant { Ok : vec text; Err : text };
 type SystemErr = record { msg : text; code : nat16 };
 type Version = record { major : nat32; minor : nat32; patch : nat32 };
 service : () -> {
   app_info_get : () -> (Result) query;
-  app_info_update : (text, Version) -> (Result_1);
-  app_version_check : () -> (Result_2) query;
-  balance_get : () -> (Result_3) query;
-  controller_main_create : (ControllerMainCreateRequest) -> (Result_4);
-  controller_main_get : (principal) -> (Result_4) query;
-  controller_main_list : () -> (Result_5) query;
+  app_info_update : (principal, text, Version) -> (Result_1);
+  app_version_check : () -> (Result);
+  balance_get : () -> (Result_2) query;
+  controller_main_create : (ControllerMainCreateRequest) -> (Result_3);
+  controller_main_get : (principal) -> (Result_3) query;
+  controller_main_list : () -> (Result_4) query;
   controller_user_add : (principal) -> ();
   controller_user_remove : (principal) -> ();
   ego_canister_add : (text, principal) -> (Result_1);
+  ego_canister_upgrade : () -> (Result_1);
   ego_controller_add : (principal) -> (Result_1);
   ego_controller_remove : (principal) -> (Result_1);
   ego_controller_set : (vec principal) -> (Result_1);
-  ego_log_list : (nat64) -> (Result_6) query;
+  ego_log_list : (nat64) -> (Result_5) query;
   ego_op_add : (principal) -> (Result_1);
   ego_owner_add : (principal) -> (Result_1);
   ego_owner_remove : (principal) -> (Result_1);

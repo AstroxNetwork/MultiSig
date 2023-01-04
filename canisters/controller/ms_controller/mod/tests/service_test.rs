@@ -3,7 +3,7 @@ use std::collections::BTreeMap;
 use async_trait::async_trait;
 use ego_lib::ego_canister::TEgoCanister;
 use ego_lib::ego_store::TEgoStore;
-use ego_types::app::{App, AppId, Canister, CanisterType, Category, EgoError, QueryParam, UserApp, WalletApp, Version};
+use ego_types::app::{App, AppId, Canister, CanisterType, Category, EgoError, UserApp, Version};
 use ego_types::app_info::AppInfo;
 use ic_cdk::export::Principal;
 use mockall::mock;
@@ -18,9 +18,9 @@ mock! {
 
   #[async_trait]
   impl TEgoStore for Store {
-    async fn wallet_main_new(&self, user_id: Principal) -> Result<WalletApp, EgoError>;
+    async fn wallet_main_new(&self, user_id: Principal) -> Result<UserApp, EgoError>;
 
-    async fn app_main_list(&self, query_param: QueryParam) -> Result<Vec<App>, EgoError>;
+    async fn app_main_list(&self) -> Result<Vec<App>, EgoError>;
     async fn app_main_get(&self, app_id: AppId) -> Result<App, EgoError>;
 
     async fn wallet_app_install(&self, app_id: AppId) -> Result<UserApp, EgoError>;
@@ -63,7 +63,7 @@ mock! {
     async fn balance_get(&self, target_canister_id: Principal) -> Result<u128, String>;
 
     // app info
-    fn app_info_update(&self, target_canister_id: Principal, app_id: AppId, version: Version);
+    fn app_info_update(&self, target_canister_id: Principal, wallet_id: Principal, app_id: AppId, version: Version);
     async fn app_info_get(&self, target_canister_id: Principal) -> Result<AppInfo, String>;
     async fn app_version_check(&self, target_canister_id: Principal) -> Result<App, String>;
   }
@@ -106,19 +106,22 @@ async fn app_main_create() {
 
   ego_store.expect_wallet_app_install().returning(|app_id| {
     assert_eq!(APP_NAME.to_string(), app_id);
-    let user_app = UserApp {
+    let app = App {
       app_id: "btc_wallet".to_string(),
       name: "btc_wallet".to_string(),
       category: Category::System,
       logo: "".to_string(),
       description: "".to_string(),
       current_version: Default::default(),
-      frontend: None,
-      backend: Some(Canister {
+      price: 0f32,
+    };
+    let user_app = UserApp {
+      app,
+      canister: Canister {
         canister_id: Principal::from_text(BTC_WALLET_ID.to_string()).unwrap(),
         canister_type: CanisterType::BACKEND,
-      }),
-      latest_version: Default::default()
+      },
+      latest_version: Default::default(),
     };
     Ok(user_app)
   });

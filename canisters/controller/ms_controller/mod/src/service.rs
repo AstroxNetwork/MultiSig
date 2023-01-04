@@ -1,14 +1,14 @@
 use std::collections::BTreeMap;
+
 use ego_lib::ego_canister::TEgoCanister;
 use ego_lib::ego_store::TEgoStore;
 use ego_types::app::AppId;
+use ic_cdk::export::Principal;
 
 use crate::app_wallet::TAppWallet;
 use crate::model::{Action, Sign};
 use crate::state::{CONTROLLER, log_add};
-use crate::types::{Errors, SystemErr};
-use ic_cdk::export::Principal;
-
+use crate::types::SystemErr;
 
 pub struct Service {}
 
@@ -25,19 +25,16 @@ impl Service {
       Err(e) => { Err(SystemErr::from(e)) }
     }?;
 
-    match user_app.backend {
-      Some(canister) => {
-        CONTROLLER.with(|controller| controller.borrow_mut().app = Some(canister.canister_id));
+    let canister = user_app.canister;
 
-        log_add("2. add self as user");
-        ego_canister.ego_user_add(canister.canister_id, user_id);
+    CONTROLLER.with(|controller| controller.borrow_mut().app = Some(canister.canister_id));
 
-        log_add("3. remove self from owner");
-        ego_canister.ego_owner_remove(canister.canister_id, user_id);
-        Ok(canister.canister_id)
-      }
-      _ => Err(SystemErr::from(Errors::SystemError))
-    }
+    log_add("2. add self as user");
+    ego_canister.ego_user_add(canister.canister_id, user_id);
+
+    log_add("3. remove self from owner");
+    ego_canister.ego_owner_remove(canister.canister_id, user_id);
+    Ok(canister.canister_id)
   }
 
   pub fn app_action_get(action_id: u64) -> Result<Action, SystemErr> {

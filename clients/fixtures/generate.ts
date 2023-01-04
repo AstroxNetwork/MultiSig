@@ -1,14 +1,13 @@
 import fs from 'fs';
-import { randomBytes } from 'crypto';
+import {randomBytes} from 'crypto';
 import Mock from 'mockjs';
-import { toHexString } from '@dfinity/candid';
-import { Ed25519KeyIdentity } from '@dfinity/identity';
-import {
-  getIdentityFromPhrase,
-  getIdentityFromPhraseWithSeed,
-} from '../settings/identity';
-import { SignIdentity } from '@dfinity/agent';
-const { Random } = Mock;
+import {toHexString} from '@dfinity/candid';
+import {Ed25519KeyIdentity} from '@dfinity/identity';
+import {getIdentityFromPhraseWithSeed,} from '../settings/identity';
+import {SignIdentity} from '@dfinity/agent';
+
+const {Random} = Mock;
+
 export interface MockIdentity {
   name: string;
   principal: string;
@@ -43,7 +42,7 @@ function identityFactoryWihPhrase(
 ) {
   const ids: Array<MockIdentity> = [];
   for (var i = 0; i < index; i += 1) {
-    const { identity, seed } = getIdentityFromPhraseWithSeed(phrase);
+    const {identity, seed} = getIdentityFromPhraseWithSeed(phrase);
     ids.push({
       name: Random.name(),
       derEncodedPublicKey: toHexString(identity.getPublicKey().toDer()),

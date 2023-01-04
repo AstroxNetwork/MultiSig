@@ -1,6 +1,10 @@
 use std::collections::BTreeMap;
 
 use candid::candid_method;
+use ego_lib::ego_canister::TEgoCanister;
+use ego_macros::{inject_app_info_api, inject_ego_api};
+use ego_types::registry::Registry;
+use ego_types::user::User;
 use ic_cdk::{api, caller, storage};
 use ic_cdk::api::time;
 use ic_cdk::export::candid::{CandidType, Deserialize};
@@ -10,25 +14,15 @@ use serde::Serialize;
 
 use ms_controller_mod::app_wallet::AppWallet;
 use ms_controller_mod::ego_lib::ego_canister::EgoCanister;
-
 use ms_controller_mod::model::{Action, Controller, Sign};
-use ms_controller_mod::service::{Service};
-
+use ms_controller_mod::service::Service;
+use ms_controller_mod::state::{app_info_post_upgrade, app_info_pre_upgrade, canister_add, canister_get_one, is_op, is_owner, is_user, log_add, log_list, op_add, owner_add, owner_remove, owners_set, registry_post_upgrade, registry_pre_upgrade, user_add, user_add_with_name, user_remove, users, users_post_upgrade, users_pre_upgrade, users_set};
 use ms_controller_mod::state::CONTROLLER;
 use ms_controller_mod::types::{AppActionCreateRequest, Errors, SystemErr};
 use ms_controller_mod::types::Errors::TooManyUser;
 
-use ms_controller_mod::state::{canister_add, canister_get_one, log_add, is_owner, log_list, op_add, owner_add, owner_remove, owners_set, registry_post_upgrade, registry_pre_upgrade, user_add, user_remove, is_user, is_op, users_post_upgrade, users_pre_upgrade, users_set, app_info_pre_upgrade, app_info_post_upgrade, user_add_with_name, users};
-use ego_types::user::User;
-use ego_types::registry::Registry;
-use ego_types::app::{App};
-
-use ego_macros::{inject_ego_user, inject_ego_registry, inject_ego_controller, inject_ego_log, inject_ego_app_info};
-inject_ego_user!();
-inject_ego_registry!();
-inject_ego_controller!();
-inject_ego_log!();
-inject_ego_app_info!();
+inject_ego_api!();
+inject_app_info_api!();
 
 
 #[init]
@@ -180,10 +174,21 @@ async fn app_main_create() -> Result<(), SystemErr> {
 
 #[query(name = "app_main_get", guard = "user_guard")]
 #[candid_method(query, rename = "app_main_get")]
-async fn app_main_get() -> Result<Option<Principal>, SystemErr> {
+fn app_main_get() -> Result<Option<Principal>, SystemErr> {
   log_add("controller: app_main_get");
 
   CONTROLLER.with(|controller| Ok(controller.borrow().app.clone()))
+}
+
+#[update(name = "app_main_upgrade", guard = "user_guard")]
+#[candid_method(update, rename = "app_main_upgrade")]
+fn app_main_upgrade() -> Result<(), SystemErr> {
+  log_add("controller: app_main_upgrade");
+
+  let app_canister_id = CONTROLLER.with(|controller| controller.borrow().app.unwrap());
+  let ego_canister = EgoCanister::new();
+  ego_canister.ego_canister_upgrade(app_canister_id);
+  Ok(())
 }
 
 #[update(name = "app_action_create", guard = "user_guard")]

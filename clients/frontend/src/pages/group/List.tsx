@@ -1,20 +1,22 @@
-import { RootDispatch, RootState } from '@/store';
-import { getActor } from '@/utils';
-import { PageContainer } from '@ant-design/pro-components';
-import { useConnect } from '@connect2ic/react';
-import { Button, Card, Col, Descriptions, List, Row } from 'antd';
-import { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { Controller } from '../../../../idls/ms_provider';
-import { idlFactory as controllerIdl } from '@/../../idls/ms_controller.idl';
-import { useHistory } from 'react-router-dom';
+import {RootDispatch, RootState} from '@/store';
+import {getActor} from '@/utils';
+import {PageContainer} from '@ant-design/pro-components';
+import {useConnect} from '@connect2ic/react';
+import {Button, Card, Col, Descriptions, List, Row} from 'antd';
+import {useEffect} from 'react';
+import {useSelector, useDispatch} from 'react-redux';
+import {Controller} from '../../../../idls/ms_provider';
+import {idlFactory as controllerIdl} from '@/../../idls/ms_controller.idl';
+import {useHistory} from 'react-router-dom';
+
 const GroupList: React.FC = () => {
   const dispatch = useDispatch<RootDispatch>();
   const history = useHistory();
   const groups = useSelector((state: RootState) => state.app.groups);
-  const { activeProvider } = useConnect();
+  const {activeProvider} = useConnect();
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+  }, []);
 
   const selectGroup = async (group: Controller) => {
     const controllerActor = await getActor(
@@ -27,7 +29,7 @@ const GroupList: React.FC = () => {
       activeControllerActor: controllerActor,
     });
     // dispatch.app.queryWallets({ contrlCanisterId: group.id.toText() });
-    dispatch.app.save({ slideMode: 'wallet' });
+    dispatch.app.save({slideMode: 'wallet'});
     history.push('/wallet/assets');
   };
 
@@ -48,7 +50,7 @@ const GroupList: React.FC = () => {
     <PageContainer ghost>
       <Row gutter={24}>
         {groups.map(group => (
-          <Col span={12} style={{ marginBottom: 20 }}>
+          <Col span={12} style={{marginBottom: 20}}>
             <Card
               title={group.name}
               bordered={false}

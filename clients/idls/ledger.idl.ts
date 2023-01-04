@@ -1,12 +1,12 @@
-export const idlFactory = ({ IDL }) => {
+export const idlFactory = ({IDL}) => {
   const AccountIdentifier = IDL.Text;
-  const Duration = IDL.Record({ secs: IDL.Nat64, nanos: IDL.Nat32 });
+  const Duration = IDL.Record({secs: IDL.Nat64, nanos: IDL.Nat32});
   const ArchiveOptions = IDL.Record({
     max_message_size_bytes: IDL.Opt(IDL.Nat32),
     node_max_memory_size_bytes: IDL.Opt(IDL.Nat32),
     controller_id: IDL.Principal,
   });
-  const ICPTs = IDL.Record({ e8s: IDL.Nat64 });
+  const ICPTs = IDL.Record({e8s: IDL.Nat64});
   const LedgerCanisterInitPayload = IDL.Record({
     send_whitelist: IDL.Vec(IDL.Tuple(IDL.Principal)),
     minting_account: AccountIdentifier,
@@ -19,8 +19,8 @@ export const idlFactory = ({ IDL }) => {
   const AccountBalanceArgsNew = IDL.Record({
     account: AccountIdentifierNew,
   });
-  const Tokens = IDL.Record({ e8s: IDL.Nat64 });
-  const AccountBalanceArgs = IDL.Record({ account: AccountIdentifier });
+  const Tokens = IDL.Record({e8s: IDL.Nat64});
+  const AccountBalanceArgs = IDL.Record({account: AccountIdentifier});
   const CanisterId = IDL.Principal;
   const HeaderField = IDL.Tuple(IDL.Text, IDL.Text);
   const HttpRequest = IDL.Record({
@@ -44,7 +44,7 @@ export const idlFactory = ({ IDL }) => {
     block_height: BlockHeight,
   });
   const Memo = IDL.Nat64;
-  const TimeStamp = IDL.Record({ timestamp_nanos: IDL.Nat64 });
+  const TimeStamp = IDL.Record({timestamp_nanos: IDL.Nat64});
   const SendArgs = IDL.Record({
     to: AccountIdentifier,
     fee: ICPTs,
@@ -63,11 +63,11 @@ export const idlFactory = ({ IDL }) => {
   });
   const BlockIndex = IDL.Nat64;
   const TransferError = IDL.Variant({
-    TxTooOld: IDL.Record({ allowed_window_nanos: IDL.Nat64 }),
-    BadFee: IDL.Record({ expected_fee: Tokens }),
-    TxDuplicate: IDL.Record({ duplicate_of: BlockIndex }),
+    TxTooOld: IDL.Record({allowed_window_nanos: IDL.Nat64}),
+    BadFee: IDL.Record({expected_fee: Tokens}),
+    TxDuplicate: IDL.Record({duplicate_of: BlockIndex}),
     TxCreatedInFuture: IDL.Null,
-    InsufficientFunds: IDL.Record({ balance: Tokens }),
+    InsufficientFunds: IDL.Record({balance: Tokens}),
   });
   const TransferResult = IDL.Variant({
     Ok: BlockIndex,
@@ -83,15 +83,15 @@ export const idlFactory = ({ IDL }) => {
     transfer: IDL.Func([TransferArgs], [TransferResult], []),
   });
 };
-export const init = ({ IDL }) => {
+export const init = ({IDL}) => {
   const AccountIdentifier = IDL.Text;
-  const Duration = IDL.Record({ secs: IDL.Nat64, nanos: IDL.Nat32 });
+  const Duration = IDL.Record({secs: IDL.Nat64, nanos: IDL.Nat32});
   const ArchiveOptions = IDL.Record({
     max_message_size_bytes: IDL.Opt(IDL.Nat32),
     node_max_memory_size_bytes: IDL.Opt(IDL.Nat32),
     controller_id: IDL.Principal,
   });
-  const ICPTs = IDL.Record({ e8s: IDL.Nat64 });
+  const ICPTs = IDL.Record({e8s: IDL.Nat64});
   const LedgerCanisterInitPayload = IDL.Record({
     send_whitelist: IDL.Vec(IDL.Tuple(IDL.Principal)),
     minting_account: AccountIdentifier,

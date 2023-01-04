@@ -1,4 +1,4 @@
-export const idlFactory = ({ IDL }) => {
+export const idlFactory = ({IDL}) => {
   const Kind = IDL.Variant({
     User: IDL.Null,
     Canister: IDL.Null,
@@ -15,7 +15,7 @@ export const idlFactory = ({ IDL }) => {
     name: IDL.Opt(IDL.Text),
     role: Role,
   });
-  const WalletResult = IDL.Variant({ Ok: IDL.Null, Err: IDL.Text });
+  const WalletResult = IDL.Variant({Ok: IDL.Null, Err: IDL.Text});
   const EventKind = IDL.Variant({
     CyclesReceived: IDL.Record({
       from: IDL.Principal,
@@ -36,8 +36,8 @@ export const idlFactory = ({ IDL }) => {
       amount: IDL.Nat64,
       refund: IDL.Nat64,
     }),
-    AddressRemoved: IDL.Record({ id: IDL.Principal }),
-    WalletDeployed: IDL.Record({ canister: IDL.Principal }),
+    AddressRemoved: IDL.Record({id: IDL.Principal}),
+    WalletDeployed: IDL.Record({canister: IDL.Principal}),
     AddressAdded: IDL.Record({
       id: IDL.Principal,
       name: IDL.Opt(IDL.Text),
@@ -69,8 +69,8 @@ export const idlFactory = ({ IDL }) => {
       amount: IDL.Nat,
       refund: IDL.Nat,
     }),
-    AddressRemoved: IDL.Record({ id: IDL.Principal }),
-    WalletDeployed: IDL.Record({ canister: IDL.Principal }),
+    AddressRemoved: IDL.Record({id: IDL.Principal}),
+    WalletDeployed: IDL.Record({canister: IDL.Principal}),
     AddressAdded: IDL.Record({
       id: IDL.Principal,
       name: IDL.Opt(IDL.Text),
@@ -83,9 +83,9 @@ export const idlFactory = ({ IDL }) => {
     timestamp: IDL.Nat64,
   });
   const ManagedCanisterEventKind = IDL.Variant({
-    CyclesSent: IDL.Record({ amount: IDL.Nat64, refund: IDL.Nat64 }),
-    Created: IDL.Record({ cycles: IDL.Nat64 }),
-    Called: IDL.Record({ cycles: IDL.Nat64, method_name: IDL.Text }),
+    CyclesSent: IDL.Record({amount: IDL.Nat64, refund: IDL.Nat64}),
+    Created: IDL.Record({cycles: IDL.Nat64}),
+    Called: IDL.Record({cycles: IDL.Nat64, method_name: IDL.Text}),
   });
   const ManagedCanisterEvent = IDL.Record({
     id: IDL.Nat32,
@@ -93,9 +93,9 @@ export const idlFactory = ({ IDL }) => {
     timestamp: IDL.Nat64,
   });
   const ManagedCanisterEventKind128 = IDL.Variant({
-    CyclesSent: IDL.Record({ amount: IDL.Nat, refund: IDL.Nat }),
-    Created: IDL.Record({ cycles: IDL.Nat }),
-    Called: IDL.Record({ cycles: IDL.Nat, method_name: IDL.Text }),
+    CyclesSent: IDL.Record({amount: IDL.Nat, refund: IDL.Nat}),
+    Created: IDL.Record({cycles: IDL.Nat}),
+    Called: IDL.Record({cycles: IDL.Nat, method_name: IDL.Text}),
   });
   const ManagedCanisterEvent128 = IDL.Record({
     id: IDL.Nat32,
@@ -132,7 +132,7 @@ export const idlFactory = ({ IDL }) => {
     created_at: IDL.Nat64,
   });
   const WalletResultCall = IDL.Variant({
-    Ok: IDL.Record({ return: IDL.Vec(IDL.Nat8) }),
+    Ok: IDL.Record({return: IDL.Vec(IDL.Nat8)}),
     Err: IDL.Text,
   });
   const CanisterSettings = IDL.Record({
@@ -147,14 +147,14 @@ export const idlFactory = ({ IDL }) => {
     settings: CanisterSettings,
   });
   const WalletResultCreate = IDL.Variant({
-    Ok: IDL.Record({ canister_id: IDL.Principal }),
+    Ok: IDL.Record({canister_id: IDL.Principal}),
     Err: IDL.Text,
   });
   const CreateCanisterArgs128 = IDL.Record({
     cycles: IDL.Nat,
     settings: CanisterSettings,
   });
-  const ReceiveOptions = IDL.Record({ memo: IDL.Opt(IDL.Text) });
+  const ReceiveOptions = IDL.Record({memo: IDL.Opt(IDL.Text)});
   return IDL.Service({
     add_address: IDL.Func([AddressEntry], [], []),
     add_controller: IDL.Func([IDL.Principal], [], []),
@@ -244,12 +244,12 @@ export const idlFactory = ({ IDL }) => {
     wallet_api_version: IDL.Func([], [IDL.Text], ['query']),
     wallet_balance: IDL.Func(
       [],
-      [IDL.Record({ amount: IDL.Nat64 })],
+      [IDL.Record({amount: IDL.Nat64})],
       ['query'],
     ),
     wallet_balance128: IDL.Func(
       [],
-      [IDL.Record({ amount: IDL.Nat })],
+      [IDL.Record({amount: IDL.Nat})],
       ['query'],
     ),
     wallet_call: IDL.Func(
@@ -298,22 +298,22 @@ export const idlFactory = ({ IDL }) => {
     ),
     wallet_receive: IDL.Func([IDL.Opt(ReceiveOptions)], [], []),
     wallet_send: IDL.Func(
-      [IDL.Record({ canister: IDL.Principal, amount: IDL.Nat64 })],
+      [IDL.Record({canister: IDL.Principal, amount: IDL.Nat64})],
       [WalletResult],
       [],
     ),
     wallet_send128: IDL.Func(
-      [IDL.Record({ canister: IDL.Principal, amount: IDL.Nat })],
+      [IDL.Record({canister: IDL.Principal, amount: IDL.Nat})],
       [WalletResult],
       [],
     ),
     wallet_store_wallet_wasm: IDL.Func(
-      [IDL.Record({ wasm_module: IDL.Vec(IDL.Nat8) })],
+      [IDL.Record({wasm_module: IDL.Vec(IDL.Nat8)})],
       [],
       [],
     ),
   });
 };
-export const init = ({ IDL }) => {
+export const init = ({IDL}) => {
   return [];
 };

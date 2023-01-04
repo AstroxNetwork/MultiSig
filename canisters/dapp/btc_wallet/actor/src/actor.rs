@@ -1,6 +1,9 @@
 use std::collections::BTreeMap;
 
 use candid::candid_method;
+use ego_macros::{inject_app_info_api, inject_ego_api};
+use ego_types::registry::Registry;
+use ego_types::user::User;
 use ic_btc_types::{MillisatoshiPerByte, Network, Utxo};
 use ic_cdk::{caller, storage};
 use ic_cdk::export::candid::{CandidType, Deserialize};
@@ -8,23 +11,15 @@ use ic_cdk::export::Principal;
 use ic_cdk_macros::*;
 use serde::Serialize;
 
-use btc_wallet_mod::service::{BtcStore};
+use btc_wallet_mod::service::BtcStore;
+use btc_wallet_mod::service::{app_info_post_upgrade, app_info_pre_upgrade, canister_add, canister_get_one, is_op, is_owner, is_user, log_add, log_list, op_add, owner_add, owner_remove, owners_set, registry_post_upgrade, registry_pre_upgrade, user_add, user_remove, users_post_upgrade, users_pre_upgrade, users_set};
 use btc_wallet_mod::tecdsa_signer::types::TSignerManager;
 use btc_wallet_mod::types::{
   EgoBtcError, GetAddressResponse, SendRequest, SendResponse, UserBalanceResponse,
 };
 
-use btc_wallet_mod::service::{canister_add, canister_get_one, log_add, is_owner, log_list, op_add, owner_add, owner_remove, owners_set, registry_post_upgrade, registry_pre_upgrade, user_add, user_remove, is_user, is_op, users_post_upgrade, users_pre_upgrade, users_set, app_info_pre_upgrade, app_info_post_upgrade};
-use ego_types::user::User;
-use ego_types::registry::Registry;
-use ego_types::app::{App};
-
-use ego_macros::{inject_ego_user, inject_ego_registry, inject_ego_controller, inject_ego_log, inject_ego_app_info};
-inject_ego_user!();
-inject_ego_registry!();
-inject_ego_controller!();
-inject_ego_log!();
-inject_ego_app_info!();
+inject_ego_api!();
+inject_app_info_api!();
 
 
 #[init]

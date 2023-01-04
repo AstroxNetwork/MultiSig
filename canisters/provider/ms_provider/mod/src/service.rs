@@ -1,10 +1,10 @@
 use ego_lib::ego_store::TEgoStore;
+use ic_cdk::export::Principal;
 
 use crate::model::Controller;
 use crate::ms_controller::TMsController;
 use crate::state::{log_add, PROVIDER};
 use crate::types::SystemErr;
-use ic_cdk::export::Principal;
 
 pub struct Service {}
 
@@ -35,17 +35,14 @@ impl Service {
       }
     }?;
 
-    match user_app.backend {
-      Some(canister) => {
-        let controller = PROVIDER.with(|provider| provider.borrow_mut().controller_main_create(&canister.canister_id, user_id, name, total_user_amount, threshold_user_amount));
+    let canister = user_app.canister;
 
-        log_add("2. init controller");
-        ms_controller.controller_init(controller.id, total_user_amount, threshold_user_amount);
+    let controller = PROVIDER.with(|provider| provider.borrow_mut().controller_main_create(&canister.canister_id, user_id, name, total_user_amount, threshold_user_amount));
 
-        Ok(controller)
-      }
-      _ => Err(SystemErr { code: 500, msg: "System Error".to_string() })
-    }
+    log_add("2. init controller");
+    ms_controller.controller_init(controller.id, total_user_amount, threshold_user_amount);
+
+    Ok(controller)
   }
 
   pub fn controller_user_add(controller_id: &Principal, user_id: &Principal) {

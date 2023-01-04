@@ -1,167 +1,164 @@
-import type { Principal } from '@dfinity/principal';
-import type { ActorMethod } from '@dfinity/agent';
+import type {Principal} from '@dfinity/principal';
+import type {ActorMethod} from '@dfinity/agent';
 
-export interface AdminAppCreateRequest {
-  'deploy_mode' : DeployMode,
-  'logo' : string,
-  'name' : string,
-  'frontend' : [] | [Principal],
-  'description' : string,
-  'version' : Version,
-  'app_id' : string,
-  'category' : Category,
-  'backend_data_hash' : string,
-  'backend_data' : Array<number>,
+export interface AdminAppCreateBackendRequest {
+  'logo': string,
+  'name': string,
+  'description': string,
+  'version': Version,
+  'app_id': string,
+  'category': Category,
+  'backend_data_hash': string,
+  'backend_data': Array<number>,
 }
-export interface AdminAppCreateResponse { 'app_version' : AppVersion }
-export interface AppMainGetRequest { 'app_id' : string }
-export interface AppMainGetResponse { 'app' : EgoDevApp }
+
+export interface App {
+  'logo': string,
+  'name': string,
+  'description': string,
+  'app_id': string,
+  'category': Category,
+  'current_version': Version,
+  'price': number,
+}
+
 export interface AppMainNewRequest {
-  'logo' : string,
-  'name' : string,
-  'description' : string,
-  'app_id' : string,
-  'category' : Category,
-  'price' : number,
+  'logo': string,
+  'name': string,
+  'description': string,
+  'app_id': string,
+  'category': Category,
+  'price': number,
 }
+
 export interface AppVersion {
-  'status' : AppVersionStatus,
-  'frontend' : [] | [Wasm],
-  'version' : Version,
-  'app_id' : string,
-  'backend' : [] | [Wasm],
-  'file_id' : Principal,
+  'status': AppVersionStatus,
+  'wasm': [] | [Wasm],
+  'version': Version,
+  'app_id': string,
+  'file_id': Principal,
 }
-export interface AppVersionApproveRequest {
-  'version' : Version,
-  'app_id' : string,
-}
-export interface AppVersionNewRequest { 'version' : Version, 'app_id' : string }
-export interface AppVersionNewResponse { 'app_version' : AppVersion }
+
 export interface AppVersionSetFrontendAddressRequest {
-  'canister_id' : Principal,
-  'version' : Version,
-  'app_id' : string,
+  'canister_id': Principal,
+  'version': Version,
+  'app_id': string,
 }
-export interface AppVersionSetFrontendAddressResponse { 'ret' : boolean }
-export type AppVersionStatus = { 'NEW' : null } |
-  { 'REJECTED' : null } |
-  { 'SUBMITTED' : null } |
-  { 'REVOKED' : null } |
-  { 'RELEASED' : null } |
-  { 'APPROVED' : null };
+
+export type AppVersionStatus = { 'NEW': null } |
+  { 'REJECTED': null } |
+  { 'SUBMITTED': null } |
+  { 'REVOKED': null } |
+  { 'RELEASED': null } |
+  { 'APPROVED': null };
+
 export interface AppVersionUploadWasmRequest {
-  'data' : Array<number>,
-  'hash' : string,
-  'version' : Version,
-  'app_id' : string,
+  'data': Array<number>,
+  'hash': string,
+  'version': Version,
+  'app_id': string,
 }
-export interface AppVersionUploadWasmResponse { 'ret' : boolean }
-export interface AppVersionWaitForAuditResponse { 'apps' : Array<EgoDevApp> }
-export type CanisterType = { 'BACKEND' : null } |
-  { 'ASSET' : null };
-export type Category = { 'System' : null } |
-  { 'Vault' : null };
-export type DeployMode = { 'DEDICATED' : null } |
-  { 'SHARED' : null };
+
+export type CanisterType = { 'BACKEND': null } |
+  { 'ASSET': null };
+export type Category = { 'System': null } |
+  { 'Vault': null };
+
 export interface Developer {
-  'name' : string,
-  'user_id' : Principal,
-  'is_app_auditor' : boolean,
-  'created_apps' : Array<string>,
-  'is_manager' : boolean,
+  'name': string,
+  'is_app_auditor': boolean,
+  'developer_id': Principal,
+  'created_apps': Array<string>,
+  'is_manager': boolean,
 }
-export interface DeveloperAppListResponse { 'apps' : Array<EgoDevApp> }
-export interface DeveloperMainGetResponse { 'developer' : Developer }
-export interface DeveloperMainRegisterRequest { 'name' : string }
+
 export interface EgoDevApp {
-  'deploy_mode' : DeployMode,
-  'logo' : string,
-  'name' : string,
-  'description' : string,
-  'app_id' : string,
-  'release_version' : [] | [Version],
-  'category' : Category,
-  'developer_id' : Principal,
-  'price' : number,
-  'versions' : Array<AppVersion>,
-  'audit_version' : [] | [Version],
+  'app': App,
+  'developer_id': Principal,
+  'versions': Array<AppVersion>,
+  'audit_version': [] | [Version],
 }
-export interface EgoError { 'msg' : string, 'code' : number }
-export interface InitArg { 'init_caller' : [] | [Principal] }
-export type Result = { 'Ok' : AdminAppCreateResponse } |
-  { 'Err' : EgoError };
-export type Result_1 = { 'Ok' : AppVersionNewResponse } |
-  { 'Err' : EgoError };
-export type Result_10 = { 'Ok' : UserMainListResponse } |
-  { 'Err' : EgoError };
-export type Result_11 = { 'Ok' : UserRoleSetResponse } |
-  { 'Err' : EgoError };
-export type Result_2 = { 'Ok' : AppVersionSetFrontendAddressResponse } |
-  { 'Err' : EgoError };
-export type Result_3 = { 'Ok' : AppVersionUploadWasmResponse } |
-  { 'Err' : EgoError };
-export type Result_4 = { 'Ok' : AppVersionWaitForAuditResponse } |
-  { 'Err' : EgoError };
-export type Result_5 = { 'Ok' : AppMainGetResponse } |
-  { 'Err' : EgoError };
-export type Result_6 = { 'Ok' : DeveloperAppListResponse } |
-  { 'Err' : EgoError };
-export type Result_7 = { 'Ok' : DeveloperMainGetResponse } |
-  { 'Err' : EgoError };
-export type Result_8 = { 'Ok' : null } |
-  { 'Err' : string };
-export type Result_9 = { 'Ok' : Array<[string, Array<Principal>]> } |
-  { 'Err' : string };
-export interface UserMainListRequest { 'name' : string }
-export interface UserMainListResponse { 'users' : Array<Developer> }
+
+export interface EgoError {
+  'msg': string,
+  'code': number
+}
+
+export interface InitArg {
+  'init_caller': [] | [Principal]
+}
+
+export type Result = { 'Ok': AppVersion } |
+  { 'Err': EgoError };
+export type Result_1 = { 'Ok': boolean } |
+  { 'Err': EgoError };
+export type Result_2 = { 'Ok': Array<EgoDevApp> } |
+  { 'Err': EgoError };
+export type Result_3 = { 'Ok': bigint } |
+  { 'Err': string };
+export type Result_4 = { 'Ok': EgoDevApp } |
+  { 'Err': EgoError };
+export type Result_5 = { 'Ok': Developer } |
+  { 'Err': EgoError };
+export type Result_6 = { 'Ok': null } |
+  { 'Err': string };
+export type Result_7 = { 'Ok': Array<string> } |
+  { 'Err': string };
+export type Result_8 = { 'Ok': Array<Developer> } |
+  { 'Err': EgoError };
+
 export interface UserRoleSetRequest {
-  'user_id' : Principal,
-  'is_app_auditor' : boolean,
-  'is_manager' : boolean,
+  'user_id': Principal,
+  'is_app_auditor': boolean,
+  'is_manager': boolean,
 }
-export interface UserRoleSetResponse { 'ret' : boolean }
+
 export interface Version {
-  'major' : number,
-  'minor' : number,
-  'patch' : number,
+  'major': number,
+  'minor': number,
+  'patch': number,
 }
+
 export interface Wasm {
-  'canister_id' : Principal,
-  'version' : Version,
-  'app_id' : string,
-  'canister_type' : CanisterType,
+  'canister_id': Principal,
+  'version': Version,
+  'app_id': string,
+  'canister_type': CanisterType,
 }
+
 export interface _SERVICE {
-  'admin_app_create' : ActorMethod<[AdminAppCreateRequest], Result>,
-  'app_version_approve' : ActorMethod<[AppVersionApproveRequest], Result>,
-  'app_version_new' : ActorMethod<[AppVersionNewRequest], Result_1>,
-  'app_version_reject' : ActorMethod<[AppVersionNewRequest], Result_1>,
-  'app_version_release' : ActorMethod<[AppVersionNewRequest], Result_1>,
-  'app_version_revoke' : ActorMethod<[AppVersionNewRequest], Result_1>,
-  'app_version_set_frontend_address' : ActorMethod<
-    [AppVersionSetFrontendAddressRequest],
-    Result_2,
-  >,
-  'app_version_submit' : ActorMethod<[AppVersionNewRequest], Result_1>,
-  'app_version_upload_wasm' : ActorMethod<
-    [AppVersionUploadWasmRequest],
-    Result_3,
-  >,
-  'app_version_wait_for_audit' : ActorMethod<[], Result_4>,
-  'balance_get' : ActorMethod<[], bigint>,
-  'developer_app_get' : ActorMethod<[AppMainGetRequest], Result_5>,
-  'developer_app_list' : ActorMethod<[], Result_6>,
-  'developer_app_new' : ActorMethod<[AppMainNewRequest], Result_5>,
-  'developer_main_get' : ActorMethod<[], Result_7>,
-  'developer_main_register' : ActorMethod<
-    [DeveloperMainRegisterRequest],
-    Result_7,
-  >,
-  'ego_canister_add' : ActorMethod<[string, Principal], Result_8>,
-  'ego_canister_list' : ActorMethod<[], Result_9>,
-  'ego_owner_add' : ActorMethod<[Principal], Result_8>,
-  'ego_user_add' : ActorMethod<[Principal], Result_8>,
-  'user_main_list' : ActorMethod<[UserMainListRequest], Result_10>,
-  'user_role_set' : ActorMethod<[UserRoleSetRequest], Result_11>,
+  'admin_app_create': ActorMethod<[AdminAppCreateBackendRequest], Result>,
+  'app_version_approve': ActorMethod<[string, Version], Result>,
+  'app_version_new': ActorMethod<[string, Version], Result>,
+  'app_version_reject': ActorMethod<[string, Version], Result>,
+  'app_version_release': ActorMethod<[string, Version], Result>,
+  'app_version_revoke': ActorMethod<[string, Version], Result>,
+  'app_version_set_frontend_address': ActorMethod<[AppVersionSetFrontendAddressRequest],
+    Result_1,
+    >,
+  'app_version_submit': ActorMethod<[string, Version], Result>,
+  'app_version_upload_wasm': ActorMethod<[AppVersionUploadWasmRequest],
+    Result_1,
+    >,
+  'app_version_wait_for_audit': ActorMethod<[], Result_2>,
+  'balance_get': ActorMethod<[], Result_3>,
+  'developer_app_get': ActorMethod<[string], Result_4>,
+  'developer_app_list': ActorMethod<[], Result_2>,
+  'developer_app_new': ActorMethod<[AppMainNewRequest], Result_4>,
+  'developer_main_get': ActorMethod<[], Result_5>,
+  'developer_main_register': ActorMethod<[string], Result_5>,
+  'ego_canister_add': ActorMethod<[string, Principal], Result_6>,
+  'ego_controller_add': ActorMethod<[Principal], Result_6>,
+  'ego_controller_remove': ActorMethod<[Principal], Result_6>,
+  'ego_controller_set': ActorMethod<[Array<Principal>], Result_6>,
+  'ego_log_list': ActorMethod<[bigint], Result_7>,
+  'ego_op_add': ActorMethod<[Principal], Result_6>,
+  'ego_owner_add': ActorMethod<[Principal], Result_6>,
+  'ego_owner_remove': ActorMethod<[Principal], Result_6>,
+  'ego_owner_set': ActorMethod<[Array<Principal>], Result_6>,
+  'ego_user_add': ActorMethod<[Principal], Result_6>,
+  'ego_user_remove': ActorMethod<[Principal], Result_6>,
+  'ego_user_set': ActorMethod<[Array<Principal>], Result_6>,
+  'user_main_list': ActorMethod<[string], Result_8>,
+  'user_role_set': ActorMethod<[UserRoleSetRequest], Result_1>,
 }

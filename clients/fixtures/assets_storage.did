@@ -1,140 +1,158 @@
 type BatchId = nat;
+
 type ChunkId = nat;
+
 type Key = text;
+
 type Time = int;
 
 type CreateAssetArguments = record {
-  key: Key;
-  content_type: text;
+    key: Key;
+    content_type: text;
 };
 
-// Add or change content for an asset, by content encoding
+    // Add or change content for an asset, by content encoding
 type SetAssetContentArguments = record {
-  key: Key;
-  content_encoding: text;
-  chunk_ids: vec ChunkId;
-  sha256: opt blob;
+    key: Key;
+    content_encoding: text;
+    chunk_ids: vec ChunkId;
+    sha256: opt blob;
 };
 
-// Remove content for an asset, by content encoding
+    // Remove content for an asset, by content encoding
 type UnsetAssetContentArguments = record {
-  key: Key;
-  content_encoding: text;
+    key: Key;
+    content_encoding: text;
 };
 
-// Delete an asset
+    // Delete an asset
 type DeleteAssetArguments = record {
-  key: Key;
+    key: Key;
 };
 
-// Reset everything
+    // Reset everything
 type ClearArguments = record {};
 
 type BatchOperationKind = variant {
-  CreateAsset: CreateAssetArguments;
-  SetAssetContent: SetAssetContentArguments;
+    CreateAsset: CreateAssetArguments;
+    SetAssetContent: SetAssetContentArguments;
 
-  UnsetAssetContent: UnsetAssetContentArguments;
-  DeleteAsset: DeleteAssetArguments;
+    UnsetAssetContent: UnsetAssetContentArguments;
+    DeleteAsset: DeleteAssetArguments;
 
-  Clear: ClearArguments;
+    Clear: ClearArguments;
 };
 
-type HeaderField = record { text; text; };
+type HeaderField = record {
+    text;
+    text;
+};
 
 type HttpRequest = record {
-  method: text;
-  url: text;
-  headers: vec HeaderField;
-  body: blob;
+    method: text;
+    url: text;
+    headers: vec HeaderField;
+    body: blob;
 };
 
 type HttpResponse = record {
-  status_code: nat16;
-  headers: vec HeaderField;
-  body: blob;
-  streaming_strategy: opt StreamingStrategy;
+    status_code: nat16;
+    headers: vec HeaderField;
+    body: blob;
+    streaming_strategy: opt StreamingStrategy;
 };
 
 type StreamingCallbackHttpResponse = record {
-  body: blob;
-  token: opt StreamingCallbackToken;
+    body: blob;
+    token: opt StreamingCallbackToken;
 };
 
 type StreamingCallbackToken = record {
-  key: Key;
-  content_encoding: text;
-  index: nat;
-  sha256: opt blob;
-};
-
-type StreamingStrategy = variant {
-  Callback: record {
-    callback: func (StreamingCallbackToken) -> (opt StreamingCallbackHttpResponse) query;
-    token: StreamingCallbackToken;
-  };
-};
-
-service: {
-
-  get: (record {
-    key: Key;
-    accept_encodings: vec text;
-  }) -> (record {
-    content: blob; // may be the entirety of the content, or just chunk index 0
-    content_type: text;
-    content_encoding: text;
-    sha256: opt blob; // sha256 of entire asset encoding, calculated by dfx and passed in SetAssetContentArguments
-    total_length: nat; // all chunks except last have size == content.size()
-  }) query;
-
-  // if get() returned chunks > 1, call this to retrieve them.
-  // chunks may or may not be split up at the same boundaries as presented to create_chunk().
-  get_chunk: (record {
     key: Key;
     content_encoding: text;
     index: nat;
-    sha256: opt blob;  // sha256 of entire asset encoding, calculated by dfx and passed in SetAssetContentArguments
-  }) -> (record { content: blob }) query;
+    sha256: opt blob;
+};
 
-  list : (record {}) -> (vec record {
-    key: Key;
-    content_type: text;
-    encodings: vec record {
-      content_encoding: text;
-      sha256: opt blob; // sha256 of entire asset encoding, calculated by dfx and passed in SetAssetContentArguments
-      length: nat; // Size of this encoding's blob. Calculated when uploading assets.
-      modified: Time;
+type StreamingStrategy = variant {
+    Callback: record {
+        callback: func (StreamingCallbackToken) -> (opt StreamingCallbackHttpResponse) query;
+        token: StreamingCallbackToken;
     };
-  }) query;
+};
 
-  create_batch : (record {}) -> (record { batch_id: BatchId });
+service : {
 
-  create_chunk: (record { batch_id: BatchId; content: blob }) -> (record { chunk_id: ChunkId });
+    get: (record {
+        key: Key;
+        accept_encodings: vec text;
+    }) -> (record {
+        content: blob; // may be the entirety of the content, or just chunk index 0
+        content_type: text;
+        content_encoding: text;
+        sha256: opt blob; // sha256 of entire asset encoding, calculated by dfx and passed in SetAssetContentArguments
+        total_length: nat; // all chunks except last have size == content.size()
+    }) query;
 
-  // Perform all operations successfully, or reject
-  commit_batch: (record { batch_id: BatchId; operations: vec BatchOperationKind }) -> ();
+    // if get() returned chunks > 1, call this to retrieve them.
+    // chunks may or may not be split up at the same boundaries as presented to create_chunk().
+    get_chunk: (record {
+        key: Key;
+        content_encoding: text;
+        index: nat;
+        sha256: opt blob;  // sha256 of entire asset encoding, calculated by dfx and passed in SetAssetContentArguments
+    }) -> (record {
+        content: blob
+    }) query;
 
-  create_asset: (CreateAssetArguments) -> ();
-  set_asset_content: (SetAssetContentArguments) -> ();
-  unset_asset_content: (UnsetAssetContentArguments) -> ();
+    list : (record {}) -> (vec record {
+        key: Key;
+        content_type: text;
+        encodings: vec record {
+            content_encoding: text;
+            sha256: opt blob; // sha256 of entire asset encoding, calculated by dfx and passed in SetAssetContentArguments
+            length: nat; // Size of this encoding's blob. Calculated when uploading assets.
+            modified: Time;
+        };
+    }) query;
 
-  delete_asset: (DeleteAssetArguments) -> ();
+    create_batch : (record {}) -> (record {
+        batch_id: BatchId
+    });
 
-  clear: (ClearArguments) -> ();
+    create_chunk: (record {
+        batch_id: BatchId;
+        content: blob
+    }) -> (record {
+        chunk_id: ChunkId
+    });
 
-  // Single call to create an asset with content for a single content encoding that
-  // fits within the message ingress limit.
-  store: (record {
-    key: Key;
-    content_type: text;
-    content_encoding: text;
-    content: blob;
-    sha256: opt blob
-  }) -> ();
+    // Perform all operations successfully, or reject
+    commit_batch: (record {
+        batch_id: BatchId;
+        operations: vec BatchOperationKind
+    }) -> ();
 
-  http_request: (request: HttpRequest) -> (HttpResponse) query;
-  http_request_streaming_callback: (token: StreamingCallbackToken) -> (opt StreamingCallbackHttpResponse) query;
+    create_asset: (CreateAssetArguments) -> ();
+    set_asset_content: (SetAssetContentArguments) -> ();
+    unset_asset_content: (UnsetAssetContentArguments) -> ();
 
-  authorize: (principal) -> ();
+    delete_asset: (DeleteAssetArguments) -> ();
+
+    clear: (ClearArguments) -> ();
+
+    // Single call to create an asset with content for a single content encoding that
+    // fits within the message ingress limit.
+    store: (record {
+        key: Key;
+        content_type: text;
+        content_encoding: text;
+        content: blob;
+        sha256: opt blob
+    }) -> ();
+
+    http_request: (request: HttpRequest) -> (HttpResponse) query;
+    http_request_streaming_callback: (token: StreamingCallbackToken) -> (opt StreamingCallbackHttpResponse) query;
+
+    authorize: (principal) -> ();
 }

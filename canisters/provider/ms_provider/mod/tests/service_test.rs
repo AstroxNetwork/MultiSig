@@ -2,7 +2,7 @@ use std::collections::BTreeMap;
 
 use async_trait::async_trait;
 use ego_lib::ego_store::TEgoStore;
-use ego_types::app::{App, AppId, Canister, CanisterType, EgoError, QueryParam, UserApp, Version, WalletApp};
+use ego_types::app::{App, AppId, Canister, CanisterType, Category, EgoError, UserApp, Version};
 use ic_cdk::export::Principal;
 use mockall::mock;
 
@@ -16,9 +16,9 @@ mock! {
 
   #[async_trait]
   impl TEgoStore for Store {
-    async fn wallet_main_new(&self, user_id: Principal) -> Result<WalletApp, EgoError>;
+    async fn wallet_main_new(&self, user_id: Principal) -> Result<UserApp, EgoError>;
 
-    async fn app_main_list(&self, query_param: QueryParam) -> Result<Vec<App>, EgoError>;
+    async fn app_main_list(&self) -> Result<Vec<App>, EgoError>;
     async fn app_main_get(&self, app_id: AppId) -> Result<App, EgoError>;
 
     async fn wallet_app_install(&self, app_id: AppId) -> Result<UserApp, EgoError>;
@@ -125,18 +125,31 @@ async fn controller_main_create() {
 
 
   store.expect_wallet_main_new().returning(move |_| {
-    let user_app = WalletApp {
+    let app = App {
       app_id: APP_NAME.to_string(),
+      name: "".to_string(),
+      category: Category::System,
+      logo: "".to_string(),
+      description: "".to_string(),
       current_version: Version {
         major: 1,
         minor: 0,
         patch: 0,
       },
-      frontend: None,
-      backend: Some(Canister {
+      price: 0.0,
+    };
+
+    let user_app = UserApp {
+      app,
+      canister: Canister {
         canister_id: provider2_principal,
         canister_type: CanisterType::BACKEND,
-      }),
+      },
+      latest_version: Version {
+        major: 1,
+        minor: 0,
+        patch: 1,
+      },
     };
 
     Ok(user_app)

@@ -17,7 +17,9 @@
       "type": "ephemeral"
     },
     "mainnet": {
-      "providers": ["https://identity.ic0.app"],
+      "providers": [
+        "https://identity.ic0.app"
+      ],
       "type": "persistent"
     }
   },

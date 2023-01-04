@@ -1,20 +1,20 @@
+use std::cell::RefCell;
 use std::collections::HashMap;
 
+use ego_macros::{inject_app_info, inject_ego_data};
 use ic_btc_types::{MillisatoshiPerByte, Network, Utxo};
 use ic_cdk::export::candid::{CandidType, Deserialize};
 use itertools::Itertools;
 use serde::Serialize;
-use std::cell::RefCell;
+
 use tecdsa_signer::service::SignerService;
 
 use crate::{bitcoin_api, bitcoin_wallet};
 use crate::bitcoin_wallet::public_key_to_p2pkh_address;
 use crate::types::{EgoBtcError, GetAddressResponse, SendResponse, UserBalanceResponse};
 
-
-use ego_macros::{inject_canister_all};
-
-inject_canister_all!();
+inject_ego_data!();
+inject_app_info!();
 
 /********************  methods for canister_registry_macro   ********************/
 fn on_canister_added(name: &str, canister_id: Principal) {

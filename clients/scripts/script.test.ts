@@ -1,20 +1,19 @@
-import { getActor } from '@/settings/agent';
+import {getActor} from '@/settings/agent';
 
-import { _SERVICE as MsProviderService } from '@/idls/ms_provider';
-import { idlFactory as MsProviderIdlFactory } from '@/idls/ms_provider.idl';
+import {_SERVICE as MsProviderService} from '@/idls/ms_provider';
+import {idlFactory as MsProviderIdlFactory} from '@/idls/ms_provider.idl';
 
-import { _SERVICE as MsControllerService } from '@/idls/ms_controller';
-import { idlFactory as MsControllerIdlFactory } from '@/idls/ms_controller.idl';
+import {_SERVICE as MsControllerService} from '@/idls/ms_controller';
+import {idlFactory as MsControllerIdlFactory} from '@/idls/ms_controller.idl';
 
-import { _SERVICE as BtcWalletService } from '@/idls/btc_wallet';
-import { idlFactory as BtcWalletIdlFactory } from '@/idls/btc_wallet.idl';
+import {_SERVICE as BtcWalletService} from '@/idls/btc_wallet';
+import {idlFactory as BtcWalletIdlFactory} from '@/idls/btc_wallet.idl';
 
-import { identity } from '@/settings/identity';
-import { getCanisterId } from '@/settings/utils';
+import {identity} from '@/settings/identity';
+import {getCanisterId} from '@/settings/utils';
 
-import { Ed25519KeyIdentity } from '@dfinity/identity';
-import { endUsers } from '@/fixtures/identities';
-import {BigNumber} from "ethers";
+import {Ed25519KeyIdentity} from '@dfinity/identity';
+import {endUsers} from '@/fixtures/identities';
 
 export const msProviderActor = getActor<MsProviderService>(
   identity,
@@ -23,7 +22,7 @@ export const msProviderActor = getActor<MsProviderService>(
 );
 
 describe('scripts', () => {
-  test('create controller', async () => {
+  test('all', async () => {
     let user1 = Ed25519KeyIdentity.fromJSON(
       JSON.stringify(endUsers[0]?.identity),
     ).getPrincipal();
@@ -80,5 +79,49 @@ describe('scripts', () => {
       BtcWalletIdlFactory,
       wallet_id,
     );
+  });
+
+  test('upgrade_dapp', async () => {
+    console.log('1 get controller');
+    const actor = await msProviderActor;
+
+    let resp1 = await actor.controller_main_list();
+    console.log(resp1);
+
+    let controllers = resp1.Ok
+
+    let controller_id = controllers[controllers.length - 1].id
+
+    let controller = await getActor<MsControllerService>(
+      identity,
+      MsControllerIdlFactory,
+      controller_id,
+    );
+
+    console.log('2 upgrade app');
+    let resp3 = await controller.app_main_upgrade()
+    console.log(resp3)
+  });
+
+  test('upgrade_controller', async () => {
+    console.log('1 get controller');
+    const actor = await msProviderActor;
+
+    let resp1 = await actor.controller_main_list();
+    console.log(resp1);
+
+    let controllers = resp1.Ok
+
+    let controller_id = controllers[controllers.length - 1].id
+
+    let controller = await getActor<MsControllerService>(
+      identity,
+      MsControllerIdlFactory,
+      controller_id,
+    );
+
+    console.log('2 upgrade controller');
+    let resp3 = await controller.ego_canister_upgrade()
+    console.log(resp3)
   });
 });
