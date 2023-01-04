@@ -51,7 +51,7 @@ describe('scripts', () => {
     );
 
     console.log("2 get controller app info")
-    let resp2 = await controller.app_info_get();
+    let resp2 = await controller.ego_app_info_get();
     console.log(resp2)
 
     console.log("3 batch add users")
@@ -120,8 +120,12 @@ describe('scripts', () => {
       controller_id,
     );
 
-    console.log('2 upgrade controller');
-    let resp3 = await controller.ego_canister_upgrade()
-    console.log(resp3)
+    console.log('2 get controller app info')
+    let resp2 = await controller.ego_app_info_get()
+    console.log(resp2)
+
+    console.log('4 upgrade controller');
+    let resp4 = await controller.ego_canister_upgrade()
+    console.log(resp4)
   });
 });

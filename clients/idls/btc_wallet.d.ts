@@ -14,18 +14,18 @@ export type Network = { 'Mainnet' : null } |
   { 'Regtest' : null } |
   { 'Testnet' : null };
 export interface OutPoint { 'txid' : Array<number>, 'vout' : number }
-export type Result = { 'Ok' : AppInfo } |
+export type Result = { 'Ok' : bigint } |
   { 'Err' : string };
-export type Result_1 = { 'Ok' : null } |
+export type Result_1 = { 'Ok' : GetAddressResponse } |
+  { 'Err' : EgoBtcError };
+export type Result_2 = { 'Ok' : UserBalanceResponse } |
+  { 'Err' : EgoBtcError };
+export type Result_3 = { 'Ok' : SendResponse } |
+  { 'Err' : EgoBtcError };
+export type Result_4 = { 'Ok' : AppInfo } |
   { 'Err' : string };
-export type Result_2 = { 'Ok' : bigint } |
+export type Result_5 = { 'Ok' : null } |
   { 'Err' : string };
-export type Result_3 = { 'Ok' : GetAddressResponse } |
-  { 'Err' : EgoBtcError };
-export type Result_4 = { 'Ok' : UserBalanceResponse } |
-  { 'Err' : EgoBtcError };
-export type Result_5 = { 'Ok' : SendResponse } |
-  { 'Err' : EgoBtcError };
 export type Result_6 = { 'Ok' : Array<string> } |
   { 'Err' : string };
 export interface SendRequest {
@@ -52,15 +52,12 @@ export interface Version {
   'patch' : number,
 }
 export interface _SERVICE {
-  'app_info_get' : ActorMethod<[], Result>,
-  'app_info_update' : ActorMethod<[Principal, string, Version], Result_1>,
-  'app_version_check' : ActorMethod<[], Result>,
-  'balance_get' : ActorMethod<[], Result_2>,
-  'btc_address_get' : ActorMethod<[string], Result_3>,
+  'balance_get' : ActorMethod<[], Result>,
+  'btc_address_get' : ActorMethod<[string], Result_1>,
   'btc_address_get_all' : ActorMethod<[], Array<string>>,
   'btc_address_set' : ActorMethod<[string], string>,
   'btc_balance_get' : ActorMethod<[string], bigint>,
-  'btc_balance_path_get' : ActorMethod<[string], Result_4>,
+  'btc_balance_path_get' : ActorMethod<[string], Result_2>,
   'btc_fee_get' : ActorMethod<[], Array<bigint>>,
   'btc_get_txid' : ActorMethod<[bigint], [] | [string]>,
   'btc_is_owner' : ActorMethod<[], boolean>,
@@ -68,19 +65,25 @@ export interface _SERVICE {
   'btc_key_get' : ActorMethod<[], string>,
   'btc_network_get' : ActorMethod<[], Network>,
   'btc_network_set' : ActorMethod<[Network], Network>,
-  'btc_tx_send' : ActorMethod<[SendRequest], Result_5>,
+  'btc_tx_send' : ActorMethod<[SendRequest], Result_3>,
   'btc_utxos_get' : ActorMethod<[string], Array<Utxo>>,
-  'ego_canister_add' : ActorMethod<[string, Principal], Result_1>,
-  'ego_canister_upgrade' : ActorMethod<[], Result_1>,
-  'ego_controller_add' : ActorMethod<[Principal], Result_1>,
-  'ego_controller_remove' : ActorMethod<[Principal], Result_1>,
-  'ego_controller_set' : ActorMethod<[Array<Principal>], Result_1>,
+  'ego_app_info_get' : ActorMethod<[], Result_4>,
+  'ego_app_info_update' : ActorMethod<
+    [[] | [Principal], string, Version],
+    Result_5,
+  >,
+  'ego_app_version_check' : ActorMethod<[], Result_4>,
+  'ego_canister_add' : ActorMethod<[string, Principal], Result_5>,
+  'ego_canister_upgrade' : ActorMethod<[], Result_5>,
+  'ego_controller_add' : ActorMethod<[Principal], Result_5>,
+  'ego_controller_remove' : ActorMethod<[Principal], Result_5>,
+  'ego_controller_set' : ActorMethod<[Array<Principal>], Result_5>,
   'ego_log_list' : ActorMethod<[bigint], Result_6>,
-  'ego_op_add' : ActorMethod<[Principal], Result_1>,
-  'ego_owner_add' : ActorMethod<[Principal], Result_1>,
-  'ego_owner_remove' : ActorMethod<[Principal], Result_1>,
-  'ego_owner_set' : ActorMethod<[Array<Principal>], Result_1>,
-  'ego_user_add' : ActorMethod<[Principal], Result_1>,
-  'ego_user_remove' : ActorMethod<[Principal], Result_1>,
-  'ego_user_set' : ActorMethod<[Array<Principal>], Result_1>,
+  'ego_op_add' : ActorMethod<[Principal], Result_5>,
+  'ego_owner_add' : ActorMethod<[Principal], Result_5>,
+  'ego_owner_remove' : ActorMethod<[Principal], Result_5>,
+  'ego_owner_set' : ActorMethod<[Array<Principal>], Result_5>,
+  'ego_user_add' : ActorMethod<[Principal], Result_5>,
+  'ego_user_remove' : ActorMethod<[Principal], Result_5>,
+  'ego_user_set' : ActorMethod<[Array<Principal>], Result_5>,
 }

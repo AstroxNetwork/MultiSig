@@ -24,8 +24,8 @@ mock! {
     async fn app_main_get(&self, app_id: AppId) -> Result<App, EgoError>;
 
     async fn wallet_app_install(&self, app_id: AppId) -> Result<UserApp, EgoError>;
-    async fn wallet_app_upgrade(&self, app_id: AppId) -> Result<UserApp, EgoError>;
-    async fn wallet_app_remove(&self, app_id: AppId) -> Result<(), EgoError>;
+    fn wallet_app_upgrade(&self, wallet_id: Principal);
+    fn wallet_app_remove(&self, wallet_id: Principal);
     async fn wallet_app_list(&self) -> Result<Vec<UserApp>, EgoError>;
   }
 }
@@ -63,9 +63,12 @@ mock! {
     async fn balance_get(&self, target_canister_id: Principal) -> Result<u128, String>;
 
     // app info
-    fn app_info_update(&self, target_canister_id: Principal, wallet_id: Principal, app_id: AppId, version: Version);
-    async fn app_info_get(&self, target_canister_id: Principal) -> Result<AppInfo, String>;
-    async fn app_version_check(&self, target_canister_id: Principal) -> Result<App, String>;
+    fn ego_app_info_update(&self, target_canister_id: Principal, wallet_id: Option<Principal>, app_id: AppId, version: Version);
+    async fn ego_app_info_get(&self, target_canister_id: Principal) -> Result<AppInfo, String>;
+    async fn ego_app_version_check(&self, target_canister_id: Principal) -> Result<App, String>;
+
+    // canister upgrade
+    fn ego_canister_upgrade(&self, target_canister_id: Principal);
   }
 }
 

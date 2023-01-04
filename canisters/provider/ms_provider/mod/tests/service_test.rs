@@ -22,8 +22,8 @@ mock! {
     async fn app_main_get(&self, app_id: AppId) -> Result<App, EgoError>;
 
     async fn wallet_app_install(&self, app_id: AppId) -> Result<UserApp, EgoError>;
-    async fn wallet_app_upgrade(&self, app_id: AppId) -> Result<UserApp, EgoError>;
-    async fn wallet_app_remove(&self, app_id: AppId) -> Result<(), EgoError>;
+    fn wallet_app_upgrade(&self, wallet_id: Principal);
+    fn wallet_app_remove(&self, wallet_id: Principal);
     async fn wallet_app_list(&self) -> Result<Vec<UserApp>, EgoError>;
   }
 }

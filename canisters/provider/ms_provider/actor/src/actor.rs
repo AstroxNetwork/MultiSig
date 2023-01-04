@@ -14,7 +14,7 @@ use serde::Serialize;
 use ms_provider_mod::model::{Controller, Provider};
 use ms_provider_mod::ms_controller::MsController;
 use ms_provider_mod::service::Service;
-use ms_provider_mod::state::{app_info_post_upgrade, app_info_pre_upgrade, canister_add, canister_get_one, is_op, is_owner, is_user, log_add, log_list, op_add, owner_add, owner_remove, owners_set, registry_post_upgrade, registry_pre_upgrade, user_add, user_remove, users_post_upgrade, users_pre_upgrade, users_set};
+use ms_provider_mod::state::{app_info_post_upgrade, app_info_pre_upgrade, canister_add, canister_get_one, is_op, is_owner, is_user, log_add, log_list, op_add, owner_add, owner_remove, owners_set, registry_post_upgrade, registry_pre_upgrade, user_add, user_remove, users_post_upgrade, users_pre_upgrade, users_set, app_info_get, app_info_update};
 use ms_provider_mod::state::PROVIDER;
 use ms_provider_mod::types::{ControllerMainCreateRequest, Errors, SystemErr};
 

@@ -34,15 +34,15 @@ export type Result_1 = { 'Ok' : Action } |
   { 'Err' : SystemErr };
 export type Result_2 = { 'Ok' : Array<Action> } |
   { 'Err' : SystemErr };
-export type Result_3 = { 'Ok' : AppInfo } |
-  { 'Err' : string };
-export type Result_4 = { 'Ok' : null } |
-  { 'Err' : string };
-export type Result_5 = { 'Ok' : null } |
+export type Result_3 = { 'Ok' : null } |
   { 'Err' : SystemErr };
-export type Result_6 = { 'Ok' : [] | [Principal] } |
+export type Result_4 = { 'Ok' : [] | [Principal] } |
   { 'Err' : SystemErr };
-export type Result_7 = { 'Ok' : bigint } |
+export type Result_5 = { 'Ok' : bigint } |
+  { 'Err' : string };
+export type Result_6 = { 'Ok' : AppInfo } |
+  { 'Err' : string };
+export type Result_7 = { 'Ok' : null } |
   { 'Err' : string };
 export type Result_8 = { 'Ok' : Array<string> } |
   { 'Err' : string };
@@ -60,28 +60,31 @@ export interface _SERVICE {
   'app_action_create' : ActorMethod<[AppActionCreateRequest], Result_1>,
   'app_action_get' : ActorMethod<[bigint], Result_1>,
   'app_action_list' : ActorMethod<[], Result_2>,
-  'app_info_get' : ActorMethod<[], Result_3>,
-  'app_info_update' : ActorMethod<[Principal, string, Version], Result_4>,
-  'app_main_create' : ActorMethod<[], Result_5>,
-  'app_main_get' : ActorMethod<[], Result_6>,
-  'app_main_upgrade' : ActorMethod<[], Result_5>,
-  'app_version_check' : ActorMethod<[], Result_3>,
-  'balance_get' : ActorMethod<[], Result_7>,
-  'batch_user_add' : ActorMethod<[Array<[Principal, string]>], Result_5>,
+  'app_main_create' : ActorMethod<[], Result_3>,
+  'app_main_get' : ActorMethod<[], Result_4>,
+  'app_main_upgrade' : ActorMethod<[], Result_3>,
+  'balance_get' : ActorMethod<[], Result_5>,
+  'batch_user_add' : ActorMethod<[Array<[Principal, string]>], Result_3>,
   'controller_init' : ActorMethod<[number, number], undefined>,
-  'ego_canister_add' : ActorMethod<[string, Principal], Result_4>,
-  'ego_canister_upgrade' : ActorMethod<[], Result_4>,
-  'ego_controller_add' : ActorMethod<[Principal], Result_4>,
-  'ego_controller_remove' : ActorMethod<[Principal], Result_4>,
-  'ego_controller_set' : ActorMethod<[Array<Principal>], Result_4>,
+  'ego_app_info_get' : ActorMethod<[], Result_6>,
+  'ego_app_info_update' : ActorMethod<
+    [[] | [Principal], string, Version],
+    Result_7,
+  >,
+  'ego_app_version_check' : ActorMethod<[], Result_6>,
+  'ego_canister_add' : ActorMethod<[string, Principal], Result_7>,
+  'ego_canister_upgrade' : ActorMethod<[], Result_7>,
+  'ego_controller_add' : ActorMethod<[Principal], Result_7>,
+  'ego_controller_remove' : ActorMethod<[Principal], Result_7>,
+  'ego_controller_set' : ActorMethod<[Array<Principal>], Result_7>,
   'ego_log_list' : ActorMethod<[bigint], Result_8>,
-  'ego_op_add' : ActorMethod<[Principal], Result_4>,
-  'ego_owner_add' : ActorMethod<[Principal], Result_4>,
-  'ego_owner_remove' : ActorMethod<[Principal], Result_4>,
-  'ego_owner_set' : ActorMethod<[Array<Principal>], Result_4>,
-  'ego_user_add' : ActorMethod<[Principal], Result_4>,
-  'ego_user_remove' : ActorMethod<[Principal], Result_4>,
-  'ego_user_set' : ActorMethod<[Array<Principal>], Result_4>,
+  'ego_op_add' : ActorMethod<[Principal], Result_7>,
+  'ego_owner_add' : ActorMethod<[Principal], Result_7>,
+  'ego_owner_remove' : ActorMethod<[Principal], Result_7>,
+  'ego_owner_set' : ActorMethod<[Array<Principal>], Result_7>,
+  'ego_user_add' : ActorMethod<[Principal], Result_7>,
+  'ego_user_remove' : ActorMethod<[Principal], Result_7>,
+  'ego_user_set' : ActorMethod<[Array<Principal>], Result_7>,
   'role_user_list' : ActorMethod<[], Result_9>,
-  'role_user_remove' : ActorMethod<[Principal], Result_5>,
+  'role_user_remove' : ActorMethod<[Principal], Result_3>,
 }

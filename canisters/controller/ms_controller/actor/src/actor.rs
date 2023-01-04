@@ -16,7 +16,7 @@ use ms_controller_mod::app_wallet::AppWallet;
 use ms_controller_mod::ego_lib::ego_canister::EgoCanister;
 use ms_controller_mod::model::{Action, Controller, Sign};
 use ms_controller_mod::service::Service;
-use ms_controller_mod::state::{app_info_post_upgrade, app_info_pre_upgrade, canister_add, canister_get_one, is_op, is_owner, is_user, log_add, log_list, op_add, owner_add, owner_remove, owners_set, registry_post_upgrade, registry_pre_upgrade, user_add, user_add_with_name, user_remove, users, users_post_upgrade, users_pre_upgrade, users_set};
+use ms_controller_mod::state::{app_info_post_upgrade, app_info_pre_upgrade, app_info_get, app_info_update, canister_add, canister_get_one, is_op, is_owner, is_user, log_add, log_list, op_add, owner_add, owner_remove, owners_set, registry_post_upgrade, registry_pre_upgrade, user_add, user_add_with_name, user_remove, users, users_post_upgrade, users_pre_upgrade, users_set};
 use ms_controller_mod::state::CONTROLLER;
 use ms_controller_mod::types::{AppActionCreateRequest, Errors, SystemErr};
 use ms_controller_mod::types::Errors::TooManyUser;
