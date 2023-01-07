@@ -79,6 +79,7 @@ export const idlFactory = ({ IDL }) => {
       ),
     'ego_app_version_check' : IDL.Func([], [Result_4], []),
     'ego_canister_add' : IDL.Func([IDL.Text, IDL.Principal], [Result_5], []),
+    'ego_canister_remove' : IDL.Func([], [Result_5], []),
     'ego_canister_upgrade' : IDL.Func([], [Result_5], []),
     'ego_controller_add' : IDL.Func([IDL.Principal], [Result_5], []),
     'ego_controller_remove' : IDL.Func([IDL.Principal], [Result_5], []),

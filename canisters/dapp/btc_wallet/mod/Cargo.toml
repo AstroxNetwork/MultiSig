@@ -27,9 +27,6 @@ bs58 = "0.4.0"
 serde_json = "1.0"
 tecdsa_signer = { path = "../../../helpers/tecdsa_signer" }
 itertools = "0.10.5"
-ego_lib = "0.3.3"
-ego_macros = "0.1.4"
-ego_types = "0.1.2"
 arrayvec = "0.7.1"
 derive_more = "0.99.1"
 ethabi = "17.0.0"
@@ -45,6 +42,14 @@ rlp = "0.5"
 tiny-keccak = { version = "2.0.1", features = ["keccak"] }
 pin-project = "1.0"
 getrandom= {version ="0.2.8", features= ["js"]}
+
+ego_lib = "0.3.4"
+ego_macros = "0.1.5"
+ego_types = "0.1.2"
+
+#ego_lib = {path="../../../../../ego/ego/lib/ego_lib"}
+#ego_macros = {path="../../../../../ego/ego/lib/ego_macros"}
+#ego_types = {path="../../../../../ego/ego/lib/ego_types"}
 
 [features]
 file_memory = []

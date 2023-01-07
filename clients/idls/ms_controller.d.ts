@@ -16,6 +16,15 @@ export type ActionStatus = { 'INIT' : null } |
   { 'SUCCESS' : null } |
   { 'TIMEOUT' : null } |
   { 'SINGING' : null };
+export interface App {
+  'logo' : string,
+  'name' : string,
+  'description' : string,
+  'app_id' : string,
+  'category' : Category,
+  'current_version' : Version,
+  'price' : number,
+}
 export interface AppActionCreateRequest {
   'path' : string,
   'to_address' : string,
@@ -28,9 +37,19 @@ export interface AppInfo {
   'latest_version' : Version,
   'wallet_id' : [] | [Principal],
 }
+export interface Canister {
+  'canister_id' : Principal,
+  'canister_type' : CanisterType,
+}
+export type CanisterType = { 'BACKEND' : null } |
+  { 'ASSET' : null };
+export type Category = { 'System' : null } |
+  { 'Vault' : null };
 export type Result = { 'Ok' : Sign } |
   { 'Err' : SystemErr };
 export type Result_1 = { 'Ok' : Action } |
+  { 'Err' : SystemErr };
+export type Result_10 = { 'Ok' : Array<UserApp> } |
   { 'Err' : SystemErr };
 export type Result_2 = { 'Ok' : Array<Action> } |
   { 'Err' : SystemErr };
@@ -50,6 +69,11 @@ export type Result_9 = { 'Ok' : Array<[Principal, string]> } |
   { 'Err' : SystemErr };
 export interface Sign { 'sign_at' : bigint, 'user_id' : Principal }
 export interface SystemErr { 'msg' : string, 'code' : number }
+export interface UserApp {
+  'app' : App,
+  'canister' : Canister,
+  'latest_version' : Version,
+}
 export interface Version {
   'major' : number,
   'minor' : number,
@@ -73,6 +97,7 @@ export interface _SERVICE {
   >,
   'ego_app_version_check' : ActorMethod<[], Result_6>,
   'ego_canister_add' : ActorMethod<[string, Principal], Result_7>,
+  'ego_canister_remove' : ActorMethod<[], Result_7>,
   'ego_canister_upgrade' : ActorMethod<[], Result_7>,
   'ego_controller_add' : ActorMethod<[Principal], Result_7>,
   'ego_controller_remove' : ActorMethod<[Principal], Result_7>,
@@ -87,4 +112,5 @@ export interface _SERVICE {
   'ego_user_set' : ActorMethod<[Array<Principal>], Result_7>,
   'role_user_list' : ActorMethod<[], Result_9>,
   'role_user_remove' : ActorMethod<[Principal], Result_3>,
+  'wallet_app_list' : ActorMethod<[], Result_10>,
 }

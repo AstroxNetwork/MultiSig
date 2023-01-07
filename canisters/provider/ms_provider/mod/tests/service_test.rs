@@ -2,6 +2,7 @@ use std::collections::BTreeMap;
 
 use async_trait::async_trait;
 use ego_lib::ego_store::TEgoStore;
+use ego_lib::inject_mock_ego_store;
 use ego_types::app::{App, AppId, Canister, CanisterType, Category, EgoError, UserApp, Version};
 use ic_cdk::export::Principal;
 use mockall::mock;
@@ -11,22 +12,7 @@ use ms_provider_mod::ms_controller::TMsController;
 use ms_provider_mod::service::Service;
 use ms_provider_mod::state::PROVIDER;
 
-mock! {
-  Store {}
-
-  #[async_trait]
-  impl TEgoStore for Store {
-    async fn wallet_main_new(&self, user_id: Principal) -> Result<UserApp, EgoError>;
-
-    async fn app_main_list(&self) -> Result<Vec<App>, EgoError>;
-    async fn app_main_get(&self, app_id: AppId) -> Result<App, EgoError>;
-
-    async fn wallet_app_install(&self, app_id: AppId) -> Result<UserApp, EgoError>;
-    fn wallet_app_upgrade(&self, wallet_id: Principal);
-    fn wallet_app_remove(&self, wallet_id: Principal);
-    async fn wallet_app_list(&self) -> Result<Vec<UserApp>, EgoError>;
-  }
-}
+inject_mock_ego_store!();
 
 mock! {
   Controller {}

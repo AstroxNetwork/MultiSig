@@ -51,6 +51,30 @@ export const idlFactory = ({ IDL }) => {
     'Ok' : IDL.Vec(IDL.Tuple(IDL.Principal, IDL.Text)),
     'Err' : SystemErr,
   });
+  const Category = IDL.Variant({ 'System' : IDL.Null, 'Vault' : IDL.Null });
+  const App = IDL.Record({
+    'logo' : IDL.Text,
+    'name' : IDL.Text,
+    'description' : IDL.Text,
+    'app_id' : IDL.Text,
+    'category' : Category,
+    'current_version' : Version,
+    'price' : IDL.Float32,
+  });
+  const CanisterType = IDL.Variant({
+    'BACKEND' : IDL.Null,
+    'ASSET' : IDL.Null,
+  });
+  const Canister = IDL.Record({
+    'canister_id' : IDL.Principal,
+    'canister_type' : CanisterType,
+  });
+  const UserApp = IDL.Record({
+    'app' : App,
+    'canister' : Canister,
+    'latest_version' : Version,
+  });
+  const Result_10 = IDL.Variant({ 'Ok' : IDL.Vec(UserApp), 'Err' : SystemErr });
   return IDL.Service({
     'action_sign_create' : IDL.Func([IDL.Nat64], [Result], []),
     'app_action_create' : IDL.Func([AppActionCreateRequest], [Result_1], []),
@@ -74,6 +98,7 @@ export const idlFactory = ({ IDL }) => {
       ),
     'ego_app_version_check' : IDL.Func([], [Result_6], []),
     'ego_canister_add' : IDL.Func([IDL.Text, IDL.Principal], [Result_7], []),
+    'ego_canister_remove' : IDL.Func([], [Result_7], []),
     'ego_canister_upgrade' : IDL.Func([], [Result_7], []),
     'ego_controller_add' : IDL.Func([IDL.Principal], [Result_7], []),
     'ego_controller_remove' : IDL.Func([IDL.Principal], [Result_7], []),
@@ -88,6 +113,7 @@ export const idlFactory = ({ IDL }) => {
     'ego_user_set' : IDL.Func([IDL.Vec(IDL.Principal)], [Result_7], []),
     'role_user_list' : IDL.Func([], [Result_9], ['query']),
     'role_user_remove' : IDL.Func([IDL.Principal], [Result_3], []),
+    'wallet_app_list' : IDL.Func([], [Result_10], []),
   });
 };
 export const init = ({ IDL }) => { return []; };

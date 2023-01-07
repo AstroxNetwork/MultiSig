@@ -120,12 +120,13 @@ describe('scripts', () => {
       controller_id,
     );
 
-    console.log('2 get controller app info')
-    let resp2 = await controller.ego_app_info_get()
-    console.log(resp2)
+    console.log('2 wallet app list');
+    let resp2 = await controller.wallet_app_list();
+    let user_app = resp2.Ok[0]
+    console.log(user_app)
 
-    console.log('4 upgrade controller');
-    let resp4 = await controller.ego_canister_upgrade()
-    console.log(resp4)
+    // console.log('3 upgrade controller');
+    // let resp4 = await controller.ego_canister_upgrade()
+    // console.log(resp4)
   });
 });

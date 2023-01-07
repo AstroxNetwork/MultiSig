@@ -10,6 +10,15 @@ type Action = record {
   extended : vec record { text; text };
 };
 type ActionStatus = variant { INIT; SUCCESS; TIMEOUT; SINGING };
+type App = record {
+  logo : text;
+  name : text;
+  description : text;
+  app_id : text;
+  category : Category;
+  current_version : Version;
+  price : float32;
+};
 type AppActionCreateRequest = record {
   path : text;
   to_address : text;
@@ -22,8 +31,15 @@ type AppInfo = record {
   latest_version : Version;
   wallet_id : opt principal;
 };
+type Canister = record {
+  canister_id : principal;
+  canister_type : CanisterType;
+};
+type CanisterType = variant { BACKEND; ASSET };
+type Category = variant { System; Vault };
 type Result = variant { Ok : Sign; Err : SystemErr };
 type Result_1 = variant { Ok : Action; Err : SystemErr };
+type Result_10 = variant { Ok : vec UserApp; Err : SystemErr };
 type Result_2 = variant { Ok : vec Action; Err : SystemErr };
 type Result_3 = variant { Ok; Err : SystemErr };
 type Result_4 = variant { Ok : opt principal; Err : SystemErr };
@@ -37,6 +53,11 @@ type Result_9 = variant {
 };
 type Sign = record { sign_at : nat64; user_id : principal };
 type SystemErr = record { msg : text; code : nat16 };
+type UserApp = record {
+  app : App;
+  canister : Canister;
+  latest_version : Version;
+};
 type Version = record { major : nat32; minor : nat32; patch : nat32 };
 service : () -> {
   action_sign_create : (nat64) -> (Result);
@@ -53,6 +74,7 @@ service : () -> {
   ego_app_info_update : (opt principal, text, Version) -> (Result_7);
   ego_app_version_check : () -> (Result_6);
   ego_canister_add : (text, principal) -> (Result_7);
+  ego_canister_remove : () -> (Result_7);
   ego_canister_upgrade : () -> (Result_7);
   ego_controller_add : (principal) -> (Result_7);
   ego_controller_remove : (principal) -> (Result_7);
@@ -67,4 +89,5 @@ service : () -> {
   ego_user_set : (vec principal) -> (Result_7);
   role_user_list : () -> (Result_9) query;
   role_user_remove : (principal) -> (Result_3);
+  wallet_app_list : () -> (Result_10);
 }

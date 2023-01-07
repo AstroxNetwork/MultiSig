@@ -74,6 +74,7 @@ export interface _SERVICE {
   >,
   'ego_app_version_check' : ActorMethod<[], Result_4>,
   'ego_canister_add' : ActorMethod<[string, Principal], Result_5>,
+  'ego_canister_remove' : ActorMethod<[], Result_5>,
   'ego_canister_upgrade' : ActorMethod<[], Result_5>,
   'ego_controller_add' : ActorMethod<[Principal], Result_5>,
   'ego_controller_remove' : ActorMethod<[Principal], Result_5>,

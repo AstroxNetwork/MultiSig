@@ -50,6 +50,7 @@ service : () -> {
   ego_app_info_update : (opt principal, text, Version) -> (Result_5);
   ego_app_version_check : () -> (Result_4);
   ego_canister_add : (text, principal) -> (Result_5);
+  ego_canister_remove : () -> (Result_5);
   ego_canister_upgrade : () -> (Result_5);
   ego_controller_add : (principal) -> (Result_5);
   ego_controller_remove : (principal) -> (Result_5);

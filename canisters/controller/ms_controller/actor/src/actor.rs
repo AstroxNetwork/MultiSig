@@ -3,6 +3,7 @@ use std::collections::BTreeMap;
 use candid::candid_method;
 use ego_lib::ego_canister::TEgoCanister;
 use ego_macros::{inject_app_info_api, inject_ego_api};
+use ego_types::app::UserApp;
 use ego_types::registry::Registry;
 use ego_types::user::User;
 use ic_cdk::{api, caller, storage};
@@ -238,4 +239,23 @@ fn action_sign_create(action_id: u64) -> Result<Sign, SystemErr> {
       Service::action_sign_create(app_wallet, action_id, &user_id, time())
     }
   }
+}
+
+///
+/// get installed user app list
+///
+#[update(name = "wallet_app_list", guard = "owner_guard")]
+#[candid_method(update, rename = "wallet_app_list")]
+async fn wallet_app_list() -> Result<Vec<UserApp>, SystemErr> {
+  //
+  log_add("controller: wallet_app_list");
+  let ego_store_id = canister_get_one("ego_store").unwrap();
+  let ego_store = EgoStore::new(ego_store_id);
+
+  let result = match ego_store.wallet_app_list().await {
+    Ok(apps) => Ok(apps),
+    Err(e)  => {Err(SystemErr::from(e))}
+  }?;
+
+  Ok(result)
 }
