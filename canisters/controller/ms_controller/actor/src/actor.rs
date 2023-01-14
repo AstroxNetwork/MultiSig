@@ -2,7 +2,7 @@ use std::collections::BTreeMap;
 
 use candid::candid_method;
 use ego_lib::ego_canister::TEgoCanister;
-use ego_macros::{inject_app_info_api, inject_ego_api};
+use ego_macros::{inject_app_info_api, inject_cycle_info_api, inject_ego_api};
 use ego_types::app::UserApp;
 use ego_types::registry::Registry;
 use ego_types::user::User;
@@ -17,13 +17,14 @@ use ms_controller_mod::app_wallet::AppWallet;
 use ms_controller_mod::ego_lib::ego_canister::EgoCanister;
 use ms_controller_mod::model::{Action, Controller, Sign};
 use ms_controller_mod::service::Service;
-use ms_controller_mod::state::{app_info_post_upgrade, app_info_pre_upgrade, app_info_get, app_info_update, canister_add, canister_get_one, is_op, is_owner, is_user, log_add, log_list, op_add, owner_add, owner_remove, owners_set, registry_post_upgrade, registry_pre_upgrade, user_add, user_add_with_name, user_remove, users, users_post_upgrade, users_pre_upgrade, users_set};
+use ms_controller_mod::state::*;
 use ms_controller_mod::state::CONTROLLER;
 use ms_controller_mod::types::{AppActionCreateRequest, Errors, SystemErr};
 use ms_controller_mod::types::Errors::TooManyUser;
 
 inject_ego_api!();
 inject_app_info_api!();
+inject_cycle_info_api!();
 
 
 #[init]
@@ -42,6 +43,7 @@ struct PersistState {
   users: Option<User>,
   registry: Option<Registry>,
   app_info: Option<AppInfo>,
+  cycle_info: Option<CycleInfo>
 }
 
 #[pre_upgrade]
@@ -55,6 +57,7 @@ fn pre_upgrade() {
     users: Some(users_pre_upgrade()),
     registry: Some(registry_pre_upgrade()),
     app_info: Some(app_info_pre_upgrade()),
+    cycle_info: Some(cycle_info_pre_upgrade())
   };
 
   storage::stable_save((state, )).unwrap();
@@ -85,6 +88,13 @@ fn post_upgrade() {
     None => {}
     Some(app_info) => {
       app_info_post_upgrade(app_info);
+    }
+  }
+
+  match state.cycle_info {
+    None => {}
+    Some(cycle_info) => {
+      cycle_info_post_upgrade(cycle_info);
     }
   }
 }

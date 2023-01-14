@@ -7,6 +7,11 @@ export interface AppInfo {
   'latest_version' : Version,
   'wallet_id' : [] | [Principal],
 }
+export interface CycleInfo {
+  'records' : Array<CycleRecord>,
+  'estimate_remaining' : bigint,
+}
+export interface CycleRecord { 'ts' : bigint, 'balance' : bigint }
 export type EgoBtcError = { 'UnknownError' : string } |
   { 'AddressNotFound' : null };
 export interface GetAddressResponse { 'address' : string }
@@ -26,7 +31,11 @@ export type Result_4 = { 'Ok' : AppInfo } |
   { 'Err' : string };
 export type Result_5 = { 'Ok' : null } |
   { 'Err' : string };
-export type Result_6 = { 'Ok' : Array<string> } |
+export type Result_6 = { 'Ok' : Array<CycleRecord> } |
+  { 'Err' : string };
+export type Result_7 = { 'Ok' : CycleInfo } |
+  { 'Err' : string };
+export type Result_8 = { 'Ok' : Array<string> } |
   { 'Err' : string };
 export interface SendRequest {
   'request_id' : bigint,
@@ -79,7 +88,11 @@ export interface _SERVICE {
   'ego_controller_add' : ActorMethod<[Principal], Result_5>,
   'ego_controller_remove' : ActorMethod<[Principal], Result_5>,
   'ego_controller_set' : ActorMethod<[Array<Principal>], Result_5>,
-  'ego_log_list' : ActorMethod<[bigint], Result_6>,
+  'ego_cycle_check' : ActorMethod<[], Result_5>,
+  'ego_cycle_estimate_set' : ActorMethod<[bigint], Result_5>,
+  'ego_cycle_history' : ActorMethod<[], Result_6>,
+  'ego_cycle_info' : ActorMethod<[], Result_7>,
+  'ego_log_list' : ActorMethod<[bigint], Result_8>,
   'ego_op_add' : ActorMethod<[Principal], Result_5>,
   'ego_owner_add' : ActorMethod<[Principal], Result_5>,
   'ego_owner_remove' : ActorMethod<[Principal], Result_5>,

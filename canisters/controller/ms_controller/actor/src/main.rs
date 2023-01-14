@@ -13,6 +13,7 @@ fn main() {
   use std::collections::BTreeMap;
   use ego_types::app::{UserApp, AppId, Version};
   use ego_types::app_info::AppInfo;
+  use ego_types::cycle_info::*;
 
   candid::export_service!();
   std::print!("{}", __export_service());

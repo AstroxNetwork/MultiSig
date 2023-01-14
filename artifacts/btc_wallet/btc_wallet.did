@@ -4,6 +4,11 @@ type AppInfo = record {
   latest_version : Version;
   wallet_id : opt principal;
 };
+type CycleInfo = record {
+  records : vec CycleRecord;
+  estimate_remaining : nat64;
+};
+type CycleRecord = record { ts : nat64; balance : nat };
 type EgoBtcError = variant { UnknownError : text; AddressNotFound };
 type GetAddressResponse = record { address : text };
 type Network = variant { Mainnet; Regtest; Testnet };
@@ -14,7 +19,9 @@ type Result_2 = variant { Ok : UserBalanceResponse; Err : EgoBtcError };
 type Result_3 = variant { Ok : SendResponse; Err : EgoBtcError };
 type Result_4 = variant { Ok : AppInfo; Err : text };
 type Result_5 = variant { Ok; Err : text };
-type Result_6 = variant { Ok : vec text; Err : text };
+type Result_6 = variant { Ok : vec CycleRecord; Err : text };
+type Result_7 = variant { Ok : CycleInfo; Err : text };
+type Result_8 = variant { Ok : vec text; Err : text };
 type SendRequest = record {
   request_id : nat64;
   path : text;
@@ -55,7 +62,11 @@ service : () -> {
   ego_controller_add : (principal) -> (Result_5);
   ego_controller_remove : (principal) -> (Result_5);
   ego_controller_set : (vec principal) -> (Result_5);
-  ego_log_list : (nat64) -> (Result_6) query;
+  ego_cycle_check : () -> (Result_5);
+  ego_cycle_estimate_set : (nat64) -> (Result_5);
+  ego_cycle_history : () -> (Result_6) query;
+  ego_cycle_info : () -> (Result_7);
+  ego_log_list : (nat64) -> (Result_8) query;
   ego_op_add : (principal) -> (Result_5);
   ego_owner_add : (principal) -> (Result_5);
   ego_owner_remove : (principal) -> (Result_5);

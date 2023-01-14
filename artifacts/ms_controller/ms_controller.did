@@ -37,20 +37,27 @@ type Canister = record {
 };
 type CanisterType = variant { BACKEND; ASSET };
 type Category = variant { System; Vault };
+type CycleInfo = record {
+  records : vec CycleRecord;
+  estimate_remaining : nat64;
+};
+type CycleRecord = record { ts : nat64; balance : nat };
 type Result = variant { Ok : Sign; Err : SystemErr };
 type Result_1 = variant { Ok : Action; Err : SystemErr };
-type Result_10 = variant { Ok : vec UserApp; Err : SystemErr };
+type Result_10 = variant { Ok : vec text; Err : text };
+type Result_11 = variant {
+  Ok : vec record { principal; text };
+  Err : SystemErr;
+};
+type Result_12 = variant { Ok : vec UserApp; Err : SystemErr };
 type Result_2 = variant { Ok : vec Action; Err : SystemErr };
 type Result_3 = variant { Ok; Err : SystemErr };
 type Result_4 = variant { Ok : opt principal; Err : SystemErr };
 type Result_5 = variant { Ok : nat; Err : text };
 type Result_6 = variant { Ok : AppInfo; Err : text };
 type Result_7 = variant { Ok; Err : text };
-type Result_8 = variant { Ok : vec text; Err : text };
-type Result_9 = variant {
-  Ok : vec record { principal; text };
-  Err : SystemErr;
-};
+type Result_8 = variant { Ok : vec CycleRecord; Err : text };
+type Result_9 = variant { Ok : CycleInfo; Err : text };
 type Sign = record { sign_at : nat64; user_id : principal };
 type SystemErr = record { msg : text; code : nat16 };
 type UserApp = record {
@@ -79,7 +86,11 @@ service : () -> {
   ego_controller_add : (principal) -> (Result_7);
   ego_controller_remove : (principal) -> (Result_7);
   ego_controller_set : (vec principal) -> (Result_7);
-  ego_log_list : (nat64) -> (Result_8) query;
+  ego_cycle_check : () -> (Result_7);
+  ego_cycle_estimate_set : (nat64) -> (Result_7);
+  ego_cycle_history : () -> (Result_8) query;
+  ego_cycle_info : () -> (Result_9);
+  ego_log_list : (nat64) -> (Result_10) query;
   ego_op_add : (principal) -> (Result_7);
   ego_owner_add : (principal) -> (Result_7);
   ego_owner_remove : (principal) -> (Result_7);
@@ -87,7 +98,7 @@ service : () -> {
   ego_user_add : (principal) -> (Result_7);
   ego_user_remove : (principal) -> (Result_7);
   ego_user_set : (vec principal) -> (Result_7);
-  role_user_list : () -> (Result_9) query;
+  role_user_list : () -> (Result_11) query;
   role_user_remove : (principal) -> (Result_3);
-  wallet_app_list : () -> (Result_10);
+  wallet_app_list : () -> (Result_12);
 }

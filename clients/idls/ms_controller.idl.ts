@@ -46,8 +46,18 @@ export const idlFactory = ({ IDL }) => {
   });
   const Result_6 = IDL.Variant({ 'Ok' : AppInfo, 'Err' : IDL.Text });
   const Result_7 = IDL.Variant({ 'Ok' : IDL.Null, 'Err' : IDL.Text });
-  const Result_8 = IDL.Variant({ 'Ok' : IDL.Vec(IDL.Text), 'Err' : IDL.Text });
-  const Result_9 = IDL.Variant({
+  const CycleRecord = IDL.Record({ 'ts' : IDL.Nat64, 'balance' : IDL.Nat });
+  const Result_8 = IDL.Variant({
+    'Ok' : IDL.Vec(CycleRecord),
+    'Err' : IDL.Text,
+  });
+  const CycleInfo = IDL.Record({
+    'records' : IDL.Vec(CycleRecord),
+    'estimate_remaining' : IDL.Nat64,
+  });
+  const Result_9 = IDL.Variant({ 'Ok' : CycleInfo, 'Err' : IDL.Text });
+  const Result_10 = IDL.Variant({ 'Ok' : IDL.Vec(IDL.Text), 'Err' : IDL.Text });
+  const Result_11 = IDL.Variant({
     'Ok' : IDL.Vec(IDL.Tuple(IDL.Principal, IDL.Text)),
     'Err' : SystemErr,
   });
@@ -74,7 +84,7 @@ export const idlFactory = ({ IDL }) => {
     'canister' : Canister,
     'latest_version' : Version,
   });
-  const Result_10 = IDL.Variant({ 'Ok' : IDL.Vec(UserApp), 'Err' : SystemErr });
+  const Result_12 = IDL.Variant({ 'Ok' : IDL.Vec(UserApp), 'Err' : SystemErr });
   return IDL.Service({
     'action_sign_create' : IDL.Func([IDL.Nat64], [Result], []),
     'app_action_create' : IDL.Func([AppActionCreateRequest], [Result_1], []),
@@ -103,7 +113,11 @@ export const idlFactory = ({ IDL }) => {
     'ego_controller_add' : IDL.Func([IDL.Principal], [Result_7], []),
     'ego_controller_remove' : IDL.Func([IDL.Principal], [Result_7], []),
     'ego_controller_set' : IDL.Func([IDL.Vec(IDL.Principal)], [Result_7], []),
-    'ego_log_list' : IDL.Func([IDL.Nat64], [Result_8], ['query']),
+    'ego_cycle_check' : IDL.Func([], [Result_7], []),
+    'ego_cycle_estimate_set' : IDL.Func([IDL.Nat64], [Result_7], []),
+    'ego_cycle_history' : IDL.Func([], [Result_8], ['query']),
+    'ego_cycle_info' : IDL.Func([], [Result_9], []),
+    'ego_log_list' : IDL.Func([IDL.Nat64], [Result_10], ['query']),
     'ego_op_add' : IDL.Func([IDL.Principal], [Result_7], []),
     'ego_owner_add' : IDL.Func([IDL.Principal], [Result_7], []),
     'ego_owner_remove' : IDL.Func([IDL.Principal], [Result_7], []),
@@ -111,9 +125,9 @@ export const idlFactory = ({ IDL }) => {
     'ego_user_add' : IDL.Func([IDL.Principal], [Result_7], []),
     'ego_user_remove' : IDL.Func([IDL.Principal], [Result_7], []),
     'ego_user_set' : IDL.Func([IDL.Vec(IDL.Principal)], [Result_7], []),
-    'role_user_list' : IDL.Func([], [Result_9], ['query']),
+    'role_user_list' : IDL.Func([], [Result_11], ['query']),
     'role_user_remove' : IDL.Func([IDL.Principal], [Result_3], []),
-    'wallet_app_list' : IDL.Func([], [Result_10], []),
+    'wallet_app_list' : IDL.Func([], [Result_12], []),
   });
 };
 export const init = ({ IDL }) => { return []; };

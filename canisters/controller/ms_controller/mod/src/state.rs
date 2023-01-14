@@ -1,11 +1,12 @@
 use std::cell::RefCell;
 
-use ego_macros::{inject_app_info, inject_ego_data};
+use ego_macros::{inject_app_info, inject_cycle_info, inject_ego_data};
 
 use crate::model::Controller;
 
 inject_ego_data!();
 inject_app_info!();
+inject_cycle_info!();
 
 /********************  methods for canister_registry_macro   ********************/
 fn on_canister_added(name: &str, canister_id: Principal) {

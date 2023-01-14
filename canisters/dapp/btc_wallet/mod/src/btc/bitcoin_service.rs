@@ -1,7 +1,7 @@
 use std::cell::RefCell;
 use std::collections::HashMap;
 
-use ego_macros::{inject_app_info, inject_ego_data};
+use ego_macros::{inject_app_info, inject_cycle_info, inject_ego_data};
 use ic_btc_types::{MillisatoshiPerByte, Network, Utxo};
 use ic_cdk::export::candid::{CandidType, Deserialize};
 use itertools::Itertools;
@@ -15,6 +15,7 @@ use crate::types::{EgoBtcError, GetAddressResponse, SendResponse, UserBalanceRes
 
 inject_ego_data!();
 inject_app_info!();
+inject_cycle_info!();
 
 /********************  methods for canister_registry_macro   ********************/
 fn on_canister_added(name: &str, canister_id: Principal) {

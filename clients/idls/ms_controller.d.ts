@@ -45,11 +45,20 @@ export type CanisterType = { 'BACKEND' : null } |
   { 'ASSET' : null };
 export type Category = { 'System' : null } |
   { 'Vault' : null };
+export interface CycleInfo {
+  'records' : Array<CycleRecord>,
+  'estimate_remaining' : bigint,
+}
+export interface CycleRecord { 'ts' : bigint, 'balance' : bigint }
 export type Result = { 'Ok' : Sign } |
   { 'Err' : SystemErr };
 export type Result_1 = { 'Ok' : Action } |
   { 'Err' : SystemErr };
-export type Result_10 = { 'Ok' : Array<UserApp> } |
+export type Result_10 = { 'Ok' : Array<string> } |
+  { 'Err' : string };
+export type Result_11 = { 'Ok' : Array<[Principal, string]> } |
+  { 'Err' : SystemErr };
+export type Result_12 = { 'Ok' : Array<UserApp> } |
   { 'Err' : SystemErr };
 export type Result_2 = { 'Ok' : Array<Action> } |
   { 'Err' : SystemErr };
@@ -63,10 +72,10 @@ export type Result_6 = { 'Ok' : AppInfo } |
   { 'Err' : string };
 export type Result_7 = { 'Ok' : null } |
   { 'Err' : string };
-export type Result_8 = { 'Ok' : Array<string> } |
+export type Result_8 = { 'Ok' : Array<CycleRecord> } |
   { 'Err' : string };
-export type Result_9 = { 'Ok' : Array<[Principal, string]> } |
-  { 'Err' : SystemErr };
+export type Result_9 = { 'Ok' : CycleInfo } |
+  { 'Err' : string };
 export interface Sign { 'sign_at' : bigint, 'user_id' : Principal }
 export interface SystemErr { 'msg' : string, 'code' : number }
 export interface UserApp {
@@ -102,7 +111,11 @@ export interface _SERVICE {
   'ego_controller_add' : ActorMethod<[Principal], Result_7>,
   'ego_controller_remove' : ActorMethod<[Principal], Result_7>,
   'ego_controller_set' : ActorMethod<[Array<Principal>], Result_7>,
-  'ego_log_list' : ActorMethod<[bigint], Result_8>,
+  'ego_cycle_check' : ActorMethod<[], Result_7>,
+  'ego_cycle_estimate_set' : ActorMethod<[bigint], Result_7>,
+  'ego_cycle_history' : ActorMethod<[], Result_8>,
+  'ego_cycle_info' : ActorMethod<[], Result_9>,
+  'ego_log_list' : ActorMethod<[bigint], Result_10>,
   'ego_op_add' : ActorMethod<[Principal], Result_7>,
   'ego_owner_add' : ActorMethod<[Principal], Result_7>,
   'ego_owner_remove' : ActorMethod<[Principal], Result_7>,
@@ -110,7 +123,7 @@ export interface _SERVICE {
   'ego_user_add' : ActorMethod<[Principal], Result_7>,
   'ego_user_remove' : ActorMethod<[Principal], Result_7>,
   'ego_user_set' : ActorMethod<[Array<Principal>], Result_7>,
-  'role_user_list' : ActorMethod<[], Result_9>,
+  'role_user_list' : ActorMethod<[], Result_11>,
   'role_user_remove' : ActorMethod<[Principal], Result_3>,
-  'wallet_app_list' : ActorMethod<[], Result_10>,
+  'wallet_app_list' : ActorMethod<[], Result_12>,
 }

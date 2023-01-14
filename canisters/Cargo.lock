@@ -580,9 +580,9 @@ dependencies = [
 
 [[package]]
 name = "ego_lib"
-version = "0.3.4"
+version = "0.3.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9604dbed79087ad5c0abf7a91e4ba8be949469d6ee853a8921c0b0473aa96246"
+checksum = "b69a7d55c84171b8614df539d9b1017eaa5a89d4d343ab490c48e0c620d413a1"
 dependencies = [
  "async-trait",
  "candid",
@@ -595,9 +595,9 @@ dependencies = [
 
 [[package]]
 name = "ego_macros"
-version = "0.1.5"
+version = "0.1.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5840a445d8d74d7258c5f3c24afc44dc9c3566a9a1aec606e3179d0e19ffd63b"
+checksum = "c7ef0715755c9b4699389770794066be920c8069d9b0532177a3e18211973831"
 dependencies = [
  "candid",
  "ego_types",
@@ -607,9 +607,9 @@ dependencies = [
 
 [[package]]
 name = "ego_types"
-version = "0.1.2"
+version = "0.1.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4ca42ce82e0d9869be6da295c407206167562720fc87f1215e8baba6481acc83"
+checksum = "0d82153463af01a251454553567fa3280bf00e966581f036875097e337faedbe"
 dependencies = [
  "candid",
  "ic-cdk",
@@ -1888,9 +1888,9 @@ checksum = "58bc9567378fc7690d6b2addae4e60ac2eeea07becb2c64b9f218b53865cba2a"
 
 [[package]]
 name = "serde"
-version = "1.0.149"
+version = "1.0.152"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "256b9932320c590e707b94576e3cc1f7c9024d0ee6612dfbcf1cb106cbe8e055"
+checksum = "bb7d1f0d3021d347a83e556fc4683dea2ea09d87bccdf88ff5c12545d89d5efb"
 dependencies = [
  "serde_derive",
 ]
@@ -1916,9 +1916,9 @@ dependencies = [
 
 [[package]]
 name = "serde_derive"
-version = "1.0.149"
+version = "1.0.152"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b4eae9b04cbffdfd550eb462ed33bc6a1b68c935127d008b27444d08380f94e4"
+checksum = "af487d118eecd09402d70a5d72551860e788df87b464af30e5ea6a38c75c541e"
 dependencies = [
  "proc-macro2",
  "quote",
