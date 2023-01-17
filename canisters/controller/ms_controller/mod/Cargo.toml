@@ -14,9 +14,9 @@ serde = "1.0"
 serde_json = "1.0"
 async-trait = "0.1.57"
 
-ego_lib = "0.3.8"
-ego_macros = "0.1.7"
-ego_types = "0.1.4"
+ego_lib = "0.3.10"
+ego_macros = "0.1.9"
+ego_types = "0.1.6"
 
 #ego_lib = {path="../../../../../ego/ego/lib/ego_lib"}
 #ego_macros = {path="../../../../../ego/ego/lib/ego_macros"}

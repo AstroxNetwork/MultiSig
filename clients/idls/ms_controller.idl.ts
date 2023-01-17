@@ -67,6 +67,7 @@ export const idlFactory = ({ IDL }) => {
     'name' : IDL.Text,
     'description' : IDL.Text,
     'app_id' : IDL.Text,
+    'app_hash' : IDL.Text,
     'category' : Category,
     'current_version' : Version,
     'price' : IDL.Float32,

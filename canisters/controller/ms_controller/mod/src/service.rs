@@ -7,7 +7,7 @@ use ic_cdk::export::Principal;
 
 use crate::app_wallet::TAppWallet;
 use crate::model::{Action, Sign};
-use crate::state::{CONTROLLER, log_add};
+use crate::state::{CONTROLLER, info_log_add};
 use crate::types::SystemErr;
 
 pub struct Service {}
@@ -19,7 +19,7 @@ impl Service {
     user_id: Principal,
     app_id: AppId,
   ) -> Result<Principal, SystemErr> {
-    log_add("1. create wallet");
+    info_log_add("1. create wallet");
     let user_app = match ego_store.wallet_app_install(app_id).await {
       Ok(user_app) => Ok(user_app),
       Err(e) => { Err(SystemErr::from(e)) }
@@ -29,10 +29,10 @@ impl Service {
 
     CONTROLLER.with(|controller| controller.borrow_mut().app = Some(canister.canister_id));
 
-    log_add("2. add self as user");
+    info_log_add("2. add self as user");
     ego_canister.ego_user_add(canister.canister_id, user_id);
 
-    log_add("3. remove self from owner");
+    info_log_add("3. remove self from owner");
     ego_canister.ego_owner_remove(canister.canister_id, user_id);
     Ok(canister.canister_id)
   }

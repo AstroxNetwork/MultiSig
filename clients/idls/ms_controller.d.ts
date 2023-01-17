@@ -21,6 +21,7 @@ export interface App {
   'name' : string,
   'description' : string,
   'app_id' : string,
+  'app_hash' : string,
   'category' : Category,
   'current_version' : Version,
   'price' : number,

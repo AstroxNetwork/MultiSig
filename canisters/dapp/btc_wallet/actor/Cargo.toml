@@ -23,9 +23,9 @@ btc_wallet_mod = { path = "../mod" }
 ic-btc-types = { git = "https://github.com/dfinity/ic", rev = "c905ede6e62f167994de24c8ccf7ee37a4d8ac67" }
 tecdsa_signer = { path = "../../../helpers/tecdsa_signer" }
 
-ego_lib = "0.3.8"
-ego_macros = "0.1.7"
-ego_types = "0.1.4"
+ego_lib = "0.3.10"
+ego_macros = "0.1.9"
+ego_types = "0.1.6"
 
 #ego_lib = {path="../../../../../ego/ego/lib/ego_lib"}
 #ego_macros = {path="../../../../../ego/ego/lib/ego_macros"}

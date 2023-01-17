@@ -27,8 +27,8 @@ inject_cycle_info_api!();
 #[candid_method(init)]
 pub fn init() {
     let caller = ic_cdk::api::caller();
-    log_add(format!("btc_wallet: init, caller is {}", caller.clone()).as_str());
-    log_add("==> add caller as the owner");
+    info_log_add(format!("btc_wallet: init, caller is {}", caller.clone()).as_str());
+    info_log_add("==> add caller as the owner");
     owner_add(caller.clone());
     // TODO: Set btc_init
 }
@@ -45,7 +45,7 @@ struct PersistState {
 
 #[pre_upgrade]
 fn pre_upgrade() {
-    log_add("btc wallet: pre_upgrade");
+    info_log_add("btc wallet: pre_upgrade");
     let state = PersistState {
         btc_store: btc::bitcoin_service::pre_upgrade(),
         signer: tecdsa_signer::state::pre_upgrade(),
@@ -59,7 +59,7 @@ fn pre_upgrade() {
 
 #[post_upgrade]
 fn post_upgrade() {
-    log_add("btc wallet: post_upgrade");
+    info_log_add("btc wallet: post_upgrade");
     let (state,): (PersistState,) = storage::stable_restore().unwrap();
 
     btc::bitcoin_service::post_upgrade(state.btc_store);

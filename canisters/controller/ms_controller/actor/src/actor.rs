@@ -31,9 +31,9 @@ inject_cycle_info_api!();
 #[candid_method(init)]
 pub fn init() {
   let caller = caller();
-  log_add(format!("controller: init, caller is {}", caller.clone()).as_str());
+  info_log_add(format!("controller: init, caller is {}", caller.clone()).as_str());
 
-  log_add("==> add caller as the owner");
+  info_log_add("==> add caller as the owner");
   owner_add(caller.clone());
 }
 
@@ -48,7 +48,7 @@ struct PersistState {
 
 #[pre_upgrade]
 fn pre_upgrade() {
-  log_add("controller: pre_upgrade");
+  info_log_add("controller: pre_upgrade");
 
   let controller = CONTROLLER.with(|controller| controller.borrow().clone());
 
@@ -65,7 +65,7 @@ fn pre_upgrade() {
 
 #[post_upgrade]
 fn post_upgrade() {
-  log_add("controller: post_upgrade");
+  info_log_add("controller: post_upgrade");
 
   let (state, ): (PersistState, ) = storage::stable_restore().unwrap();
   CONTROLLER.with(|controller| *controller.borrow_mut() = state.controller);
@@ -102,7 +102,7 @@ fn post_upgrade() {
 #[update(name = "controller_init", guard = "owner_guard")]
 #[candid_method(update, rename = "controller_init")]
 fn controller_init(total_user_amount: u16, threshold_user_amount: u16) {
-  log_add("controller: controller_init");
+  info_log_add("controller: controller_init");
 
   CONTROLLER.with(|controller| {
     controller.borrow_mut().total_user_amount = total_user_amount;
@@ -114,7 +114,7 @@ fn controller_init(total_user_amount: u16, threshold_user_amount: u16) {
 #[update(name = "batch_user_add", guard = "owner_guard")]
 #[candid_method(update, rename = "batch_user_add")]
 fn batch_user_add(pusers: BTreeMap<Principal, String>) -> Result<(), SystemErr> {
-  log_add("controller: batch_user_add");
+  info_log_add("controller: batch_user_add");
 
   CONTROLLER.with(|controller| {
     let user_count = users().unwrap().len();
@@ -151,7 +151,7 @@ pub fn role_user_remove(user_id: Principal) -> Result<(), SystemErr> {
 #[query(name = "role_user_list", guard = "user_guard")]
 #[candid_method(query, rename = "role_user_list")]
 fn role_user_list() -> Result<BTreeMap<Principal, String>, SystemErr> {
-  log_add("controller: role_user_list");
+  info_log_add("controller: role_user_list");
 
   Ok(users().unwrap())
 }
@@ -160,7 +160,7 @@ fn role_user_list() -> Result<BTreeMap<Principal, String>, SystemErr> {
 #[update(name = "app_main_create", guard = "owner_guard")]
 #[candid_method(update, rename = "app_main_create")]
 async fn app_main_create() -> Result<(), SystemErr> {
-  log_add("controller: app_main_create");
+  info_log_add("controller: app_main_create");
 
   let user_id = caller();
 
@@ -186,7 +186,7 @@ async fn app_main_create() -> Result<(), SystemErr> {
 #[query(name = "app_main_get", guard = "user_guard")]
 #[candid_method(query, rename = "app_main_get")]
 fn app_main_get() -> Result<Option<Principal>, SystemErr> {
-  log_add("controller: app_main_get");
+  info_log_add("controller: app_main_get");
 
   CONTROLLER.with(|controller| Ok(controller.borrow().app.clone()))
 }
@@ -194,7 +194,7 @@ fn app_main_get() -> Result<Option<Principal>, SystemErr> {
 #[update(name = "app_main_upgrade", guard = "user_guard")]
 #[candid_method(update, rename = "app_main_upgrade")]
 fn app_main_upgrade() -> Result<(), SystemErr> {
-  log_add("controller: app_main_upgrade");
+  info_log_add("controller: app_main_upgrade");
 
   let app_canister_id = CONTROLLER.with(|controller| controller.borrow().app.unwrap());
   let ego_canister = EgoCanister::new();
@@ -205,7 +205,7 @@ fn app_main_upgrade() -> Result<(), SystemErr> {
 #[update(name = "app_action_create", guard = "user_guard")]
 #[candid_method(update, rename = "app_action_create")]
 fn app_action_create(req: AppActionCreateRequest) -> Result<Action, SystemErr> {
-  log_add("controller: app_action_create");
+  info_log_add("controller: app_action_create");
 
   let action = Service::app_action_create(
     req.path,
@@ -220,7 +220,7 @@ fn app_action_create(req: AppActionCreateRequest) -> Result<Action, SystemErr> {
 #[query(name = "app_action_get", guard = "user_guard")]
 #[candid_method(query, rename = "app_action_get")]
 fn app_action_get(action_id: u64) -> Result<Action, SystemErr> {
-  log_add("controller: app_action_get");
+  info_log_add("controller: app_action_get");
 
   Service::app_action_get(action_id)
 }
@@ -228,7 +228,7 @@ fn app_action_get(action_id: u64) -> Result<Action, SystemErr> {
 #[query(name = "app_action_list", guard = "user_guard")]
 #[candid_method(query, rename = "app_action_list")]
 fn app_action_list() -> Result<Vec<Action>, SystemErr> {
-  log_add("controller: app_action_list");
+  info_log_add("controller: app_action_list");
 
   let actions = Service::app_action_list();
   Ok(actions)
@@ -237,7 +237,7 @@ fn app_action_list() -> Result<Vec<Action>, SystemErr> {
 #[update(name = "action_sign_create", guard = "user_guard")]
 #[candid_method(update, rename = "action_sign_create")]
 fn action_sign_create(action_id: u64) -> Result<Sign, SystemErr> {
-  log_add("controller: action_sign_create");
+  info_log_add("controller: action_sign_create");
 
   let app = CONTROLLER.with(|controller| controller.borrow().app);
 
@@ -258,7 +258,7 @@ fn action_sign_create(action_id: u64) -> Result<Sign, SystemErr> {
 #[candid_method(update, rename = "wallet_app_list")]
 async fn wallet_app_list() -> Result<Vec<UserApp>, SystemErr> {
   //
-  log_add("controller: wallet_app_list");
+  info_log_add("controller: wallet_app_list");
   let ego_store_id = canister_get_one("ego_store").unwrap();
   let ego_store = EgoStore::new(ego_store_id);
 

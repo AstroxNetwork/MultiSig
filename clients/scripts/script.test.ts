@@ -30,20 +30,31 @@ describe('scripts', () => {
       JSON.stringify(endUsers[1]?.identity),
     ).getPrincipal();
 
-    console.log('1 create controller');
+    console.log('1 list controller');
     const actor = await msProviderActor;
 
-    let resp1 = await actor.controller_main_create({
-      name: 'test',
-      total_user_amount: 5,
-      threshold_user_amount: 2,
-    });
-    console.log(resp1);
+    let resp1 = await actor.controller_main_list();
+    console.log(resp1)
 
-    let controller_id = resp1.Ok.id;
+    let controller_ids = resp1.Ok;
+    let controller_id = null;
+    if(controller_ids.length == 0){
+      console.log('2 create controller');
+      let resp2 = await actor.controller_main_create({
+        name: 'test',
+        total_user_amount: 5,
+        threshold_user_amount: 2,
+      });
+      console.log(resp2);
+
+      controller_id = resp2.Ok.id;
+    } else {
+      controller_id = controller_ids[0].id
+    }
+
     console.log(controller_id);
-    console.log('add user');
 
+    console.log('add user');
     let controller = await getActor<MsControllerService>(
       identity,
       MsControllerIdlFactory,

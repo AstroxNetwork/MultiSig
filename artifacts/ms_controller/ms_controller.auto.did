@@ -15,6 +15,7 @@ type App = record {
   name : text;
   description : text;
   app_id : text;
+  app_hash : text;
   category : Category;
   current_version : Version;
   price : float32;
