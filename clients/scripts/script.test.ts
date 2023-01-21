@@ -9,16 +9,26 @@ import {idlFactory as MsControllerIdlFactory} from '@/idls/ms_controller.idl';
 import {_SERVICE as BtcWalletService} from '@/idls/btc_wallet';
 import {idlFactory as BtcWalletIdlFactory} from '@/idls/btc_wallet.idl';
 
+import {_SERVICE as EgoOpsService} from '@/ego/ego_ops';
+import {idlFactory as EgoOpsIdlFactory} from '@/ego/ego_ops.idl';
+
 import {identity} from '@/settings/identity';
 import {getCanisterId} from '@/settings/utils';
 
 import {Ed25519KeyIdentity} from '@dfinity/identity';
 import {endUsers} from '@/fixtures/identities';
+import {BigNumber} from "ethers";
 
 export const msProviderActor = getActor<MsProviderService>(
   identity,
   MsProviderIdlFactory,
   getCanisterId('ms_provider')!,
+);
+
+export const egoOpsActor = getActor<EgoOpsService>(
+  identity,
+  EgoOpsIdlFactory,
+  getCanisterId('ego_ops')!,
 );
 
 describe('scripts', () => {
@@ -139,5 +149,40 @@ describe('scripts', () => {
     // console.log('3 upgrade controller');
     // let resp4 = await controller.ego_canister_upgrade()
     // console.log(resp4)
+  });
+
+  test('cycle_recharge', async () => {
+    console.log('1 get controller');
+    const actor = await msProviderActor;
+
+    let resp1 = await actor.controller_main_list();
+    console.log(resp1);
+
+    let controllers = resp1.Ok
+
+    let controller_id = controllers[controllers.length - 1].id
+
+    let controller = await getActor<MsControllerService>(
+      identity,
+      MsControllerIdlFactory,
+      controller_id,
+    );
+
+    console.log('2 balance_get');
+    let resp2 = await controller.balance_get();
+    console.log(resp2)
+
+    console.log('3 ego_cycle_threshold_get');
+    const ops = await egoOpsActor
+    let resp3 = await ops.admin_wallet_cycle_recharge({cycle: BigInt(1000000000), wallet_id: controller_id, comment: "test"});
+    console.log(resp3)
+
+    console.log('4 ego_cycle_recharge');
+    let resp4 = await controller.ego_cycle_recharge(BigInt(1000000000))
+    console.log(resp4)
+
+    console.log('5 balance_get');
+    let resp5 = await controller.balance_get();
+    console.log(resp5)
   });
 });

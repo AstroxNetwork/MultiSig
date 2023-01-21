@@ -33,6 +33,7 @@ export const idlFactory = ({ IDL }) => {
     'name' : IDL.Text,
     'description' : IDL.Text,
     'app_id' : IDL.Text,
+    'app_hash' : IDL.Text,
     'category' : Category,
     'current_version' : Version,
     'price' : IDL.Float32,
@@ -52,7 +53,17 @@ export const idlFactory = ({ IDL }) => {
   const EgoStoreApp = IDL.Record({ 'app' : App, 'wasm' : Wasm });
   const Result_5 = IDL.Variant({ 'Ok' : IDL.Nat, 'Err' : IDL.Text });
   const Result_6 = IDL.Variant({ 'Ok' : IDL.Null, 'Err' : IDL.Text });
-  const Result_7 = IDL.Variant({ 'Ok' : IDL.Vec(IDL.Text), 'Err' : IDL.Text });
+  const CycleRecord = IDL.Record({ 'ts' : IDL.Nat64, 'balance' : IDL.Nat });
+  const Result_7 = IDL.Variant({
+    'Ok' : IDL.Vec(CycleRecord),
+    'Err' : IDL.Text,
+  });
+  const CycleInfo = IDL.Record({
+    'records' : IDL.Vec(CycleRecord),
+    'estimate_remaining' : IDL.Nat64,
+  });
+  const Result_8 = IDL.Variant({ 'Ok' : CycleInfo, 'Err' : IDL.Text });
+  const Result_9 = IDL.Variant({ 'Ok' : IDL.Vec(IDL.Text), 'Err' : IDL.Text });
   const Canister = IDL.Record({
     'canister_id' : IDL.Principal,
     'canister_type' : CanisterType,
@@ -62,15 +73,16 @@ export const idlFactory = ({ IDL }) => {
     'canister' : Canister,
     'latest_version' : Version,
   });
-  const Result_8 = IDL.Variant({ 'Ok' : UserApp, 'Err' : EgoError });
-  const Result_9 = IDL.Variant({ 'Ok' : IDL.Vec(UserApp), 'Err' : EgoError });
+  const Result_10 = IDL.Variant({ 'Ok' : UserApp, 'Err' : EgoError });
+  const Result_11 = IDL.Variant({ 'Ok' : IDL.Vec(UserApp), 'Err' : EgoError });
+  const Result_12 = IDL.Variant({ 'Ok' : IDL.Nat, 'Err' : EgoError });
   const WalletCycleChargeRequest = IDL.Record({
     'cycle' : IDL.Nat,
     'comment' : IDL.Text,
     'wallet_id' : IDL.Principal,
   });
   const WalletCycleChargeResponse = IDL.Record({ 'ret' : IDL.Bool });
-  const Result_10 = IDL.Variant({
+  const Result_13 = IDL.Variant({
     'Ok' : WalletCycleChargeResponse,
     'Err' : EgoError,
   });
@@ -86,25 +98,9 @@ export const idlFactory = ({ IDL }) => {
     'cycles' : IDL.Nat,
     'cash_flow_type' : CashFlowType,
   });
-  const WalletCycleListResponse = IDL.Record({
-    'cash_flows' : IDL.Vec(CashFlow),
-  });
-  const Result_11 = IDL.Variant({
-    'Ok' : WalletCycleListResponse,
-    'Err' : EgoError,
-  });
-  const Result_12 = IDL.Variant({ 'Ok' : IDL.Principal, 'Err' : EgoError });
-  const WalletOrderListResponse = IDL.Record({ 'orders' : IDL.Vec(Order) });
-  const Result_13 = IDL.Variant({
-    'Ok' : WalletOrderListResponse,
-    'Err' : EgoError,
-  });
-  const WalletOrderNewRequest = IDL.Record({ 'amount' : IDL.Float32 });
-  const WalletOrderNewResponse = IDL.Record({ 'memo' : IDL.Nat64 });
-  const Result_14 = IDL.Variant({
-    'Ok' : WalletOrderNewResponse,
-    'Err' : EgoError,
-  });
+  const Result_14 = IDL.Variant({ 'Ok' : IDL.Vec(CashFlow), 'Err' : EgoError });
+  const Result_15 = IDL.Variant({ 'Ok' : IDL.Principal, 'Err' : EgoError });
+  const Result_16 = IDL.Variant({ 'Ok' : IDL.Nat64, 'Err' : EgoError });
   return IDL.Service({
     'admin_wallet_cycle_recharge' : IDL.Func(
         [AdminWalletCycleRechargeRequest],
@@ -125,7 +121,13 @@ export const idlFactory = ({ IDL }) => {
     'ego_controller_add' : IDL.Func([IDL.Principal], [Result_6], []),
     'ego_controller_remove' : IDL.Func([IDL.Principal], [Result_6], []),
     'ego_controller_set' : IDL.Func([IDL.Vec(IDL.Principal)], [Result_6], []),
-    'ego_log_list' : IDL.Func([IDL.Nat64], [Result_7], ['query']),
+    'ego_cycle_check' : IDL.Func([], [Result_6], []),
+    'ego_cycle_estimate_set' : IDL.Func([IDL.Nat64], [Result_6], []),
+    'ego_cycle_history' : IDL.Func([], [Result_7], ['query']),
+    'ego_cycle_info' : IDL.Func([], [Result_8], []),
+    'ego_cycle_recharge' : IDL.Func([IDL.Nat], [Result_6], []),
+    'ego_cycle_threshold_get' : IDL.Func([], [Result_5], []),
+    'ego_log_list' : IDL.Func([IDL.Nat64], [Result_9], ['query']),
     'ego_op_add' : IDL.Func([IDL.Principal], [Result_6], []),
     'ego_owner_add' : IDL.Func([IDL.Principal], [Result_6], []),
     'ego_owner_remove' : IDL.Func([IDL.Principal], [Result_6], []),
@@ -133,24 +135,25 @@ export const idlFactory = ({ IDL }) => {
     'ego_user_add' : IDL.Func([IDL.Principal], [Result_6], []),
     'ego_user_remove' : IDL.Func([IDL.Principal], [Result_6], []),
     'ego_user_set' : IDL.Func([IDL.Vec(IDL.Principal)], [Result_6], []),
-    'wallet_app_install' : IDL.Func([IDL.Text], [Result_8], []),
-    'wallet_app_list' : IDL.Func([], [Result_9], []),
+    'wallet_app_install' : IDL.Func([IDL.Text], [Result_10], []),
+    'wallet_app_list' : IDL.Func([], [Result_11], []),
     'wallet_app_remove' : IDL.Func([IDL.Principal], [Result_2], []),
     'wallet_app_upgrade' : IDL.Func([IDL.Principal], [Result_2], []),
     'wallet_canister_track' : IDL.Func([IDL.Principal], [Result_2], []),
     'wallet_canister_untrack' : IDL.Func([IDL.Principal], [Result_2], []),
+    'wallet_cycle_balance' : IDL.Func([], [Result_12], []),
     'wallet_cycle_charge' : IDL.Func(
         [WalletCycleChargeRequest],
-        [Result_10],
+        [Result_13],
         [],
       ),
-    'wallet_cycle_list' : IDL.Func([], [Result_11], []),
-    'wallet_main_new' : IDL.Func([IDL.Principal], [Result_8], []),
-    'wallet_main_register' : IDL.Func([IDL.Principal], [Result_12], []),
-    'wallet_order_list' : IDL.Func([], [Result_13], []),
-    'wallet_order_new' : IDL.Func([WalletOrderNewRequest], [Result_14], []),
-    'wallet_order_notify' : IDL.Func([WalletOrderNewResponse], [Result_10], []),
-    'wallet_tenant_get' : IDL.Func([], [Result_12], []),
+    'wallet_cycle_list' : IDL.Func([], [Result_14], []),
+    'wallet_main_new' : IDL.Func([IDL.Principal], [Result_10], []),
+    'wallet_main_register' : IDL.Func([IDL.Principal], [Result_15], []),
+    'wallet_order_list' : IDL.Func([], [Result_1], []),
+    'wallet_order_new' : IDL.Func([IDL.Float32], [Result_16], []),
+    'wallet_order_notify' : IDL.Func([IDL.Nat64], [Result], []),
+    'wallet_tenant_get' : IDL.Func([], [Result_15], []),
   });
 };
 export const init = ({ IDL }) => {

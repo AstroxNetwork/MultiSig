@@ -15,6 +15,7 @@ export interface App {
   'name' : string,
   'description' : string,
   'app_id' : string,
+  'app_hash' : string,
   'category' : Category,
   'current_version' : Version,
   'price' : number,
@@ -37,6 +38,11 @@ export type CashFlowType = { 'CHARGE' : null } |
   { 'RECHARGE' : null };
 export type Category = { 'System' : null } |
   { 'Vault' : null };
+export interface CycleInfo {
+  'records' : Array<CycleRecord>,
+  'estimate_remaining' : bigint,
+}
+export interface CycleRecord { 'ts' : bigint, 'balance' : bigint }
 export interface EgoError { 'msg' : string, 'code' : number }
 export interface EgoStoreApp { 'app' : App, 'wasm' : Wasm }
 export interface InitArg { 'init_caller' : [] | [Principal] }
@@ -54,15 +60,19 @@ export type Result = { 'Ok' : boolean } |
   { 'Err' : EgoError };
 export type Result_1 = { 'Ok' : Array<Order> } |
   { 'Err' : EgoError };
-export type Result_10 = { 'Ok' : WalletCycleChargeResponse } |
+export type Result_10 = { 'Ok' : UserApp } |
   { 'Err' : EgoError };
-export type Result_11 = { 'Ok' : WalletCycleListResponse } |
+export type Result_11 = { 'Ok' : Array<UserApp> } |
   { 'Err' : EgoError };
-export type Result_12 = { 'Ok' : Principal } |
+export type Result_12 = { 'Ok' : bigint } |
   { 'Err' : EgoError };
-export type Result_13 = { 'Ok' : WalletOrderListResponse } |
+export type Result_13 = { 'Ok' : WalletCycleChargeResponse } |
   { 'Err' : EgoError };
-export type Result_14 = { 'Ok' : WalletOrderNewResponse } |
+export type Result_14 = { 'Ok' : Array<CashFlow> } |
+  { 'Err' : EgoError };
+export type Result_15 = { 'Ok' : Principal } |
+  { 'Err' : EgoError };
+export type Result_16 = { 'Ok' : bigint } |
   { 'Err' : EgoError };
 export type Result_2 = { 'Ok' : null } |
   { 'Err' : EgoError };
@@ -74,12 +84,12 @@ export type Result_5 = { 'Ok' : bigint } |
   { 'Err' : string };
 export type Result_6 = { 'Ok' : null } |
   { 'Err' : string };
-export type Result_7 = { 'Ok' : Array<string> } |
+export type Result_7 = { 'Ok' : Array<CycleRecord> } |
   { 'Err' : string };
-export type Result_8 = { 'Ok' : UserApp } |
-  { 'Err' : EgoError };
-export type Result_9 = { 'Ok' : Array<UserApp> } |
-  { 'Err' : EgoError };
+export type Result_8 = { 'Ok' : CycleInfo } |
+  { 'Err' : string };
+export type Result_9 = { 'Ok' : Array<string> } |
+  { 'Err' : string };
 export interface UserApp {
   'app' : App,
   'canister' : Canister,
@@ -96,10 +106,6 @@ export interface WalletCycleChargeRequest {
   'wallet_id' : Principal,
 }
 export interface WalletCycleChargeResponse { 'ret' : boolean }
-export interface WalletCycleListResponse { 'cash_flows' : Array<CashFlow> }
-export interface WalletOrderListResponse { 'orders' : Array<Order> }
-export interface WalletOrderNewRequest { 'amount' : number }
-export interface WalletOrderNewResponse { 'memo' : bigint }
 export interface Wasm {
   'canister_id' : Principal,
   'version' : Version,
@@ -124,7 +130,13 @@ export interface _SERVICE {
   'ego_controller_add' : ActorMethod<[Principal], Result_6>,
   'ego_controller_remove' : ActorMethod<[Principal], Result_6>,
   'ego_controller_set' : ActorMethod<[Array<Principal>], Result_6>,
-  'ego_log_list' : ActorMethod<[bigint], Result_7>,
+  'ego_cycle_check' : ActorMethod<[], Result_6>,
+  'ego_cycle_estimate_set' : ActorMethod<[bigint], Result_6>,
+  'ego_cycle_history' : ActorMethod<[], Result_7>,
+  'ego_cycle_info' : ActorMethod<[], Result_8>,
+  'ego_cycle_recharge' : ActorMethod<[bigint], Result_6>,
+  'ego_cycle_threshold_get' : ActorMethod<[], Result_5>,
+  'ego_log_list' : ActorMethod<[bigint], Result_9>,
   'ego_op_add' : ActorMethod<[Principal], Result_6>,
   'ego_owner_add' : ActorMethod<[Principal], Result_6>,
   'ego_owner_remove' : ActorMethod<[Principal], Result_6>,
@@ -132,18 +144,19 @@ export interface _SERVICE {
   'ego_user_add' : ActorMethod<[Principal], Result_6>,
   'ego_user_remove' : ActorMethod<[Principal], Result_6>,
   'ego_user_set' : ActorMethod<[Array<Principal>], Result_6>,
-  'wallet_app_install' : ActorMethod<[string], Result_8>,
-  'wallet_app_list' : ActorMethod<[], Result_9>,
+  'wallet_app_install' : ActorMethod<[string], Result_10>,
+  'wallet_app_list' : ActorMethod<[], Result_11>,
   'wallet_app_remove' : ActorMethod<[Principal], Result_2>,
   'wallet_app_upgrade' : ActorMethod<[Principal], Result_2>,
   'wallet_canister_track' : ActorMethod<[Principal], Result_2>,
   'wallet_canister_untrack' : ActorMethod<[Principal], Result_2>,
-  'wallet_cycle_charge' : ActorMethod<[WalletCycleChargeRequest], Result_10>,
-  'wallet_cycle_list' : ActorMethod<[], Result_11>,
-  'wallet_main_new' : ActorMethod<[Principal], Result_8>,
-  'wallet_main_register' : ActorMethod<[Principal], Result_12>,
-  'wallet_order_list' : ActorMethod<[], Result_13>,
-  'wallet_order_new' : ActorMethod<[WalletOrderNewRequest], Result_14>,
-  'wallet_order_notify' : ActorMethod<[WalletOrderNewResponse], Result_10>,
-  'wallet_tenant_get' : ActorMethod<[], Result_12>,
+  'wallet_cycle_balance' : ActorMethod<[], Result_12>,
+  'wallet_cycle_charge' : ActorMethod<[WalletCycleChargeRequest], Result_13>,
+  'wallet_cycle_list' : ActorMethod<[], Result_14>,
+  'wallet_main_new' : ActorMethod<[Principal], Result_10>,
+  'wallet_main_register' : ActorMethod<[Principal], Result_15>,
+  'wallet_order_list' : ActorMethod<[], Result_1>,
+  'wallet_order_new' : ActorMethod<[number], Result_16>,
+  'wallet_order_notify' : ActorMethod<[bigint], Result>,
+  'wallet_tenant_get' : ActorMethod<[], Result_15>,
 }
