@@ -183,3 +183,8 @@ fn btc_is_user() -> bool {
 fn btc_is_owner() -> bool {
     is_owner(caller())
 }
+
+/********************  methods for ego_cycle_threshold_get   ********************/
+pub fn cycle_threshold_get() -> u128 {
+    500_000_000_000
+}

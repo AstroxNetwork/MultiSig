@@ -116,6 +116,8 @@ export interface _SERVICE {
   'ego_cycle_estimate_set' : ActorMethod<[bigint], Result_7>,
   'ego_cycle_history' : ActorMethod<[], Result_8>,
   'ego_cycle_info' : ActorMethod<[], Result_9>,
+  'ego_cycle_recharge' : ActorMethod<[bigint], Result_7>,
+  'ego_cycle_threshold_get' : ActorMethod<[], Result_5>,
   'ego_log_list' : ActorMethod<[bigint], Result_10>,
   'ego_op_add' : ActorMethod<[Principal], Result_7>,
   'ego_owner_add' : ActorMethod<[Principal], Result_7>,

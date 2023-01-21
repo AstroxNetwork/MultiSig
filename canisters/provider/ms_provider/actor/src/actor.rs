@@ -2,7 +2,8 @@ use std::collections::BTreeMap;
 
 use candid::candid_method;
 use ego_lib::ego_canister::{EgoCanister, TEgoCanister};
-use ego_macros::{inject_app_info_api, inject_ego_api};
+use ego_lib::ego_store::EgoStore;
+use ego_macros::{inject_ego_api};
 use ego_types::registry::Registry;
 use ego_types::user::User;
 use ic_cdk::{caller, id, storage};
@@ -19,7 +20,6 @@ use ms_provider_mod::state::PROVIDER;
 use ms_provider_mod::types::{ControllerMainCreateRequest, Errors, SystemErr};
 
 inject_ego_api!();
-inject_app_info_api!();
 
 #[init]
 #[candid_method(init)]
@@ -35,8 +35,7 @@ pub fn init() {
 struct PersistState {
   pub provider: Provider,
   users: Option<User>,
-  registry: Option<Registry>,
-  app_info: Option<AppInfo>,
+  registry: Option<Registry>
 }
 
 #[pre_upgrade]
@@ -50,7 +49,6 @@ fn pre_upgrade() {
     provider,
     users: Some(users_pre_upgrade()),
     registry: Some(registry_pre_upgrade()),
-    app_info: Some(app_info_pre_upgrade()),
   };
 
   storage::stable_save((state, )).unwrap();
@@ -74,13 +72,6 @@ fn post_upgrade() {
     None => {}
     Some(registry) => {
       registry_post_upgrade(registry);
-    }
-  }
-
-  match state.app_info {
-    None => {}
-    Some(app_info) => {
-      app_info_post_upgrade(app_info);
     }
   }
 }

@@ -66,6 +66,8 @@ service : () -> {
   ego_cycle_estimate_set : (nat64) -> (Result_5);
   ego_cycle_history : () -> (Result_6) query;
   ego_cycle_info : () -> (Result_7);
+  ego_cycle_recharge : (nat) -> (Result_5);
+  ego_cycle_threshold_get : () -> (Result);
   ego_log_list : (nat64) -> (Result_8) query;
   ego_op_add : (principal) -> (Result_5);
   ego_owner_add : (principal) -> (Result_5);

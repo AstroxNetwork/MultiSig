@@ -269,3 +269,8 @@ async fn wallet_app_list() -> Result<Vec<UserApp>, SystemErr> {
 
   Ok(result)
 }
+
+/********************  methods for ego_cycle_threshold_get   ********************/
+pub fn cycle_threshold_get() -> u128 {
+  500_000_000_000
+}

@@ -1,9 +1,3 @@
-type AppInfo = record {
-  app_id : text;
-  current_version : Version;
-  latest_version : Version;
-  wallet_id : opt principal;
-};
 type Controller = record {
   id : principal;
   total_user_amount : nat16;
@@ -16,36 +10,27 @@ type ControllerMainCreateRequest = record {
   name : text;
   threshold_user_amount : nat16;
 };
-type Result = variant { Ok : nat; Err : text };
-type Result_1 = variant { Ok : Controller; Err : SystemErr };
-type Result_2 = variant { Ok : vec Controller; Err : SystemErr };
-type Result_3 = variant { Ok : AppInfo; Err : text };
-type Result_4 = variant { Ok; Err : text };
-type Result_5 = variant { Ok : vec text; Err : text };
+type Result = variant { Ok : Controller; Err : SystemErr };
+type Result_1 = variant { Ok : vec Controller; Err : SystemErr };
+type Result_2 = variant { Ok; Err : text };
+type Result_3 = variant { Ok : vec text; Err : text };
 type SystemErr = record { msg : text; code : nat16 };
-type Version = record { major : nat32; minor : nat32; patch : nat32 };
 service : () -> {
-  balance_get : () -> (Result) query;
-  controller_main_create : (ControllerMainCreateRequest) -> (Result_1);
-  controller_main_get : (principal) -> (Result_1) query;
-  controller_main_list : () -> (Result_2) query;
+  controller_main_create : (ControllerMainCreateRequest) -> (Result);
+  controller_main_get : (principal) -> (Result) query;
+  controller_main_list : () -> (Result_1) query;
   controller_user_add : (principal) -> ();
   controller_user_remove : (principal) -> ();
-  ego_app_info_get : () -> (Result_3) query;
-  ego_app_info_update : (opt principal, text, Version) -> (Result_4);
-  ego_app_version_check : () -> (Result_3);
-  ego_canister_add : (text, principal) -> (Result_4);
-  ego_canister_remove : () -> (Result_4);
-  ego_canister_upgrade : () -> (Result_4);
-  ego_controller_add : (principal) -> (Result_4);
-  ego_controller_remove : (principal) -> (Result_4);
-  ego_controller_set : (vec principal) -> (Result_4);
-  ego_log_list : (nat64) -> (Result_5) query;
-  ego_op_add : (principal) -> (Result_4);
-  ego_owner_add : (principal) -> (Result_4);
-  ego_owner_remove : (principal) -> (Result_4);
-  ego_owner_set : (vec principal) -> (Result_4);
-  ego_user_add : (principal) -> (Result_4);
-  ego_user_remove : (principal) -> (Result_4);
-  ego_user_set : (vec principal) -> (Result_4);
+  ego_canister_add : (text, principal) -> (Result_2);
+  ego_controller_add : (principal) -> (Result_2);
+  ego_controller_remove : (principal) -> (Result_2);
+  ego_controller_set : (vec principal) -> (Result_2);
+  ego_log_list : (nat64) -> (Result_3) query;
+  ego_op_add : (principal) -> (Result_2);
+  ego_owner_add : (principal) -> (Result_2);
+  ego_owner_remove : (principal) -> (Result_2);
+  ego_owner_set : (vec principal) -> (Result_2);
+  ego_user_add : (principal) -> (Result_2);
+  ego_user_remove : (principal) -> (Result_2);
+  ego_user_set : (vec principal) -> (Result_2);
 }

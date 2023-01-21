@@ -98,6 +98,8 @@ export const idlFactory = ({ IDL }) => {
     'ego_cycle_estimate_set' : IDL.Func([IDL.Nat64], [Result_5], []),
     'ego_cycle_history' : IDL.Func([], [Result_6], ['query']),
     'ego_cycle_info' : IDL.Func([], [Result_7], []),
+    'ego_cycle_recharge' : IDL.Func([IDL.Nat], [Result_5], []),
+    'ego_cycle_threshold_get' : IDL.Func([], [Result], []),
     'ego_log_list' : IDL.Func([IDL.Nat64], [Result_8], ['query']),
     'ego_op_add' : IDL.Func([IDL.Principal], [Result_5], []),
     'ego_owner_add' : IDL.Func([IDL.Principal], [Result_5], []),
