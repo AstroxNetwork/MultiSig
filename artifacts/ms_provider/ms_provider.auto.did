@@ -13,7 +13,8 @@ type ControllerMainCreateRequest = record {
 type Result = variant { Ok : Controller; Err : SystemErr };
 type Result_1 = variant { Ok : vec Controller; Err : SystemErr };
 type Result_2 = variant { Ok; Err : text };
-type Result_3 = variant { Ok : vec text; Err : text };
+type Result_3 = variant { Ok : bool; Err : text };
+type Result_4 = variant { Ok : vec text; Err : text };
 type SystemErr = record { msg : text; code : nat16 };
 service : () -> {
   controller_main_create : (ControllerMainCreateRequest) -> (Result);
@@ -25,7 +26,9 @@ service : () -> {
   ego_controller_add : (principal) -> (Result_2);
   ego_controller_remove : (principal) -> (Result_2);
   ego_controller_set : (vec principal) -> (Result_2);
-  ego_log_list : (nat64) -> (Result_3) query;
+  ego_is_owner : () -> (Result_3) query;
+  ego_is_user : () -> (Result_3) query;
+  ego_log_list : (nat64) -> (Result_4) query;
   ego_op_add : (principal) -> (Result_2);
   ego_owner_add : (principal) -> (Result_2);
   ego_owner_remove : (principal) -> (Result_2);

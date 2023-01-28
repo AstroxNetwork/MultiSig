@@ -60,6 +60,7 @@ export const idlFactory = ({ IDL }) => {
     'name' : IDL.Text,
     'description' : IDL.Text,
     'app_id' : IDL.Text,
+    'app_hash' : IDL.Text,
     'category' : Category,
     'current_version' : Version,
     'price' : IDL.Float32,
@@ -90,8 +91,22 @@ export const idlFactory = ({ IDL }) => {
   });
   const Result_5 = IDL.Variant({ 'Ok' : Developer, 'Err' : EgoError });
   const Result_6 = IDL.Variant({ 'Ok' : IDL.Null, 'Err' : IDL.Text });
-  const Result_7 = IDL.Variant({ 'Ok' : IDL.Vec(IDL.Text), 'Err' : IDL.Text });
-  const Result_8 = IDL.Variant({ 'Ok' : IDL.Vec(Developer), 'Err' : EgoError });
+  const CycleRecord = IDL.Record({ 'ts' : IDL.Nat64, 'balance' : IDL.Nat });
+  const Result_7 = IDL.Variant({
+    'Ok' : IDL.Vec(CycleRecord),
+    'Err' : IDL.Text,
+  });
+  const CycleInfo = IDL.Record({
+    'records' : IDL.Vec(CycleRecord),
+    'estimate_remaining' : IDL.Nat64,
+  });
+  const Result_8 = IDL.Variant({ 'Ok' : CycleInfo, 'Err' : IDL.Text });
+  const Result_9 = IDL.Variant({ 'Ok' : IDL.Bool, 'Err' : IDL.Text });
+  const Result_10 = IDL.Variant({ 'Ok' : IDL.Vec(IDL.Text), 'Err' : IDL.Text });
+  const Result_11 = IDL.Variant({
+    'Ok' : IDL.Vec(Developer),
+    'Err' : EgoError,
+  });
   const UserRoleSetRequest = IDL.Record({
     'user_id' : IDL.Principal,
     'is_app_auditor' : IDL.Bool,
@@ -126,15 +141,24 @@ export const idlFactory = ({ IDL }) => {
     'ego_controller_add' : IDL.Func([IDL.Principal], [Result_6], []),
     'ego_controller_remove' : IDL.Func([IDL.Principal], [Result_6], []),
     'ego_controller_set' : IDL.Func([IDL.Vec(IDL.Principal)], [Result_6], []),
-    'ego_log_list' : IDL.Func([IDL.Nat64], [Result_7], ['query']),
+    'ego_cycle_check' : IDL.Func([], [Result_6], []),
+    'ego_cycle_estimate_set' : IDL.Func([IDL.Nat64], [Result_6], []),
+    'ego_cycle_history' : IDL.Func([], [Result_7], ['query']),
+    'ego_cycle_info' : IDL.Func([], [Result_8], []),
+    'ego_cycle_recharge' : IDL.Func([IDL.Nat], [Result_6], []),
+    'ego_cycle_threshold_get' : IDL.Func([], [Result_3], []),
+    'ego_is_owner' : IDL.Func([], [Result_9], ['query']),
+    'ego_is_user' : IDL.Func([], [Result_9], ['query']),
+    'ego_log_list' : IDL.Func([IDL.Nat64], [Result_10], ['query']),
     'ego_op_add' : IDL.Func([IDL.Principal], [Result_6], []),
     'ego_owner_add' : IDL.Func([IDL.Principal], [Result_6], []),
     'ego_owner_remove' : IDL.Func([IDL.Principal], [Result_6], []),
     'ego_owner_set' : IDL.Func([IDL.Vec(IDL.Principal)], [Result_6], []),
+    'ego_runtime_cycle_threshold_get' : IDL.Func([], [Result_3], []),
     'ego_user_add' : IDL.Func([IDL.Principal], [Result_6], []),
     'ego_user_remove' : IDL.Func([IDL.Principal], [Result_6], []),
     'ego_user_set' : IDL.Func([IDL.Vec(IDL.Principal)], [Result_6], []),
-    'user_main_list' : IDL.Func([IDL.Text], [Result_8], ['query']),
+    'user_main_list' : IDL.Func([IDL.Text], [Result_11], ['query']),
     'user_role_set' : IDL.Func([UserRoleSetRequest], [Result_1], []),
   });
 };

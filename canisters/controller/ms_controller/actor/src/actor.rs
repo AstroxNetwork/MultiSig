@@ -274,3 +274,6 @@ async fn wallet_app_list() -> Result<Vec<UserApp>, SystemErr> {
 pub fn cycle_threshold_get() -> u128 {
   500_000_000_000
 }
+pub fn runtime_cycle_threshold_get() -> u128 {
+  1_000_000_000_000
+}

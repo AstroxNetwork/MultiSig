@@ -45,12 +45,13 @@ type CycleInfo = record {
 type CycleRecord = record { ts : nat64; balance : nat };
 type Result = variant { Ok : Sign; Err : SystemErr };
 type Result_1 = variant { Ok : Action; Err : SystemErr };
-type Result_10 = variant { Ok : vec text; Err : text };
-type Result_11 = variant {
+type Result_10 = variant { Ok : bool; Err : text };
+type Result_11 = variant { Ok : vec text; Err : text };
+type Result_12 = variant {
   Ok : vec record { principal; text };
   Err : SystemErr;
 };
-type Result_12 = variant { Ok : vec UserApp; Err : SystemErr };
+type Result_13 = variant { Ok : vec UserApp; Err : SystemErr };
 type Result_2 = variant { Ok : vec Action; Err : SystemErr };
 type Result_3 = variant { Ok; Err : SystemErr };
 type Result_4 = variant { Ok : opt principal; Err : SystemErr };
@@ -93,15 +94,18 @@ service : () -> {
   ego_cycle_info : () -> (Result_9);
   ego_cycle_recharge : (nat) -> (Result_7);
   ego_cycle_threshold_get : () -> (Result_5);
-  ego_log_list : (nat64) -> (Result_10) query;
+  ego_is_owner : () -> (Result_10) query;
+  ego_is_user : () -> (Result_10) query;
+  ego_log_list : (nat64) -> (Result_11) query;
   ego_op_add : (principal) -> (Result_7);
   ego_owner_add : (principal) -> (Result_7);
   ego_owner_remove : (principal) -> (Result_7);
   ego_owner_set : (vec principal) -> (Result_7);
+  ego_runtime_cycle_threshold_get : () -> (Result_5);
   ego_user_add : (principal) -> (Result_7);
   ego_user_remove : (principal) -> (Result_7);
   ego_user_set : (vec principal) -> (Result_7);
-  role_user_list : () -> (Result_11) query;
+  role_user_list : () -> (Result_12) query;
   role_user_remove : (principal) -> (Result_3);
-  wallet_app_list : () -> (Result_12);
+  wallet_app_list : () -> (Result_13);
 }

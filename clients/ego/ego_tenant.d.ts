@@ -23,7 +23,9 @@ export type Result_2 = { 'Ok' : boolean } |
   { 'Err' : EgoError };
 export type Result_3 = { 'Ok' : null } |
   { 'Err' : string };
-export type Result_4 = { 'Ok' : Array<string> } |
+export type Result_4 = { 'Ok' : boolean } |
+  { 'Err' : string };
+export type Result_5 = { 'Ok' : Array<string> } |
   { 'Err' : string };
 export interface Version {
   'major' : number,
@@ -47,7 +49,9 @@ export interface _SERVICE {
   'ego_controller_remove' : ActorMethod<[Principal], Result_3>,
   'ego_controller_set' : ActorMethod<[Array<Principal>], Result_3>,
   'ego_cycle_check_cb' : ActorMethod<[Array<CycleRecord>, bigint], Result>,
-  'ego_log_list' : ActorMethod<[bigint], Result_4>,
+  'ego_is_owner' : ActorMethod<[], Result_4>,
+  'ego_is_user' : ActorMethod<[], Result_4>,
+  'ego_log_list' : ActorMethod<[bigint], Result_5>,
   'ego_op_add' : ActorMethod<[Principal], Result_3>,
   'ego_owner_add' : ActorMethod<[Principal], Result_3>,
   'ego_owner_remove' : ActorMethod<[Principal], Result_3>,

@@ -19,7 +19,9 @@ export type Result_1 = { 'Ok' : Array<Controller> } |
   { 'Err' : SystemErr };
 export type Result_2 = { 'Ok' : null } |
   { 'Err' : string };
-export type Result_3 = { 'Ok' : Array<string> } |
+export type Result_3 = { 'Ok' : boolean } |
+  { 'Err' : string };
+export type Result_4 = { 'Ok' : Array<string> } |
   { 'Err' : string };
 export interface SystemErr { 'msg' : string, 'code' : number }
 export interface _SERVICE {
@@ -32,7 +34,9 @@ export interface _SERVICE {
   'ego_controller_add' : ActorMethod<[Principal], Result_2>,
   'ego_controller_remove' : ActorMethod<[Principal], Result_2>,
   'ego_controller_set' : ActorMethod<[Array<Principal>], Result_2>,
-  'ego_log_list' : ActorMethod<[bigint], Result_3>,
+  'ego_is_owner' : ActorMethod<[], Result_3>,
+  'ego_is_user' : ActorMethod<[], Result_3>,
+  'ego_log_list' : ActorMethod<[bigint], Result_4>,
   'ego_op_add' : ActorMethod<[Principal], Result_2>,
   'ego_owner_add' : ActorMethod<[Principal], Result_2>,
   'ego_owner_remove' : ActorMethod<[Principal], Result_2>,

@@ -18,7 +18,8 @@ export const idlFactory = ({ IDL }) => {
     'Err' : SystemErr,
   });
   const Result_2 = IDL.Variant({ 'Ok' : IDL.Null, 'Err' : IDL.Text });
-  const Result_3 = IDL.Variant({ 'Ok' : IDL.Vec(IDL.Text), 'Err' : IDL.Text });
+  const Result_3 = IDL.Variant({ 'Ok' : IDL.Bool, 'Err' : IDL.Text });
+  const Result_4 = IDL.Variant({ 'Ok' : IDL.Vec(IDL.Text), 'Err' : IDL.Text });
   return IDL.Service({
     'controller_main_create' : IDL.Func(
         [ControllerMainCreateRequest],
@@ -33,7 +34,9 @@ export const idlFactory = ({ IDL }) => {
     'ego_controller_add' : IDL.Func([IDL.Principal], [Result_2], []),
     'ego_controller_remove' : IDL.Func([IDL.Principal], [Result_2], []),
     'ego_controller_set' : IDL.Func([IDL.Vec(IDL.Principal)], [Result_2], []),
-    'ego_log_list' : IDL.Func([IDL.Nat64], [Result_3], ['query']),
+    'ego_is_owner' : IDL.Func([], [Result_3], ['query']),
+    'ego_is_user' : IDL.Func([], [Result_3], ['query']),
+    'ego_log_list' : IDL.Func([IDL.Nat64], [Result_4], ['query']),
     'ego_op_add' : IDL.Func([IDL.Principal], [Result_2], []),
     'ego_owner_add' : IDL.Func([IDL.Principal], [Result_2], []),
     'ego_owner_remove' : IDL.Func([IDL.Principal], [Result_2], []),

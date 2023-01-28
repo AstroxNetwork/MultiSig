@@ -580,9 +580,9 @@ dependencies = [
 
 [[package]]
 name = "ego_lib"
-version = "0.3.11"
+version = "0.3.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0f4538f3da6200a3827a6537988c20dc13ba2a5b4ed3a4c9c7cc7dd5d71e809f"
+checksum = "9de01751d9b3a00e238775c0ba9df6bc4954baafc671765f013f3259a98bb7c2"
 dependencies = [
  "async-trait",
  "candid",
@@ -595,9 +595,9 @@ dependencies = [
 
 [[package]]
 name = "ego_macros"
-version = "0.1.10"
+version = "0.1.13"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e627b9cc80b1ca6bf9383a3c54839a5d60335d02774f9e4f795c4c5a97f0de63"
+checksum = "c25384033ac9ed3e4422b6669553f3929584c86122a6245734cfc73625354303"
 dependencies = [
  "candid",
  "ego_types",

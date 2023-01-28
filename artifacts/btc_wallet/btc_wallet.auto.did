@@ -21,7 +21,8 @@ type Result_4 = variant { Ok : AppInfo; Err : text };
 type Result_5 = variant { Ok; Err : text };
 type Result_6 = variant { Ok : vec CycleRecord; Err : text };
 type Result_7 = variant { Ok : CycleInfo; Err : text };
-type Result_8 = variant { Ok : vec text; Err : text };
+type Result_8 = variant { Ok : bool; Err : text };
+type Result_9 = variant { Ok : vec text; Err : text };
 type SendRequest = record {
   request_id : nat64;
   path : text;
@@ -68,11 +69,14 @@ service : () -> {
   ego_cycle_info : () -> (Result_7);
   ego_cycle_recharge : (nat) -> (Result_5);
   ego_cycle_threshold_get : () -> (Result);
-  ego_log_list : (nat64) -> (Result_8) query;
+  ego_is_owner : () -> (Result_8) query;
+  ego_is_user : () -> (Result_8) query;
+  ego_log_list : (nat64) -> (Result_9) query;
   ego_op_add : (principal) -> (Result_5);
   ego_owner_add : (principal) -> (Result_5);
   ego_owner_remove : (principal) -> (Result_5);
   ego_owner_set : (vec principal) -> (Result_5);
+  ego_runtime_cycle_threshold_get : () -> (Result);
   ego_user_add : (principal) -> (Result_5);
   ego_user_remove : (principal) -> (Result_5);
   ego_user_set : (vec principal) -> (Result_5);

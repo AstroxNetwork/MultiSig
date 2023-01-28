@@ -55,11 +55,13 @@ export type Result = { 'Ok' : Sign } |
   { 'Err' : SystemErr };
 export type Result_1 = { 'Ok' : Action } |
   { 'Err' : SystemErr };
-export type Result_10 = { 'Ok' : Array<string> } |
+export type Result_10 = { 'Ok' : boolean } |
   { 'Err' : string };
-export type Result_11 = { 'Ok' : Array<[Principal, string]> } |
+export type Result_11 = { 'Ok' : Array<string> } |
+  { 'Err' : string };
+export type Result_12 = { 'Ok' : Array<[Principal, string]> } |
   { 'Err' : SystemErr };
-export type Result_12 = { 'Ok' : Array<UserApp> } |
+export type Result_13 = { 'Ok' : Array<UserApp> } |
   { 'Err' : SystemErr };
 export type Result_2 = { 'Ok' : Array<Action> } |
   { 'Err' : SystemErr };
@@ -118,15 +120,18 @@ export interface _SERVICE {
   'ego_cycle_info' : ActorMethod<[], Result_9>,
   'ego_cycle_recharge' : ActorMethod<[bigint], Result_7>,
   'ego_cycle_threshold_get' : ActorMethod<[], Result_5>,
-  'ego_log_list' : ActorMethod<[bigint], Result_10>,
+  'ego_is_owner' : ActorMethod<[], Result_10>,
+  'ego_is_user' : ActorMethod<[], Result_10>,
+  'ego_log_list' : ActorMethod<[bigint], Result_11>,
   'ego_op_add' : ActorMethod<[Principal], Result_7>,
   'ego_owner_add' : ActorMethod<[Principal], Result_7>,
   'ego_owner_remove' : ActorMethod<[Principal], Result_7>,
   'ego_owner_set' : ActorMethod<[Array<Principal>], Result_7>,
+  'ego_runtime_cycle_threshold_get' : ActorMethod<[], Result_5>,
   'ego_user_add' : ActorMethod<[Principal], Result_7>,
   'ego_user_remove' : ActorMethod<[Principal], Result_7>,
   'ego_user_set' : ActorMethod<[Array<Principal>], Result_7>,
-  'role_user_list' : ActorMethod<[], Result_11>,
+  'role_user_list' : ActorMethod<[], Result_12>,
   'role_user_remove' : ActorMethod<[Principal], Result_3>,
-  'wallet_app_list' : ActorMethod<[], Result_12>,
+  'wallet_app_list' : ActorMethod<[], Result_13>,
 }

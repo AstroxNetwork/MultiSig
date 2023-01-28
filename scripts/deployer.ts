@@ -228,7 +228,7 @@ async function runCreate() {
 
         if (f.url) {
           Object.assign(configObject, {
-            LOCAL_URL: `http://${localCanisterId}.localhost:8000`,
+            LOCAL_URL: `http://${localCanisterId}.localhost:8080`,
           });
         }
 

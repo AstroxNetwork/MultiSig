@@ -39,7 +39,8 @@ export const idlFactory = ({ IDL }) => {
     'estimate_remaining' : IDL.Nat64,
   });
   const Result_4 = IDL.Variant({ 'Ok' : CycleInfo, 'Err' : IDL.Text });
-  const Result_5 = IDL.Variant({ 'Ok' : IDL.Vec(IDL.Text), 'Err' : IDL.Text });
+  const Result_5 = IDL.Variant({ 'Ok' : IDL.Bool, 'Err' : IDL.Text });
+  const Result_6 = IDL.Variant({ 'Ok' : IDL.Vec(IDL.Text), 'Err' : IDL.Text });
   return IDL.Service({
     'admin_app_create' : IDL.Func([AdminAppCreateRequest], [Result], []),
     'admin_wallet_cycle_recharge' : IDL.Func(
@@ -66,11 +67,14 @@ export const idlFactory = ({ IDL }) => {
     'ego_cycle_info' : IDL.Func([], [Result_4], []),
     'ego_cycle_recharge' : IDL.Func([IDL.Nat], [Result_2], []),
     'ego_cycle_threshold_get' : IDL.Func([], [Result_1], []),
-    'ego_log_list' : IDL.Func([IDL.Nat64], [Result_5], ['query']),
+    'ego_is_owner' : IDL.Func([], [Result_5], ['query']),
+    'ego_is_user' : IDL.Func([], [Result_5], ['query']),
+    'ego_log_list' : IDL.Func([IDL.Nat64], [Result_6], ['query']),
     'ego_op_add' : IDL.Func([IDL.Principal], [Result_2], []),
     'ego_owner_add' : IDL.Func([IDL.Principal], [Result_2], []),
     'ego_owner_remove' : IDL.Func([IDL.Principal], [Result_2], []),
     'ego_owner_set' : IDL.Func([IDL.Vec(IDL.Principal)], [Result_2], []),
+    'ego_runtime_cycle_threshold_get' : IDL.Func([], [Result_1], []),
     'ego_user_add' : IDL.Func([IDL.Principal], [Result_2], []),
     'ego_user_remove' : IDL.Func([IDL.Principal], [Result_2], []),
     'ego_user_set' : IDL.Func([IDL.Vec(IDL.Principal)], [Result_2], []),

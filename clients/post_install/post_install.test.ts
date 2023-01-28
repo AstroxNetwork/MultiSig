@@ -87,7 +87,7 @@ describe('ms_controller', () => {
     const ms_controller_version = {
       major: 1,
       minor: 0,
-      patch: 1,
+      patch: 0,
     };
 
     console.log(`release multisig controller\n`);

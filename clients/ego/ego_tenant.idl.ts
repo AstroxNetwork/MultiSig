@@ -30,7 +30,8 @@ export const idlFactory = ({ IDL }) => {
   const Result_2 = IDL.Variant({ 'Ok' : IDL.Bool, 'Err' : EgoError });
   const Result_3 = IDL.Variant({ 'Ok' : IDL.Null, 'Err' : IDL.Text });
   const CycleRecord = IDL.Record({ 'ts' : IDL.Nat64, 'balance' : IDL.Nat });
-  const Result_4 = IDL.Variant({ 'Ok' : IDL.Vec(IDL.Text), 'Err' : IDL.Text });
+  const Result_4 = IDL.Variant({ 'Ok' : IDL.Bool, 'Err' : IDL.Text });
+  const Result_5 = IDL.Variant({ 'Ok' : IDL.Vec(IDL.Text), 'Err' : IDL.Text });
   return IDL.Service({
     'app_main_delete' : IDL.Func([IDL.Principal], [Result], []),
     'app_main_install' : IDL.Func([AppMainInstallRequest], [Result_1], []),
@@ -50,7 +51,9 @@ export const idlFactory = ({ IDL }) => {
         [Result],
         [],
       ),
-    'ego_log_list' : IDL.Func([IDL.Nat64], [Result_4], ['query']),
+    'ego_is_owner' : IDL.Func([], [Result_4], ['query']),
+    'ego_is_user' : IDL.Func([], [Result_4], ['query']),
+    'ego_log_list' : IDL.Func([IDL.Nat64], [Result_5], ['query']),
     'ego_op_add' : IDL.Func([IDL.Principal], [Result_3], []),
     'ego_owner_add' : IDL.Func([IDL.Principal], [Result_3], []),
     'ego_owner_remove' : IDL.Func([IDL.Principal], [Result_3], []),

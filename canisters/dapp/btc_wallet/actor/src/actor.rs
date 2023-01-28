@@ -188,3 +188,6 @@ fn btc_is_owner() -> bool {
 pub fn cycle_threshold_get() -> u128 {
     500_000_000_000
 }
+pub fn runtime_cycle_threshold_get() -> u128 {
+    1_000_000_000_000
+}

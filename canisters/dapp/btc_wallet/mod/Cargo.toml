@@ -43,8 +43,8 @@ tiny-keccak = { version = "2.0.1", features = ["keccak"] }
 pin-project = "1.0"
 getrandom= {version ="0.2.8", features= ["js"]}
 
-ego_lib = "0.3.11"
-ego_macros = "0.1.10"
+ego_lib = "0.3.12"
+ego_macros = "0.1.13"
 ego_types = "0.1.6"
 
 #ego_lib = {path="../../../../../ego/ego/lib/ego_lib"}

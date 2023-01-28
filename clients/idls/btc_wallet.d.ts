@@ -35,7 +35,9 @@ export type Result_6 = { 'Ok' : Array<CycleRecord> } |
   { 'Err' : string };
 export type Result_7 = { 'Ok' : CycleInfo } |
   { 'Err' : string };
-export type Result_8 = { 'Ok' : Array<string> } |
+export type Result_8 = { 'Ok' : boolean } |
+  { 'Err' : string };
+export type Result_9 = { 'Ok' : Array<string> } |
   { 'Err' : string };
 export interface SendRequest {
   'request_id' : bigint,
@@ -94,11 +96,14 @@ export interface _SERVICE {
   'ego_cycle_info' : ActorMethod<[], Result_7>,
   'ego_cycle_recharge' : ActorMethod<[bigint], Result_5>,
   'ego_cycle_threshold_get' : ActorMethod<[], Result>,
-  'ego_log_list' : ActorMethod<[bigint], Result_8>,
+  'ego_is_owner' : ActorMethod<[], Result_8>,
+  'ego_is_user' : ActorMethod<[], Result_8>,
+  'ego_log_list' : ActorMethod<[bigint], Result_9>,
   'ego_op_add' : ActorMethod<[Principal], Result_5>,
   'ego_owner_add' : ActorMethod<[Principal], Result_5>,
   'ego_owner_remove' : ActorMethod<[Principal], Result_5>,
   'ego_owner_set' : ActorMethod<[Array<Principal>], Result_5>,
+  'ego_runtime_cycle_threshold_get' : ActorMethod<[], Result>,
   'ego_user_add' : ActorMethod<[Principal], Result_5>,
   'ego_user_remove' : ActorMethod<[Principal], Result_5>,
   'ego_user_set' : ActorMethod<[Array<Principal>], Result_5>,
